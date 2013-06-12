@@ -1,9 +1,5 @@
-update=mié 12 jun 2013 23:43:21 CEST
-last_client=pcbnew
-[general]
-version=1
-RootSch=GNBoard.sch
-BoardNm=GNBoard.brd
+update=jue 13 jun 2013 01:14:12 CEST
+last_client=kicad
 [common]
 NetDir=
 [eeschema]
@@ -89,3 +85,5 @@ LibName12=display
 LibName13=valves
 LibName14=led
 LibName15=dip_sockets
+[general]
+version=1
