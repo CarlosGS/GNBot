@@ -1,0 +1,16 @@
+# About
+Choke_Radial_ThroughHole_C&D_Bobin_RevA.mod
+
+
+Contains the KiCAD module/footprint of some
+radial mounted bobine type chokes manufactured by C&D.
+
+
+Choke_Radial_27mm_2,8mm-Drills_CD_Bobin_Type_No1410311
+Choke_Radial_27mm_2,8mm-Drills_CD_Bobin_Type_No1410312
+Choke_Radial_31mm_2.4mm-Drills_CD_Bobin_Type_No1422455
+Choke_Radial_31mm_1.5mm-Drills_CD_Bobin_Type_No1410514
+
+Author: Bernd Wiebus / Uedem / Germany / 25 Oct 2010
+GNU-GPL, NO WARRANTY!
+

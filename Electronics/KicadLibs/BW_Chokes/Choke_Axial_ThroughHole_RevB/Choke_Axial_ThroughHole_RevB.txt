@@ -1,0 +1,17 @@
+# About
+Choke_Axial_ThroughHole_RevB.mod
+
+
+Contains the KiCAD module/footprint of some
+axial mounted chokes for metric raster.
+Maybe they can used for generic types also.
+
+Choke_Horizontal_RM10mm_RevB
+Choke_Horizontal_RM20mm_RevB
+Choke_Horizontal_RM25mm_RevB
+Choke_Horizontal_RM30mm_RevB
+Choke_Horizontal_RM30mm_Narrow_RevB
+
+Author: Bernd Wiebus / Uedem / Germany / 28 March 2011
+GNU-GPL, NO WARRANTY!
+

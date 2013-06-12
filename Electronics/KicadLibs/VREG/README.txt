@@ -1,5 +1,7 @@
 A repository of symbols and footprints that I have created for Kicad.
 
+Note: v-reg.mod from OpenPLC (https://code.google.com/p/open-plc/)
+
 
 The MIT License (MIT)
 Copyright (c) 2012 Joseph Baker

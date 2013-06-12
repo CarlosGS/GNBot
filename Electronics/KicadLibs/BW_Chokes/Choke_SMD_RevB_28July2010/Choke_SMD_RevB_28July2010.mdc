@@ -1,0 +1,99 @@
+PCBNEW-LibDoc----V1  28.07.2010 17:24:05
+#
+$MODULE Choke_SMD_PISN_FASTRON
+Li Choke_SMD_PISN_FASTRON
+Cd Choke, Drossel, PISN, SMD, Fastron,
+Kw Choke, Drossel, PISN, SMD, Fastron,
+$EndMODULE
+#
+$MODULE Choke_SMD_PISR_FASTRON
+Li Choke_SMD_PISR_FASTRON
+Cd Choke, Drossel, PISR, Fastron, SMD,
+Kw Choke, Drossel, PISR, Fastron, SMD,
+$EndMODULE
+#
+$MODULE Choke_SMD_Wuerth-WE-PD-Typ-LS_Handsoldering_RevA_27July2010
+Li Choke_SMD_Wuerth-WE-PD-Typ-LS_Handsoldering_RevA_27July2010
+Cd Choke, Drossel, WE-PD Typ LS, Wuerth, SMD, Handsoldering,
+Kw Choke, Drossel, WE-PD Typ LS, Wuerth, SMD, Handsoldering,
+$EndMODULE
+#
+$MODULE Choke_SMD_Wuerth-WE-PD-Typ-M-Typ-S_Handsoldering_RevA_27July2010
+Li Choke_SMD_Wuerth-WE-PD-Typ-M-Typ-S_Handsoldering_RevA_27July2010
+Cd Choke, Drossel, WE-PD, Typ M, Typ S, Wuerth, SMD, Handsoldering,
+Kw Choke, Drossel, WE-PD, Typ M, Typ S, Wuerth, SMD, Handsoldering,
+$EndMODULE
+#
+$MODULE Choke_SMD_Wuerth-WE-PD-Typ-M-Typ-S_RevA_27July2010
+Li Choke_SMD_Wuerth-WE-PD-Typ-M-Typ-S_RevA_27July2010
+Cd Choke, Drossel, WE-PD, Typ M, Typ S, Wuerth, SMD,
+Kw Choke, Drossel, WE-PD, Typ M, Typ S, Wuerth, SMD,
+$EndMODULE
+#
+$MODULE Choke_SMD_Wuerth-WE-PD-Typ-LS_RevA_27July2010
+Li Choke_SMD_Wuerth-WE-PD-Typ-LS_RevA_27July2010
+Cd Choke, Drossel, WE-PD Typ LS, Wuerth, SMD,
+Kw Choke, Drossel, WE-PD Typ LS, Wuerth, SMD,
+$EndMODULE
+#
+$MODULE Choke_SMD_Wuerth-WE-PD2-Typ-XL_RevA_27July2010
+Li Choke_SMD_Wuerth-WE-PD2-Typ-XL_RevA_27July2010
+Cd Choke, Drossel, WE-PD2, Typ XL, Wuerth, SMD,
+Kw Choke, Drossel, WE-PD2, Typ XL, Wuerth, SMD,
+$EndMODULE
+#
+$MODULE Choke_SMD_Wuerth-WE-PD2-Typ-MS_RevA_27July2010
+Li Choke_SMD_Wuerth-WE-PD2-Typ-MS_RevA_27July2010
+Cd Choke, Drossel, WE-PD2, Typ MS, Wuerth, SMD,
+Kw Choke, Drossel, WE-PD2, Typ MS, Wuerth, SMD,
+$EndMODULE
+#
+$MODULE Choke_SMD_Wuerth-WE-PD2-Typ-L_RevA_27July2010
+Li Choke_SMD_Wuerth-WE-PD2-Typ-L_RevA_27July2010
+Cd Choke, Drossel, WE-PD2, Typ L, Wuerth, SMD,
+Kw Choke, Drossel, WE-PD2, Typ L, Wuerth, SMD,
+$EndMODULE
+#
+$MODULE Choke_SMD_Wuerth-WE-PDF_Handsoldering_RevA_27July2010
+Li Choke_SMD_Wuerth-WE-PDF_Handsoldering_RevA_27July2010
+Cd Choke, Drossel, WE-PDF, Handsoldering, Wuerth, SMD,
+Kw Choke, Drossel, WE-PDF, Handsoldering, Wuerth, SMD,
+$EndMODULE
+#
+$MODULE Choke_SMD_Wuerth-WE-PDF_RevA_27July2010
+Li Choke_SMD_Wuerth-WE-PDF_RevA_27July2010
+Cd Choke, Drossel, WE-PDF, Wuerth, SMD,
+Kw Choke, Drossel, WE-PDF, Wuerth, SMD,
+$EndMODULE
+#
+$MODULE Choke_SMD_1206_Handsoldering_RevA_28July2010
+Li Choke_SMD_1206_Handsoldering_RevA_28July2010
+Cd Choke, Drossel, SMD, 1206, Handsoldering,
+Kw Choke, Drossel, SMD, 1206, Handsoldering,
+$EndMODULE
+#
+$MODULE Choke_Double_SMD_Wuerth-WE-DD-Typ-M-Typ-S_RevA_28July2010
+Li Choke_Double_SMD_Wuerth-WE-DD-Typ-M-Typ-S_RevA_28July2010
+Cd Choke, Double, Doppeldrossel,  SMD, , Wuerth, WE-DD, Typ M, Typ S,
+Kw Choke, Double, Doppeldrossel,  SMD, , Wuerth, WE-DD, Typ M, Typ S,
+$EndMODULE
+#
+$MODULE Choke_Double_SMD_Wuerth-WE-DD-Typ-L-Typ-XL-Typ-XXL_RevA_28July2010
+Li Choke_Double_SMD_Wuerth-WE-DD-Typ-L-Typ-XL-Typ-XXL_RevA_28July2010
+Cd Choke, Double, Doppeldrossel,  SMD, , Wuerth, WE-DD, Typ L, Typ XL, Typ XXL,
+Kw Choke, Double, Doppeldrossel,  SMD, , Wuerth, WE-DD, Typ L, Typ XL, Typ XXL,
+$EndMODULE
+#
+$MODULE Choke_SMD_1206_Standard_RevA_28July2010
+Li Choke_SMD_1206_Standard_RevA_28July2010
+Cd Choke, Drossel, SMD, 1206, Standard,
+Kw Choke, Drossel, SMD, 1206, Standard,
+$EndMODULE
+#
+$MODULE Choke_SMD_Wuerth-WE-PD4-Typ-X_RevA_28July2010
+Li Choke_SMD_Wuerth-WE-PD4-Typ-X_RevA_28July2010
+Cd Choke, Drossel, WE-PD4, Typ X, Wuerth, SMD,
+Kw Choke, Drossel, WE-PD4, Typ X, Wuerth, SMD,
+$EndMODULE
+#
+$EndLIBDOC

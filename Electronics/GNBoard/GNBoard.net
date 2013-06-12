@@ -1,0 +1,130 @@
+# EESchema Netlist Version 1.1 created  mié 12 jun 2013 13:50:52 CEST
+(
+ ( /51B84E6F C1V5 C1 100uF
+  ( 1 +BATT )
+  ( 2 GND )
+ )
+ ( /51B84E73 C1V5 C2 100uF
+  ( 1 +5V )
+  ( 2 GND )
+ )
+ ( /51B851F9 D3 D1 1N5822
+  ( 1 GND )
+  ( 2 N-000002 )
+ )
+ ( /51B84C2F Choke_Toroid_6,5x13mm_Vertical L1 100uH
+  ( 1 +5V )
+  ( 2 N-000002 )
+ )
+ ( /51B84CE1 ARDUINO_MEGA_SHIELD SHIELD1 ARDUINO_MEGA_SHIELD
+  ( 0 ? )
+  ( 1 ? )
+  ( 2 ? )
+  ( 3 ? )
+  ( 3V3 ? )
+  ( 4 ? )
+  ( 5 ? )
+  ( 5V +5V )
+  ( 5V_4 ? )
+  ( 5V_5 ? )
+  ( 6 ? )
+  ( 7 ? )
+  ( 8 ? )
+  ( 9 ? )
+  ( 10 ? )
+  ( 11 ? )
+  ( 12 ? )
+  ( 13 ? )
+  ( 14 ? )
+  ( 15 ? )
+  ( 16 ? )
+  ( 17 ? )
+  ( 18 ? )
+  ( 19 ? )
+  ( 20 ? )
+  ( 21 ? )
+  ( 22 ? )
+  ( 23 ? )
+  ( 24 ? )
+  ( 25 ? )
+  ( 26 ? )
+  ( 27 ? )
+  ( 28 ? )
+  ( 29 ? )
+  ( 30 ? )
+  ( 31 ? )
+  ( 32 ? )
+  ( 33 ? )
+  ( 34 ? )
+  ( 35 ? )
+  ( 36 ? )
+  ( 37 ? )
+  ( 38 ? )
+  ( 39 ? )
+  ( 40 ? )
+  ( 41 ? )
+  ( 42 ? )
+  ( 43 ? )
+  ( 44 ? )
+  ( 45 ? )
+  ( 46 ? )
+  ( 47 ? )
+  ( 48 ? )
+  ( 49 ? )
+  ( 50 ? )
+  ( 51 ? )
+  ( 52 ? )
+  ( 53 ? )
+  ( AD0 ? )
+  ( AD1 ? )
+  ( AD2 ? )
+  ( AD3 ? )
+  ( AD4 ? )
+  ( AD5 ? )
+  ( AD6 ? )
+  ( AD7 ? )
+  ( AD8 ? )
+  ( AD9 ? )
+  ( AD10 ? )
+  ( AD11 ? )
+  ( AD12 ? )
+  ( AD13 ? )
+  ( AD14 ? )
+  ( AD15 ? )
+  ( AREF ? )
+  ( GND1 GND )
+  ( GND2 GND )
+  ( GND3 ? )
+  ( GND4 ? )
+  ( GND5 ? )
+  ( RST ? )
+  ( V_IN ? )
+ )
+ ( /51B84E1C v-reg-L200S U1 LM2576
+  ( 1 +BATT )
+  ( 2 N-000002 )
+  ( 3 GND )
+  ( 4 +5V )
+  ( 5 GND )
+ )
+)
+*
+{ Allowed footprints by component:
+$component C1
+ CP*
+ SM*
+$endlist
+$component C2
+ CP*
+ SM*
+$endlist
+$component D1
+ D?
+ S*
+$endlist
+$component U1
+ *DIP8
+ SOIC8
+$endlist
+$endfootprintlist
+}

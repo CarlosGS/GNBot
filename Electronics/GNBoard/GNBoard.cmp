@@ -1,0 +1,45 @@
+Cmp-Mod V01 Created by CVpcb (20090216-final) date = mié 12 jun 2013 13:50:52 CEST
+
+BeginCmp
+TimeStamp = /51B84E6F;
+Reference = C1;
+ValeurCmp = 100uF;
+IdModule  = C1V5;
+EndCmp
+
+BeginCmp
+TimeStamp = /51B84E73;
+Reference = C2;
+ValeurCmp = 100uF;
+IdModule  = C1V5;
+EndCmp
+
+BeginCmp
+TimeStamp = /51B851F9;
+Reference = D1;
+ValeurCmp = 1N5822;
+IdModule  = D3;
+EndCmp
+
+BeginCmp
+TimeStamp = /51B84C2F;
+Reference = L1;
+ValeurCmp = 100uH;
+IdModule  = Choke_Toroid_6,5x13mm_Vertical;
+EndCmp
+
+BeginCmp
+TimeStamp = /51B84CE1;
+Reference = SHIELD1;
+ValeurCmp = ARDUINO_MEGA_SHIELD;
+IdModule  = ARDUINO_MEGA_SHIELD;
+EndCmp
+
+BeginCmp
+TimeStamp = /51B84E1C;
+Reference = U1;
+ValeurCmp = LM2576;
+IdModule  = v-reg-L200S;
+EndCmp
+
+EndListe

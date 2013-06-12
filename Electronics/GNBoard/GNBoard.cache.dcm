@@ -1,11 +1,11 @@
-EESchema-DOCLIB  Version 2.0  mié 12 jun 2013 12:33:26 CEST
+EESchema-DOCLIB  Version 2.0  mié 12 jun 2013 13:54:19 CEST
 #
 $CMP CP1
 D Condensateur polarise
 $ENDCMP
 #
-$CMP DIODE
-D Diode simple
+$CMP DIODESCH
+D Diode schottky
 K DEV DIODE
 $ENDCMP
 #
