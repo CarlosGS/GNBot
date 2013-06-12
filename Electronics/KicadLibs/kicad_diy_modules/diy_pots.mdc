@@ -1,0 +1,230 @@
+PCBNEW-LibDoc----V1  14/1/2009-10:33:12
+#
+$MODULE R_TRIM_PT15-H
+Li R_TRIM_PT15-H
+Cd Piher PT15 H (vertical mount / horizontal adjust)
+$EndMODULE
+#
+$MODULE R_TRIM_PT10-H
+Li R_TRIM_PT10-H
+Cd Piher PT10 H (vertical mount / horizontal adjust)
+$EndMODULE
+#
+$MODULE R_TRIM_PT6-H
+Li R_TRIM_PT6-H
+Cd Piher PT6 H (vertical mount / horizontal adjust)
+$EndMODULE
+#
+$MODULE R_TRIM_PT6-V
+Li R_TRIM_PT6-V
+Cd Piher PT6 V (horizontal mount / vertical adjust)
+$EndMODULE
+#
+$MODULE R_TRIM_PT15-V
+Li R_TRIM_PT15-V
+Cd Piher PT15 V (horizontal mount / vertical adjust)
+$EndMODULE
+#
+$MODULE R_TRIM_PT10-V
+Li R_TRIM_PT10-V
+Cd Piher PT10 V (horizontal mount / vertical adjust)
+$EndMODULE
+#
+$MODULE R_TRIM_3362M
+Li R_TRIM_3362M
+Cd Bourns 1/4" Square Trimming Potentiometer
+$EndMODULE
+#
+$MODULE R_TRIM_3362P
+Li R_TRIM_3362P
+Cd Bourns 1/4" Square Trimming Potentiometer
+$EndMODULE
+#
+$MODULE R_TRIM_3362R
+Li R_TRIM_3362R
+Cd Bourns 1/4" Square Trimming Potentiometer
+$EndMODULE
+#
+$MODULE R_TRIM_3362S
+Li R_TRIM_3362S
+Cd Bourns 1/4" Square Trimming Potentiometer
+$EndMODULE
+#
+$MODULE R_TRIM_3362U
+Li R_TRIM_3362U
+Cd Bourns 1/4" Square Trimming Potentiometer
+$EndMODULE
+#
+$MODULE R_TRIM_3362W
+Li R_TRIM_3362W
+Cd Bourns 1/4" Square Trimming Potentiometer
+$EndMODULE
+#
+$MODULE R_TRIM_3362X
+Li R_TRIM_3362X
+Cd Bourns 1/4" Square Trimming Potentiometer
+$EndMODULE
+#
+$MODULE R_TRIM_3362Z
+Li R_TRIM_3362Z
+Cd Bourns 1/4" Square Trimming Potentiometer
+$EndMODULE
+#
+$MODULE R_TRIM_3386B
+Li R_TRIM_3386B
+Cd Bourns 3/8" Square Trimming Potentiometer
+Kw R
+$EndMODULE
+#
+$MODULE R_TRIM_3386C
+Li R_TRIM_3386C
+Cd Bourns 3/8" Square Trimming Potentiometer
+Kw R
+$EndMODULE
+#
+$MODULE R_TRIM_3386F
+Li R_TRIM_3386F
+Cd Bourns 3/8" Square Trimming Potentiometer
+Kw R
+$EndMODULE
+#
+$MODULE R_TRIM_3386H
+Li R_TRIM_3386H
+Cd Bourns 3/8" Square Trimming Potentiometer
+Kw R
+$EndMODULE
+#
+$MODULE R_TRIM_3386J
+Li R_TRIM_3386J
+Cd Bourns 3/8" Square Trimming Potentiometer
+Kw R
+$EndMODULE
+#
+$MODULE R_TRIM_3386P
+Li R_TRIM_3386P
+Cd Bourns 3/8" Square Trimming Potentiometer
+Kw R
+$EndMODULE
+#
+$MODULE R_TRIM_3386S
+Li R_TRIM_3386S
+Cd Bourns 3/8" Square Trimming Potentiometer
+Kw R
+$EndMODULE
+#
+$MODULE R_TRIM_3386U
+Li R_TRIM_3386U
+Cd Bourns 3/8" Square Trimming Potentiometer
+Kw R
+$EndMODULE
+#
+$MODULE R_TRIM_3386W
+Li R_TRIM_3386W
+Cd Bourns 3/8" Square Trimming Potentiometer
+Kw R
+$EndMODULE
+#
+$MODULE R_TRIM_3386X
+Li R_TRIM_3386X
+Cd Bourns 3/8" Square Trimming Potentiometer
+Kw R
+$EndMODULE
+#
+$MODULE R_TRIM_3386Y
+Li R_TRIM_3386Y
+Cd Bourns 3/8" Square Trimming Potentiometer
+Kw R
+$EndMODULE
+#
+$MODULE R_POT_PIHER_PC16_DH
+Li R_POT_PIHER_PC16_DH
+Cd Dual Potentiometer 16mm Horizontal
+$EndMODULE
+#
+$MODULE R_POT_PIHER_PC16_CH
+Li R_POT_PIHER_PC16_CH
+Cd Quad Potentiometer 16mm Horizontal
+$EndMODULE
+#
+$MODULE R_POT_PIHER_PC16_SH
+Li R_POT_PIHER_PC16_SH
+Cd Single Potentiometer 16mm Horizontal
+$EndMODULE
+#
+$MODULE R_POT_PIHER_PC16_SHI
+Li R_POT_PIHER_PC16_SHI
+Cd Single Potentiometer 16mm Horizontal with Switch
+$EndMODULE
+#
+$MODULE R_POT_PIHER_PC16_SHM1
+Li R_POT_PIHER_PC16_SHM1
+Cd Single Potentiometer 16mm Horizontal with Mounting Brackets
+$EndMODULE
+#
+$MODULE R_POT_PIHER_PC16_SHM2
+Li R_POT_PIHER_PC16_SHM2
+Cd Single Potentiometer 16mm Horizontal with Mounting Brackets
+$EndMODULE
+#
+$MODULE R_POT_PIHER_PC16_SV
+Li R_POT_PIHER_PC16_SV
+Cd Single Potentiometer 16mm Vertical
+$EndMODULE
+#
+$MODULE R_POT_PIHER_PC16_SVI
+Li R_POT_PIHER_PC16_SVI
+Cd Single Potentiometer 16mm Vertical with Switch
+$EndMODULE
+#
+$MODULE R_POT_PIHER_PC16_TH
+Li R_POT_PIHER_PC16_TH
+Cd Triple Potentiometer 16mm Horizontal
+$EndMODULE
+#
+$MODULE R_TRIM
+Li R_TRIM
+Cd 1/4" Square Trimming Potentiometer Multi
+$EndMODULE
+#
+$MODULE R_POT_ALPHA_16MM_H
+Li R_POT_ALPHA_16MM_H
+Cd Alpha Potentiometer 16mm Horizontal
+$EndMODULE
+#
+$MODULE R_POT_ALPHA_16MM_V
+Li R_POT_ALPHA_16MM_V
+Cd Alpha Potentiometer 16mm Vertical
+$EndMODULE
+#
+$MODULE R_POT_ALPHA_24MM_H
+Li R_POT_ALPHA_24MM_H
+Cd Alpha Potentiometer 24mm Horizontal
+$EndMODULE
+#
+$MODULE R_POT_ALPHA_16MM_DUAL_H
+Li R_POT_ALPHA_16MM_DUAL_H
+Cd Dual Alpha Potentiometer 16mm Horizontal
+$EndMODULE
+#
+$MODULE R_TRIM_T7YB
+Li R_TRIM_T7YB
+Cd Vishay Miniature Cermet Trimmer
+$EndMODULE
+#
+$MODULE R_TRIM_T7YA
+Li R_TRIM_T7YA
+Cd Vishay Miniature Cermet Trimmer
+$EndMODULE
+#
+$MODULE R_TRIM_3/8_ALL
+Li R_TRIM_3/8_ALL
+Cd 3/8" Square Trimming Potentiometer
+Kw R
+$EndMODULE
+#
+$MODULE R_TRIM_1/4_ALL
+Li R_TRIM_1/4_ALL
+Cd 1/4" Square Trimming Potentiometer
+$EndMODULE
+#
+$EndLIBDOC

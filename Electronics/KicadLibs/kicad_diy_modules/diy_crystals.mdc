@@ -1,0 +1,39 @@
+PCBNEW-LibDoc----V1  10/10/2008-11:30:49
+#
+$MODULE HC-49U_V
+Li HC-49U_V
+Cd Quartz boitier HC-49U Vertical
+Kw QUARTZ DEV
+$EndMODULE
+#
+$MODULE TC26_V
+Li TC26_V
+Cd Quartz boitier TC26 Vertical
+Kw QUARTZ DEV
+$EndMODULE
+#
+$MODULE TC38_V
+Li TC38_V
+Cd Quartz boitier TC38 Vertical
+Kw QUARTZ DEV
+$EndMODULE
+#
+$MODULE HC-49US_V
+Li HC-49US_V
+Cd Quartz boitier HC-49US Vertical
+Kw QUARTZ DEV
+$EndMODULE
+#
+$MODULE HC-51U_V
+Li HC-51U_V
+Cd Quartz boitier HC-51U Vertical
+Kw QUARTZ DEV
+$EndMODULE
+#
+$MODULE UM-1_V
+Li UM-1_V
+Cd Quartz boitier UM-1 Vertical
+Kw QUARTZ DEV
+$EndMODULE
+#
+$EndLIBDOC

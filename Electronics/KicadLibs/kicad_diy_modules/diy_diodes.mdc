@@ -1,0 +1,90 @@
+PCBNEW-LibDoc----V1  2/9/2008-06:29:01
+#
+$MODULE DO7_4
+Li DO7_4
+Cd Diode DO7 4 pas
+Kw D
+$EndMODULE
+#
+$MODULE DO35_3
+Li DO35_3
+Cd Diode DO35 3 pas
+Kw D
+$EndMODULE
+#
+$MODULE DO41_3
+Li DO41_3
+Cd Diode DO41 3 pas
+Kw D
+$EndMODULE
+#
+$MODULE DO35_4
+Li DO35_4
+Cd Diode DO35 4 pas
+Kw D
+$EndMODULE
+#
+$MODULE DO35_5
+Li DO35_5
+Cd Diode DO35 5 pas
+Kw D
+$EndMODULE
+#
+$MODULE DO35_1
+Li DO35_1
+Cd Diode DO35 1 pas
+Kw D
+$EndMODULE
+#
+$MODULE DO35_2
+Li DO35_2
+Cd Diode DO35 2 pas
+Kw D
+$EndMODULE
+#
+$MODULE DO41_4
+Li DO41_4
+Cd Diode DO41 4 pas
+Kw D
+$EndMODULE
+#
+$MODULE DO41_5
+Li DO41_5
+Cd Diode DO41 5 pas
+Kw D
+$EndMODULE
+#
+$MODULE DO7_5
+Li DO7_5
+Cd Diode DO7 5 pas
+Kw D
+$EndMODULE
+#
+$MODULE BRIDGE_DIP
+Li BRIDGE_DIP
+Cd Bridge Rectifier
+$EndMODULE
+#
+$MODULE BRIDGE_INLINE
+Li BRIDGE_INLINE
+Cd Bridge Rectifier
+$EndMODULE
+#
+$MODULE LED_3_V
+Li LED_3_V
+Cd Led verticale 3mm
+Kw LED DEV
+$EndMODULE
+#
+$MODULE LED_5_V
+Li LED_5_V
+Cd Led verticale 5mm
+Kw LED DEV
+$EndMODULE
+#
+$MODULE BRIDGE_ROUND
+Li BRIDGE_ROUND
+Cd Bridge Rectifier
+$EndMODULE
+#
+$EndLIBDOC

@@ -1,0 +1,783 @@
+PCBNEW-LibDoc----V1  9/10/2008-11:08:26
+#
+$MODULE C_BOX_046x025_1
+Li C_BOX_046x025_1
+Cd Condensateur 4.6x2.5mm
+Kw C
+$EndMODULE
+#
+$MODULE C_BOX_046x030_1
+Li C_BOX_046x030_1
+Cd Condensateur 4.6x3mm
+Kw C
+$EndMODULE
+#
+$MODULE C_BOX_046x038_1
+Li C_BOX_046x038_1
+Cd Condensateur 4.6x3.8mm
+Kw C
+$EndMODULE
+#
+$MODULE C_BOX_046x046_1
+Li C_BOX_046x046_1
+Cd Condensateur 4.6x4.6mm
+Kw C
+$EndMODULE
+#
+$MODULE C_BOX_046x055_1
+Li C_BOX_046x055_1
+Cd Condensateur 4.6x5.5mm
+Kw C
+$EndMODULE
+#
+$MODULE C_BOX_100x025_3
+Li C_BOX_100x025_3
+Cd Condensateur 10x2.5mm
+Kw C
+$EndMODULE
+#
+$MODULE C_BOX_100x030_3
+Li C_BOX_100x030_3
+Cd Condensateur 10x3mm
+Kw C
+$EndMODULE
+#
+$MODULE C_BOX_100x040_3
+Li C_BOX_100x040_3
+Cd Condensateur 10x4mm
+Kw C
+$EndMODULE
+#
+$MODULE C_BOX_103x045_3
+Li C_BOX_103x045_3
+Cd Condensateur 10.3x4.5mm
+Kw C
+$EndMODULE
+#
+$MODULE C_BOX_103x050_3
+Li C_BOX_103x050_3
+Cd Condensateur 10.3x5mm
+Kw C
+$EndMODULE
+#
+$MODULE C_BOX_103x057_3
+Li C_BOX_103x057_3
+Cd Condensateur 10.3x5.7mm
+Kw C
+$EndMODULE
+#
+$MODULE C_BOX_072x025_2
+Li C_BOX_072x025_2
+Cd Condensateur 7.2x2.5mm
+Kw C
+$EndMODULE
+#
+$MODULE C_BOX_072x030_2
+Li C_BOX_072x030_2
+Cd Condensateur 7.2x3mm
+Kw C
+$EndMODULE
+#
+$MODULE C_BOX_072x035_2
+Li C_BOX_072x035_2
+Cd Condensateur 7.2x3.5mm
+Kw C
+$EndMODULE
+#
+$MODULE C_BOX_072x045_2
+Li C_BOX_072x045_2
+Cd Condensateur 7.2x4.5mm
+Kw C
+$EndMODULE
+#
+$MODULE C_BOX_072x050_2
+Li C_BOX_072x050_2
+Cd Condensateur 7.2x5mm
+Kw C
+$EndMODULE
+#
+$MODULE C_BOX_072x055_2
+Li C_BOX_072x055_2
+Cd Condensateur 7.2x5.5mm
+Kw C
+$EndMODULE
+#
+$MODULE C_BOX_072x072_2
+Li C_BOX_072x072_2
+Cd Condensateur 7.2x7.2mm
+Kw C
+$EndMODULE
+#
+$MODULE C_BOX_072x085_2
+Li C_BOX_072x085_2
+Cd Condensateur 7.2x8.5mm
+Kw C
+$EndMODULE
+#
+$MODULE C_BOX_072x110_2
+Li C_BOX_072x110_2
+Cd Condensateur 7.2x11mm
+Kw C
+$EndMODULE
+#
+$MODULE C_MICA_CDE_CD10_099X056_1
+Li C_MICA_CDE_CD10_099X056_1
+Cd Condensateur Mica 1-250pF 500V 9.9x5.6mm
+Kw C
+$EndMODULE
+#
+$MODULE C_MICA_CDE_CD10_099X056_2
+Li C_MICA_CDE_CD10_099X056_2
+Cd Condensateur Mica 1-250pF 500V 9.9x5.6mm
+Kw C
+$EndMODULE
+#
+$MODULE C_MICA_CDE_CD10_099X056_3
+Li C_MICA_CDE_CD10_099X056_3
+Cd Condensateur Mica 1-250pF 500V 9.9x5.6mm
+Kw C
+$EndMODULE
+#
+$MODULE C_MICA_CDE_CD15_119X056_1
+Li C_MICA_CDE_CD15_119X056_1
+Cd Condensateur Mica 1-510pF 500V 11.9x5.6mm
+Kw C
+$EndMODULE
+#
+$MODULE C_MICA_CDE_CD15_119X056_2
+Li C_MICA_CDE_CD15_119X056_2
+Cd Condensateur Mica 1-510pF 500V 11.9x5.6mm
+Kw C
+$EndMODULE
+#
+$MODULE C_MICA_CDE_CD15_119X056_3
+Li C_MICA_CDE_CD15_119X056_3
+Cd Condensateur Mica 1-510pF 500V 11.9x5.6mm
+Kw C
+$EndMODULE
+#
+$MODULE CP_R_080_1
+Li CP_R_080_1
+Cd Condensateur radial 8mm
+Kw C
+$EndMODULE
+#
+$MODULE CP_R_100_2
+Li CP_R_100_2
+Cd Condensateur radial 10mm
+Kw C
+$EndMODULE
+#
+$MODULE CP_R_125_2
+Li CP_R_125_2
+Cd Condensateur radial 12.5mm
+Kw C
+$EndMODULE
+#
+$MODULE CP_R_160_3
+Li CP_R_160_3
+Cd Condensateur radial 16mm
+Kw C
+$EndMODULE
+#
+$MODULE CP_R_180_3
+Li CP_R_180_3
+Cd Condensateur radial 18mm
+Kw C
+$EndMODULE
+#
+$MODULE CP_R_050_1
+Li CP_R_050_1
+Cd Condensateur radial 5mm
+Kw C
+$EndMODULE
+#
+$MODULE CP_R_063_1
+Li CP_R_063_1
+Cd Condensateur radial 6.3mm
+Kw C
+$EndMODULE
+#
+$MODULE CP_A_050X120_6
+Li CP_A_050X120_6
+Cd Condensateur axial 5x12mm
+Kw C
+$EndMODULE
+#
+$MODULE CP_A_045X100_5
+Li CP_A_045X100_5
+Cd Condensateur axial 4.5x10mm
+Kw C
+$EndMODULE
+#
+$MODULE CP_A_063X120_6
+Li CP_A_063X120_6
+Cd Condensateur axial 6.3x12mm
+Kw C
+$EndMODULE
+#
+$MODULE CP_A_063X160_8
+Li CP_A_063X160_8
+Cd Condensateur axial 6.3x16mm
+Kw C
+$EndMODULE
+#
+$MODULE CP_A_080X160_8
+Li CP_A_080X160_8
+Cd Condensateur axial 8x16mm
+Kw C
+$EndMODULE
+#
+$MODULE CP_A_080X200_9
+Li CP_A_080X200_9
+Cd Condensateur axial 8x20mm
+Kw C
+$EndMODULE
+#
+$MODULE CP_A_100X210_10
+Li CP_A_100X210_10
+Cd Condensateur axial 10x21mm
+Kw C
+$EndMODULE
+#
+$MODULE CP_A_100X260_12
+Li CP_A_100X260_12
+Cd Condensateur axial 10x26mm
+Kw C
+$EndMODULE
+#
+$MODULE CP_A_130X260_12
+Li CP_A_130X260_12
+Cd Condensateur axial 13x26mm
+Kw C
+$EndMODULE
+#
+$MODULE CP_A_160X260_12
+Li CP_A_160X260_12
+Cd Condensateur axial 16x26mm
+Kw C
+$EndMODULE
+#
+$MODULE CP_A_130X315_14
+Li CP_A_130X315_14
+Cd Condensateur axial 13x31.5mm
+Kw C
+$EndMODULE
+#
+$MODULE CP_A_160X315_14
+Li CP_A_160X315_14
+Cd Condensateur axial 16x31.5mm
+Kw C
+$EndMODULE
+#
+$MODULE CP_A_160X415_18
+Li CP_A_160X415_18
+Cd Condensateur axial 16x41.5mm
+Kw C
+$EndMODULE
+#
+$MODULE CP_A_180X410_18
+Li CP_A_180X410_18
+Cd Condensateur axial 18x41mm
+Kw C
+$EndMODULE
+#
+$MODULE CP_A_200X400_18
+Li CP_A_200X400_18
+Cd Condensateur axial 20x40mm
+Kw C
+$EndMODULE
+#
+$MODULE C_CERAMIC_CDR1_050X030_1
+Li C_CERAMIC_CDR1_050X030_1
+Cd Condensateur Ceramic Xicon CDR1 5x3mm
+Kw C
+$EndMODULE
+#
+$MODULE C_CERAMIC_CDR1_050X030_2
+Li C_CERAMIC_CDR1_050X030_2
+Cd Condensateur Ceramic Xicon CDR1 5x3mm
+Kw C
+$EndMODULE
+#
+$MODULE C_CERAMIC_CDR1_060X030_1
+Li C_CERAMIC_CDR1_060X030_1
+Cd Condensateur Ceramic Xicon CDR1 6x3mm
+Kw C
+$EndMODULE
+#
+$MODULE C_CERAMIC_CDR1_060X030_2
+Li C_CERAMIC_CDR1_060X030_2
+Cd Condensateur Ceramic Xicon CDR1 6x3mm
+Kw C
+$EndMODULE
+#
+$MODULE C_CERAMIC_CDR1_075X030_2
+Li C_CERAMIC_CDR1_075X030_2
+Cd Condensateur Ceramic Xicon CDR1 7.5x3mm
+Kw C
+$EndMODULE
+#
+$MODULE C_CERAMIC_CDR1_075X030_1
+Li C_CERAMIC_CDR1_075X030_1
+Cd Condensateur Ceramic Xicon CDR1 7.5x3mm
+Kw C
+$EndMODULE
+#
+$MODULE C_CERAMIC_CDR1_085X030_1
+Li C_CERAMIC_CDR1_085X030_1
+Cd Condensateur Ceramic Xicon CDR1 8.5x3mm
+Kw C
+$EndMODULE
+#
+$MODULE C_CERAMIC_CDR1_085X030_2
+Li C_CERAMIC_CDR1_085X030_2
+Cd Condensateur Ceramic Xicon CDR1 8.5x3mm
+Kw C
+$EndMODULE
+#
+$MODULE C_CERAMIC_CDR1_095X030_2
+Li C_CERAMIC_CDR1_095X030_2
+Cd Condensateur Ceramic Xicon CDR1 9.5x3mm
+Kw C
+$EndMODULE
+#
+$MODULE C_CERAMIC_CDR1_105X030_2
+Li C_CERAMIC_CDR1_105X030_2
+Cd Condensateur Ceramic Xicon CDR1 10.5x3mm
+Kw C
+$EndMODULE
+#
+$MODULE C_CERAMIC_CDR1_125X030_2
+Li C_CERAMIC_CDR1_125X030_2
+Cd Condensateur Ceramic Xicon CDR1 12.5x3mm
+Kw C
+$EndMODULE
+#
+$MODULE CP_TANTALUM_044_1
+Li CP_TANTALUM_044_1
+Cd Condensateur Tantale 4.4mm
+Kw C
+$EndMODULE
+#
+$MODULE CP_TANTALUM_055_1
+Li CP_TANTALUM_055_1
+Cd Condensateur Tantale 5.5mm
+Kw C
+$EndMODULE
+#
+$MODULE CP_TANTALUM_060_1
+Li CP_TANTALUM_060_1
+Cd Condensateur Tantale 6mm
+Kw C
+$EndMODULE
+#
+$MODULE CP_TANTALUM_086_2
+Li CP_TANTALUM_086_2
+Cd Condensateur Tantale 8.6mm
+Kw C
+$EndMODULE
+#
+$MODULE CP_TANTALUM_096_2
+Li CP_TANTALUM_096_2
+Cd Condensateur Tantale 9.6mm
+Kw C
+$EndMODULE
+#
+$MODULE CP_TANTALUM_050_1
+Li CP_TANTALUM_050_1
+Cd Condensateur Tantale 5mm
+Kw C
+$EndMODULE
+#
+$MODULE C_716P_178X086_5
+Li C_716P_178X086_5
+Cd Condensateur 716P 600V 0.001-0.01uF
+Kw C
+$EndMODULE
+#
+$MODULE C_716P_241X122_7
+Li C_716P_241X122_7
+Cd Condensateur 716P 600V 0.012-0.039uF
+Kw C
+$EndMODULE
+#
+$MODULE C_716P_318X150_10
+Li C_716P_318X150_10
+Cd Condensateur 716P 600V 0.047-0.12uF
+Kw C
+$EndMODULE
+#
+$MODULE C_716P_432X165_14
+Li C_716P_432X165_14
+Cd Condensateur 716P 600V 0.15-0.22uF
+Kw C
+$EndMODULE
+#
+$MODULE C_715P_190X114_5
+Li C_715P_190X114_5
+Cd Condensateur 715P 600V 0.001-0.0068uF
+Kw C
+$EndMODULE
+#
+$MODULE C_715P_241X140_7
+Li C_715P_241X140_7
+Cd Condensateur 715P 600V 0.0082-0.022uF
+Kw C
+$EndMODULE
+#
+$MODULE C_715P_330X190_10
+Li C_715P_330X190_10
+Cd Condensateur 715P 600V 0.027-0.1uF
+Kw C
+$EndMODULE
+#
+$MODULE C_715P_432X216_14
+Li C_715P_432X216_14
+Cd Condensateur 715P 600V 0.12-0.22uF
+Kw C
+$EndMODULE
+#
+$MODULE C_MALLORY150_095X205_10
+Li C_MALLORY150_095X205_10
+Cd Condensateur Mallory 150 630V 0.027-0.082uF
+Kw C
+$EndMODULE
+#
+$MODULE C_MALLORY150_050X110_6
+Li C_MALLORY150_050X110_6
+Cd Condensateur Mallory 150 630V 0.001-0.0068uF
+Kw C
+$EndMODULE
+#
+$MODULE C_MALLORY150_070X165_8
+Li C_MALLORY150_070X165_8
+Cd Condensateur Mallory 150 630V 0.0082-0.022uF
+Kw C
+$EndMODULE
+#
+$MODULE C_MALLORY150_125X280_13
+Li C_MALLORY150_125X280_13
+Cd Condensateur Mallory 150 630V 0.1-0.27uF
+Kw C
+$EndMODULE
+#
+$MODULE C_MALLORY150_205X330_15
+Li C_MALLORY150_205X330_15
+Cd Condensateur Mallory 150 630V 0.33-1uF
+Kw C
+$EndMODULE
+#
+$MODULE CP_A_FT_100X300_14
+Li CP_A_FT_100X300_14
+Cd Condensateur axial Fischer & Tausche 10x30mm
+Kw C
+$EndMODULE
+#
+$MODULE CP_A_FT_120X300_14
+Li CP_A_FT_120X300_14
+Cd Condensateur axial Fischer & Tausche 12x30mm
+Kw C
+$EndMODULE
+#
+$MODULE CP_A_FT_140X300_14
+Li CP_A_FT_140X300_14
+Cd Condensateur axial Fischer & Tausche 14x30mm
+Kw C
+$EndMODULE
+#
+$MODULE CP_A_FT_140X370_16
+Li CP_A_FT_140X370_16
+Cd Condensateur axial Fischer & Tausche 14x37mm
+Kw C
+$EndMODULE
+#
+$MODULE CP_A_FT_160X300_14
+Li CP_A_FT_160X300_14
+Cd Condensateur axial Fischer & Tausche 16x30mm
+Kw C
+$EndMODULE
+#
+$MODULE CP_A_FT_180X300_14
+Li CP_A_FT_180X300_14
+Cd Condensateur axial Fischer & Tausche 18x30mm
+Kw C
+$EndMODULE
+#
+$MODULE CP_A_FT_160X390_17
+Li CP_A_FT_160X390_17
+Cd Condensateur axial Fischer & Tausche 16x39mm
+Kw C
+$EndMODULE
+#
+$MODULE CP_A_FT_180X390_17
+Li CP_A_FT_180X390_17
+Cd Condensateur axial Fischer & Tausche 18x39mm
+Kw C
+$EndMODULE
+#
+$MODULE CP_A_FT_210X360_16
+Li CP_A_FT_210X360_16
+Cd Condensateur axial Fischer & Tausche 21x36mm
+Kw C
+$EndMODULE
+#
+$MODULE CP_A_FT_250X380_17
+Li CP_A_FT_250X380_17
+Cd Condensateur axial Fischer & Tausche 25x38mm
+Kw C
+$EndMODULE
+#
+$MODULE CP_A_FT_250X490_21
+Li CP_A_FT_250X490_21
+Cd Condensateur axial Fischer & Tausche 25x49mm
+Kw C
+$EndMODULE
+#
+$MODULE CP_A_FT_300X500_21
+Li CP_A_FT_300X500_21
+Cd Condensateur axial Fischer & Tausche 30x50mm
+Kw C
+$EndMODULE
+#
+$MODULE CP_A_FT_350X500_21
+Li CP_A_FT_350X500_21
+Cd Condensateur axial Fischer & Tausche 35x50mm
+Kw C
+$EndMODULE
+#
+$MODULE CP_A_FT_350X660_28
+Li CP_A_FT_350X660_28
+Cd Condensateur axial Fischer & Tausche 35x66mm
+Kw C
+$EndMODULE
+#
+$MODULE C_PANASONIC_ECQ-V_073X032_2
+Li C_PANASONIC_ECQ-V_073X032_2
+Cd Condensateur Panasonic ECQ-V 0.01-0.068uF 50V 7.3x3.2mm
+Kw C
+$EndMODULE
+#
+$MODULE C_PANASONIC_ECQ-V_073X040_2
+Li C_PANASONIC_ECQ-V_073X040_2
+Cd Condensateur Panasonic ECQ-V 0.082-0.12uF 50V 7.3x4mm
+Kw C
+$EndMODULE
+#
+$MODULE C_PANASONIC_ECQ-V_073X048_2
+Li C_PANASONIC_ECQ-V_073X048_2
+Cd Condensateur Panasonic ECQ-V 0.15-0.22uF 50V 7.3x4.8mm
+Kw C
+$EndMODULE
+#
+$MODULE C_PANASONIC_ECQ-V_073X060_2
+Li C_PANASONIC_ECQ-V_073X060_2
+Cd Condensateur Panasonic ECQ-V 0.27-0.47uF 50V 7.3x6mm
+Kw C
+$EndMODULE
+#
+$MODULE C_PANASONIC_ECQ-V_073X068_2
+Li C_PANASONIC_ECQ-V_073X068_2
+Cd Condensateur Panasonic ECQ-V 0.56-0.82uF 50V 7.3x6.8mm
+Kw C
+$EndMODULE
+#
+$MODULE C_PANASONIC_ECQ-V_073X080_2
+Li C_PANASONIC_ECQ-V_073X080_2
+Cd Condensateur Panasonic ECQ-V 1uF 50V 7.3x8mm
+Kw C
+$EndMODULE
+#
+$MODULE C_XICON_PF_060X030_2
+Li C_XICON_PF_060X030_2
+Cd Condensateur Xicon PF 0.001-0.0056uF 100V 6x3mm
+Kw C
+$EndMODULE
+#
+$MODULE C_XICON_PF_065X035_2
+Li C_XICON_PF_065X035_2
+Cd Condensateur Xicon PF 0.0068-0.012uF 100V 6.5x3.5mm
+Kw C
+$EndMODULE
+#
+$MODULE C_XICON_PF_075X040_2
+Li C_XICON_PF_075X040_2
+Cd Condensateur Xicon PF 0.015-0.027uF 100V 7.5x4mm
+Kw C
+$EndMODULE
+#
+$MODULE C_XICON_PF_090X050_2
+Li C_XICON_PF_090X050_2
+Cd Condensateur Xicon PF 0.033-0.056uF 100V 9x5mm
+Kw C
+$EndMODULE
+#
+$MODULE C_XICON_PF_110X065_3
+Li C_XICON_PF_110X065_3
+Cd Condensateur Xicon PF 0.068-0.12uF 100V 11x6.5mm
+Kw C
+$EndMODULE
+#
+$MODULE C_XICON_PF_145X080_4
+Li C_XICON_PF_145X080_4
+Cd Condensateur Xicon PF 0.15-0.27uF 100V 14.5x8mm
+Kw C
+$EndMODULE
+#
+$MODULE C_XICON_PF_160X090_4
+Li C_XICON_PF_160X090_4
+Cd Condensateur Xicon PF 0.33-0.47uF 100V 16x9mm
+Kw C
+$EndMODULE
+#
+$MODULE C_BOX_130x040_4
+Li C_BOX_130x040_4
+Cd Condensateur 13x4mm
+Kw C
+$EndMODULE
+#
+$MODULE C_BOX_130x050_4
+Li C_BOX_130x050_4
+Cd Condensateur 13x5mm
+Kw C
+$EndMODULE
+#
+$MODULE C_BOX_130x060_4
+Li C_BOX_130x060_4
+Cd Condensateur 13x6mm
+Kw C
+$EndMODULE
+#
+$MODULE C_BOX_265x060_9
+Li C_BOX_265x060_9
+Cd Condensateur 26.5x6mm
+Kw C
+$EndMODULE
+#
+$MODULE C_BOX_180x050_6
+Li C_BOX_180x050_6
+Cd Condensateur 18x5mm
+Kw C
+$EndMODULE
+#
+$MODULE C_BOX_180x060_6
+Li C_BOX_180x060_6
+Cd Condensateur 18x6mm
+Kw C
+$EndMODULE
+#
+$MODULE C_BOX_180x070_6
+Li C_BOX_180x070_6
+Cd Condensateur 18x7mm
+Kw C
+$EndMODULE
+#
+$MODULE C_BOX_180x080_6
+Li C_BOX_180x080_6
+Cd Condensateur 18x8mm
+Kw C
+$EndMODULE
+#
+$MODULE C_BOX_180x090_6
+Li C_BOX_180x090_6
+Cd Condensateur 18x9mm
+Kw C
+$EndMODULE
+#
+$MODULE C_BOX_265x070_9
+Li C_BOX_265x070_9
+Cd Condensateur 26.5x7mm
+Kw C
+$EndMODULE
+#
+$MODULE C_BOX_315x090_11
+Li C_BOX_315x090_11
+Cd Condensateur 31.5x9mm
+Kw C
+$EndMODULE
+#
+$MODULE C_BOX_265x105_9
+Li C_BOX_265x105_9
+Cd Condensateur 26.5x10.5mm
+Kw C
+$EndMODULE
+#
+$MODULE C_BOX_265x110_9
+Li C_BOX_265x110_9
+Cd Condensateur 26.5x11mm
+Kw C
+$EndMODULE
+#
+$MODULE C_BOX_265x085_9
+Li C_BOX_265x085_9
+Cd Condensateur 26.5x8.5mm
+Kw C
+$EndMODULE
+#
+$MODULE C_BOX_315x110_11
+Li C_BOX_315x110_11
+Cd Condensateur 31.5x11mm
+Kw C
+$EndMODULE
+#
+$MODULE C_BOX_315x130_11
+Li C_BOX_315x130_11
+Cd Condensateur 31.5x13mm
+Kw C
+$EndMODULE
+#
+$MODULE C_BOX_315x150_11
+Li C_BOX_315x150_11
+Cd Condensateur 31.5x15mm
+Kw C
+$EndMODULE
+#
+$MODULE C_BOX_315x170_11
+Li C_BOX_315x170_11
+Cd Condensateur 31.5x17mm
+Kw C
+$EndMODULE
+#
+$MODULE C_BOX_315x200_11
+Li C_BOX_315x200_11
+Cd Condensateur 31.5x20mm
+Kw C
+$EndMODULE
+#
+$MODULE C_BOX_415x190_15
+Li C_BOX_415x190_15
+Cd Condensateur 41.5x19mm
+Kw C
+$EndMODULE
+#
+$MODULE C_BOX_415x200_15
+Li C_BOX_415x200_15
+Cd Condensateur 41.5x20mm
+Kw C
+$EndMODULE
+#
+$MODULE C_BOX_415x240_15
+Li C_BOX_415x240_15
+Cd Condensateur 41.5x24mm
+Kw C
+$EndMODULE
+#
+$MODULE C_BOX_415x130_15
+Li C_BOX_415x130_15
+Cd Condensateur 41.5x13mm
+Kw C
+$EndMODULE
+#
+$MODULE C_BOX_415x150_15
+Li C_BOX_415x150_15
+Cd Condensateur 41.5x15mm
+Kw C
+$EndMODULE
+#
+$MODULE C_BOX_415x170_15
+Li C_BOX_415x170_15
+Cd Condensateur 41.5x17mm
+Kw C
+$EndMODULE
+#
+$EndLIBDOC

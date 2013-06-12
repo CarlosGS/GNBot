@@ -1,0 +1,41 @@
+EESchema-DOCLIB  Version 2.0  Date: 1/14/2013 4:08:44 PM
+#
+$CMP LM22671
+D SIMPLE SWITCHER®Power Converter 500 kHz 0.5A
+K spms vreg 22671 LM22671
+$ENDCMP
+#
+$CMP LM2576
+D SIMPLE SWITCHER 3A Step-Down Voltage Regulator
+K spms vreg 2594 LM2594
+$ENDCMP
+#
+$CMP LM2594
+D SIMPLE SWITCHER®Power Converter 150 kHz 0.5A
+K spms vreg 2594 LM2594
+$ENDCMP
+#
+$CMP LM2674
+D SIMPLE SWITCHER®Power Converter 260 kHz 0.5A
+K spms vreg 2674 LM2674
+$ENDCMP
+#
+$CMP MCP1603-OS
+D 2.0 MHz, 500 mA Synchronous Buck Regulator
+$ENDCMP
+#
+$CMP MCP1603L-OS
+D 2.0 MHz, 500 mA Synchronous Buck Regulator
+$ENDCMP
+#
+$CMP TLV700XX
+D 200-mA, Low-Iq, Low-Dropout Regulator for Portable Devices
+K LDO vreg
+$ENDCMP
+#
+$CMP TPS54040
+D 0.5A, 42V Step Down SWIFT™ DC/DC Converter with ECO-MODE™
+K vreg swift buck TPS54040 54040 
+$ENDCMP
+#
+#End Doc Library

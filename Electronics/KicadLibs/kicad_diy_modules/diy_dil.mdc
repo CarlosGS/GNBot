@@ -1,0 +1,147 @@
+PCBNEW-LibDoc----V1  15/9/2008-11:19:05
+#
+$MODULE DIL52_6
+Li DIL52_6
+Cd Dual In Line 52 pins
+Kw DIL
+$EndMODULE
+#
+$MODULE DIL64_9
+Li DIL64_9
+Cd Dual In Line 64 pins
+Kw DIL
+$EndMODULE
+#
+$MODULE DIL68_9
+Li DIL68_9
+Cd Dual In Line 68 pins
+Kw DIL
+$EndMODULE
+#
+$MODULE DIL48_6
+Li DIL48_6
+Cd Dual In Line 48 pins
+Kw DIL
+$EndMODULE
+#
+$MODULE DIL42_6
+Li DIL42_6
+Cd Dual In Line 42 pins
+Kw DIL
+$EndMODULE
+#
+$MODULE DIL40_6
+Li DIL40_6
+Cd Dual In Line 40 pins
+Kw DIL
+$EndMODULE
+#
+$MODULE DIL36_6
+Li DIL36_6
+Cd Dual In Line 36 pins
+Kw DIL
+$EndMODULE
+#
+$MODULE DIL32_6
+Li DIL32_6
+Cd Dual In Line 32 pins
+Kw DIL
+$EndMODULE
+#
+$MODULE DIL28_6
+Li DIL28_6
+Cd Dual In Line 28 pins
+Kw DIL
+$EndMODULE
+#
+$MODULE DIL24_6
+Li DIL24_6
+Cd Dual In Line 24 pins
+Kw DIL
+$EndMODULE
+#
+$MODULE DIL22_4
+Li DIL22_4
+Cd Dual In Line 22 pins
+Kw DIL
+$EndMODULE
+#
+$MODULE DIL20_3
+Li DIL20_3
+Cd Dual In Line 20 pins
+Kw DIL
+$EndMODULE
+#
+$MODULE DIL18_3
+Li DIL18_3
+Cd Dual In Line 18 pins
+Kw DIL
+$EndMODULE
+#
+$MODULE DIL08_3
+Li DIL08_3
+Cd Dual In Line 8 pins
+Kw DIL
+$EndMODULE
+#
+$MODULE DIL10_3
+Li DIL10_3
+Cd Dual In Line 10 pins
+Kw DIL
+$EndMODULE
+#
+$MODULE DIL14_3
+Li DIL14_3
+Cd Dual In Line 14 pins
+Kw DIL
+$EndMODULE
+#
+$MODULE DIL16_3
+Li DIL16_3
+Cd Dual In Line 16 pins
+Kw DIL
+$EndMODULE
+#
+$MODULE DIL04_3
+Li DIL04_3
+Cd Dual In Line 4 pins
+Kw DIL
+$EndMODULE
+#
+$MODULE DIL06_3
+Li DIL06_3
+Cd Dual In Line 6 pins
+Kw DIL
+$EndMODULE
+#
+$MODULE DIL22_3
+Li DIL22_3
+Cd Dual In Line 22 pins
+Kw DIL
+$EndMODULE
+#
+$MODULE DIL24_3
+Li DIL24_3
+Cd Dual In Line 24 pins
+Kw DIL
+$EndMODULE
+#
+$MODULE DIL28_3
+Li DIL28_3
+Cd Dual In Line 28 pins
+Kw DIL
+$EndMODULE
+#
+$MODULE DIL24_4
+Li DIL24_4
+Cd Dual In Line 24 pins
+Kw DIL
+$EndMODULE
+#
+$MODULE DIL28_4
+Li DIL28_4
+Cd Dual In Line 28 pins
+Kw DIL
+$EndMODULE
+#
+$EndLIBDOC

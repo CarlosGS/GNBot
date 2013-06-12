@@ -1,0 +1,18 @@
+PCBNEW-LibDoc----V1  11/3/2009-12:04:33
+#
+$MODULE 42TM***
+Li 42TM***
+Cd Xicon 42TM Series Transformer
+$EndMODULE
+#
+$MODULE 42TC***
+Li 42TC***
+Cd Xicon 42TC Series Transformer
+$EndMODULE
+#
+$MODULE 42TL***
+Li 42TL***
+Cd Xicon 42TL Series Transformer
+$EndMODULE
+#
+$EndLIBDOC

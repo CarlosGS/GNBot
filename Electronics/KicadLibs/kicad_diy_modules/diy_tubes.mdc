@@ -1,0 +1,33 @@
+PCBNEW-LibDoc----V1  4/9/2008-07:17:36
+#
+$MODULE NOVAL_BELTON_VT9-PT-C
+Li NOVAL_BELTON_VT9-PT-C
+Cd Noval Tube Socket With Shielded Base
+$EndMODULE
+#
+$MODULE NOVAL_BELTON_VT9-PT
+Li NOVAL_BELTON_VT9-PT
+Cd Noval Tube Socket
+$EndMODULE
+#
+$MODULE NOVAL_D_21
+Li NOVAL_D_21
+Cd Noval Tube Socket Pins Diameter 21mm
+$EndMODULE
+#
+$MODULE OCTAL_BELTON_VT8-PT
+Li OCTAL_BELTON_VT8-PT
+Cd Octal Tube Socket
+$EndMODULE
+#
+$MODULE OCTAL_BELTON_VT8-PTL-01
+Li OCTAL_BELTON_VT8-PTL-01
+Cd Octal Tube Socket With Fixing Terminals
+$EndMODULE
+#
+$MODULE OCTAL_D_26
+Li OCTAL_D_26
+Cd Octal Tube Socket Pins Diameter 26mm
+$EndMODULE
+#
+$EndLIBDOC

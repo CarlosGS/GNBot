@@ -1,0 +1,182 @@
+PCBNEW-LibDoc----V1  13/2/2009-12:49:50
+#
+$MODULE PIN_ARRAY_2X2
+Li PIN_ARRAY_2X2
+Cd Double rangee de contacts 2 x 2 pins
+Kw CONN
+$EndMODULE
+#
+$MODULE PIN_ARRAY_4X2
+Li PIN_ARRAY_4X2
+Cd Double rangee de contacts 2 x 4 pins
+Kw CONN
+$EndMODULE
+#
+$MODULE PIN_ARRAY_6X2
+Li PIN_ARRAY_6X2
+Cd Double rangee de contacts 2 x 6 pins
+Kw CONN
+$EndMODULE
+#
+$MODULE PIN_ARRAY_12X2
+Li PIN_ARRAY_12X2
+Cd Double rangee de contacts 2 x 12 pins
+Kw CONN
+$EndMODULE
+#
+$MODULE PIN_ARRAY_8X2
+Li PIN_ARRAY_8X2
+Cd Double rangee de contacts 2 x 8 pins
+Kw CONN
+$EndMODULE
+#
+$MODULE PIN_ARRAY_5X2
+Li PIN_ARRAY_5X2
+Cd Double rangee de contacts 2 x 5 pins
+Kw CONN
+$EndMODULE
+#
+$MODULE PIN_ARRAY_3X2
+Li PIN_ARRAY_3X2
+Cd Double rangee de contacts 2 x 4 pins
+Kw CONN
+$EndMODULE
+#
+$MODULE PIN_ARRAY_20X2
+Li PIN_ARRAY_20X2
+Cd Double rangee de contacts 2 x 12 pins
+Kw CONN
+$EndMODULE
+#
+$MODULE PIN_ARRAY_13X2
+Li PIN_ARRAY_13X2
+Cd Double rangee de contacts 2 x 12 pins
+Kw CONN
+$EndMODULE
+#
+$MODULE PIN_ARRAY_2X1
+Li PIN_ARRAY_2X1
+Cd Connecteurs 2 pins
+Kw CONN DEV
+$EndMODULE
+#
+$MODULE PIN_ARRAY_3X1
+Li PIN_ARRAY_3X1
+Cd Connecteur 3 pins
+Kw CONN DEV
+$EndMODULE
+#
+$MODULE PIN_ARRAY_5X1
+Li PIN_ARRAY_5X1
+Cd Double rangee de contacts 2 x 5 pins
+Kw CONN
+$EndMODULE
+#
+$MODULE PIN_ARRAY_30X2
+Li PIN_ARRAY_30X2
+Cd Double rangee de contacts 2 x 12 pins
+Kw CONN
+$EndMODULE
+#
+$MODULE PIN_ARRAY_1X1
+Li PIN_ARRAY_1X1
+Cd Connecteurs 2 pins
+Kw CONN DEV
+$EndMODULE
+#
+$MODULE PIN_ARRAY_6X1
+Li PIN_ARRAY_6X1
+Cd Connecteur 6 pins
+Kw CONN DEV
+$EndMODULE
+#
+$MODULE PIN_ARRAY_8X1
+Li PIN_ARRAY_8X1
+Cd Double rangee de contacts 2 x 8 pins
+Kw CONN
+$EndMODULE
+#
+$MODULE PAD_1
+Li PAD_1
+Cd Connecteur 1 pad
+Kw CONN DEV
+$EndMODULE
+#
+$MODULE PAD_2
+Li PAD_2
+Cd Connecteur 2 pads
+Kw CONN DEV
+$EndMODULE
+#
+$MODULE PAD_3
+Li PAD_3
+Cd Connecteur 3 pads
+Kw CONN DEV
+$EndMODULE
+#
+$MODULE PAD_4
+Li PAD_4
+Cd Connecteur 4 pads
+Kw CONN DEV
+$EndMODULE
+#
+$MODULE PAD_5
+Li PAD_5
+Cd Connecteur 5 pads
+Kw CONN DEV
+$EndMODULE
+#
+$MODULE PAD_6
+Li PAD_6
+Cd Connecteur 6 pads
+Kw CONN DEV
+$EndMODULE
+#
+$MODULE JACK_2.1_DC
+Li JACK_2.1_DC
+Cd DC Jack
+$EndMODULE
+#
+$MODULE BORNIER_02
+Li BORNIER_02
+Cd Bornier d'alimentation 2 pins
+Kw DEV
+$EndMODULE
+#
+$MODULE BORNIER_05
+Li BORNIER_05
+Cd Bornier d'alimentation 5 pins
+Kw DEV
+$EndMODULE
+#
+$MODULE BORNIER_03
+Li BORNIER_03
+Cd Bornier d'alimentation 3 pins
+Kw DEV
+$EndMODULE
+#
+$MODULE BORNIER_04
+Li BORNIER_04
+Cd Bornier d'alimentation 4 pins
+Kw DEV
+$EndMODULE
+#
+$MODULE BORNIER_06
+Li BORNIER_06
+Cd Bornier d'alimentation 6 pins
+Kw DEV
+$EndMODULE
+#
+$MODULE JACK_RCA_BTOR1
+Li JACK_RCA_BTOR1
+Cd Connecteur RCA Lumberg BTOR1
+Kw CONN DEV
+$EndMODULE
+#
+$MODULE JACK_RCA_WBTOR1
+Li JACK_RCA_WBTOR1
+Cd Connecteur RCA Lumberg WBTOR1
+Kw CONN DEV
+$EndMODULE
+#
+$EndLIBDOC
