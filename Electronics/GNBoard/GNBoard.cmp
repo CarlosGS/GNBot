@@ -1,4 +1,4 @@
-Cmp-Mod V01 Created by CvPcb (2013-mar-13)-testing date = mié 12 jun 2013 21:05:27 CEST
+Cmp-Mod V01 Created by CvPcb (2013-mar-13)-testing date = jue 13 jun 2013 00:13:43 CEST
 
 BeginCmp
 TimeStamp = /51B84E6F;
@@ -19,6 +19,20 @@ TimeStamp = /51B851F9;
 Reference = D1;
 ValeurCmp = 1N5822;
 IdModule  = DO41_3;
+EndCmp
+
+BeginCmp
+TimeStamp = /51B907F8;
+Reference = K1;
+ValeurCmp = IR1;
+IdModule  = PIN_ARRAY_3X1;
+EndCmp
+
+BeginCmp
+TimeStamp = /51B90807;
+Reference = K2;
+ValeurCmp = IR2;
+IdModule  = PIN_ARRAY_3X1;
 EndCmp
 
 BeginCmp
@@ -43,37 +57,72 @@ IdModule  = bornier2;
 EndCmp
 
 BeginCmp
+TimeStamp = /51B8F3CA;
+Reference = P2;
+ValeurCmp = CONN_5;
+IdModule  = PIN_ARRAY_5x1;
+EndCmp
+
+BeginCmp
 TimeStamp = /51B88ED1;
 Reference = R1;
-ValeurCmp = R;
+ValeurCmp = 6k8;
 IdModule  = R3-LARGE_PADS;
 EndCmp
 
 BeginCmp
 TimeStamp = /51B8931B;
 Reference = R2;
-ValeurCmp = R;
+ValeurCmp = 330;
 IdModule  = R3-LARGE_PADS;
 EndCmp
 
 BeginCmp
 TimeStamp = /51B8932A;
 Reference = R3;
-ValeurCmp = R;
+ValeurCmp = 330;
 IdModule  = R3-LARGE_PADS;
 EndCmp
 
 BeginCmp
 TimeStamp = /51B89339;
 Reference = R4;
-ValeurCmp = R;
+ValeurCmp = 330;
 IdModule  = R3-LARGE_PADS;
 EndCmp
 
 BeginCmp
 TimeStamp = /51B88EE0;
 Reference = R5;
-ValeurCmp = R;
+ValeurCmp = 6k8;
+IdModule  = R3-LARGE_PADS;
+EndCmp
+
+BeginCmp
+TimeStamp = /51B8EF91;
+Reference = R6;
+ValeurCmp = 33k;
+IdModule  = R3-LARGE_PADS;
+EndCmp
+
+BeginCmp
+TimeStamp = /51B8EF9E;
+Reference = R7;
+ValeurCmp = 33k;
+IdModule  = R3-LARGE_PADS;
+EndCmp
+
+BeginCmp
+TimeStamp = /51B8EFA4;
+Reference = R8;
+ValeurCmp = 33k;
+IdModule  = R3-LARGE_PADS;
+EndCmp
+
+BeginCmp
+TimeStamp = /51B8EFAA;
+Reference = R9;
+ValeurCmp = 33k;
 IdModule  = R3-LARGE_PADS;
 EndCmp
 
