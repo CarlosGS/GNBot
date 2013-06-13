@@ -1,4 +1,4 @@
-Cmp-Mod V01 Created by CvPcb (2013-mar-13)-testing date = jue 13 jun 2013 00:47:39 CEST
+Cmp-Mod V01 Created by CvPcb (2013-mar-13)-testing date = jue 13 jun 2013 03:19:24 CEST
 
 BeginCmp
 TimeStamp = /51B84E6F;
@@ -36,6 +36,104 @@ IdModule  = PIN_ARRAY_3X1;
 EndCmp
 
 BeginCmp
+TimeStamp = /51B918BE;
+Reference = K3;
+ValeurCmp = SERVO_1;
+IdModule  = PIN_ARRAY_3X1;
+EndCmp
+
+BeginCmp
+TimeStamp = /51B918C5;
+Reference = K4;
+ValeurCmp = SERVO_2;
+IdModule  = PIN_ARRAY_3X1;
+EndCmp
+
+BeginCmp
+TimeStamp = /51B918CB;
+Reference = K5;
+ValeurCmp = SERVO_3;
+IdModule  = PIN_ARRAY_3X1;
+EndCmp
+
+BeginCmp
+TimeStamp = /51B91000;
+Reference = K6;
+ValeurCmp = SERVO_4;
+IdModule  = PIN_ARRAY_3X1;
+EndCmp
+
+BeginCmp
+TimeStamp = /51B91021;
+Reference = K7;
+ValeurCmp = SERVO_5;
+IdModule  = PIN_ARRAY_3X1;
+EndCmp
+
+BeginCmp
+TimeStamp = /51B91027;
+Reference = K8;
+ValeurCmp = SERVO_6;
+IdModule  = PIN_ARRAY_3X1;
+EndCmp
+
+BeginCmp
+TimeStamp = /51B92A38;
+Reference = K9;
+ValeurCmp = IR3;
+IdModule  = PIN_ARRAY_3X1;
+EndCmp
+
+BeginCmp
+TimeStamp = /51B92A3E;
+Reference = K10;
+ValeurCmp = IR4;
+IdModule  = PIN_ARRAY_3X1;
+EndCmp
+
+BeginCmp
+TimeStamp = /51B98906;
+Reference = K11;
+ValeurCmp = CNY_1;
+IdModule  = PIN_ARRAY_3X1;
+EndCmp
+
+BeginCmp
+TimeStamp = /51B9890D;
+Reference = K12;
+ValeurCmp = CNY_2;
+IdModule  = PIN_ARRAY_3X1;
+EndCmp
+
+BeginCmp
+TimeStamp = /51B98913;
+Reference = K13;
+ValeurCmp = CNY_3;
+IdModule  = PIN_ARRAY_3X1;
+EndCmp
+
+BeginCmp
+TimeStamp = /51B988E5;
+Reference = K14;
+ValeurCmp = CNY_4;
+IdModule  = PIN_ARRAY_3X1;
+EndCmp
+
+BeginCmp
+TimeStamp = /51B988EC;
+Reference = K15;
+ValeurCmp = CNY_5;
+IdModule  = PIN_ARRAY_3X1;
+EndCmp
+
+BeginCmp
+TimeStamp = /51B988F2;
+Reference = K16;
+ValeurCmp = CNY_6;
+IdModule  = PIN_ARRAY_3X1;
+EndCmp
+
+BeginCmp
 TimeStamp = /51B84C2F;
 Reference = L1;
 ValeurCmp = 100uH;
@@ -68,6 +166,27 @@ TimeStamp = /51B8FA82;
 Reference = P3;
 ValeurCmp = Spk;
 IdModule  = PIN_ARRAY_2X1;
+EndCmp
+
+BeginCmp
+TimeStamp = /51B93BCC;
+Reference = P4;
+ValeurCmp = I2C_1;
+IdModule  = PIN_ARRAY_4x1;
+EndCmp
+
+BeginCmp
+TimeStamp = /51B95863;
+Reference = P5;
+ValeurCmp = I2C_2;
+IdModule  = PIN_ARRAY_4x1;
+EndCmp
+
+BeginCmp
+TimeStamp = /51B9739B;
+Reference = P6;
+ValeurCmp = DHT_Conn;
+IdModule  = PIN_ARRAY_4x1;
 EndCmp
 
 BeginCmp
@@ -134,6 +253,27 @@ IdModule  = R3-LARGE_PADS;
 EndCmp
 
 BeginCmp
+TimeStamp = /51B93EA3;
+Reference = R10;
+ValeurCmp = R;
+IdModule  = R3-LARGE_PADS;
+EndCmp
+
+BeginCmp
+TimeStamp = /51B93EB2;
+Reference = R11;
+ValeurCmp = R;
+IdModule  = R3-LARGE_PADS;
+EndCmp
+
+BeginCmp
+TimeStamp = /51B97512;
+Reference = R12;
+ValeurCmp = 10k;
+IdModule  = R3-LARGE_PADS;
+EndCmp
+
+BeginCmp
 TimeStamp = /51B84CE1;
 Reference = SHIELD1;
 ValeurCmp = ARDUINO_MEGA_SHIELD;
@@ -145,6 +285,20 @@ TimeStamp = /51B8A3AE;
 Reference = SW1;
 ValeurCmp = PowerSwitch;
 IdModule  = MICROSWITCH_SPST;
+EndCmp
+
+BeginCmp
+TimeStamp = /51B96759;
+Reference = SW2;
+ValeurCmp = SW_PUSH;
+IdModule  = SW_PUSH_SMALL;
+EndCmp
+
+BeginCmp
+TimeStamp = /51B907A6;
+Reference = SW3;
+ValeurCmp = SW_PUSH;
+IdModule  = SW_PUSH_SMALL;
 EndCmp
 
 BeginCmp
