@@ -1,4 +1,4 @@
-EESchema Schematic File Version 2  date jue 13 jun 2013 11:29:49 CEST
+EESchema Schematic File Version 2  date jue 13 jun 2013 23:11:20 CEST
 LIBS:LED_RGB
 LIBS:vreg
 LIBS:arduino_shieldsNCL
@@ -164,7 +164,7 @@ L CP1 C2
 U 1 1 51B84E73
 P 3950 2750
 F 0 "C2" H 4000 2850 50  0000 L CNN
-F 1 "100uF" H 4000 2650 50  0000 L CNN
+F 1 "1000uF" H 4000 2650 50  0000 L CNN
 F 2 "" H 3950 2750 60  0001 C CNN
 F 3 "" H 3950 2750 60  0001 C CNN
 	1    3950 2750

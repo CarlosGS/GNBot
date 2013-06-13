@@ -1,7 +1,7 @@
 (export (version D)
   (design
     (source /home/carlosgs/GitRepos/GNBot/Electronics/GNBoard/GNBoard.sch)
-    (date "jue 13 jun 2013 11:29:48 CEST")
+    (date "jue 13 jun 2013 23:04:35 CEST")
     (tool "eeschema (2013-mar-13)-testing"))
   (components
     (comp (ref D1)
@@ -10,7 +10,7 @@
       (sheetpath (names /) (tstamps /))
       (tstamp 51B851F9))
     (comp (ref C2)
-      (value 100uF)
+      (value 1000uF)
       (libsource (lib device) (part CP1))
       (sheetpath (names /) (tstamps /))
       (tstamp 51B84E73))
@@ -257,6 +257,15 @@
         (pin (num 3) (name GND) (type power_in))
         (pin (num 4) (name FB) (type input))
         (pin (num 5) (name ON/OFF) (type input))))
+    (libpart (lib LED_RGB) (part LED_RCGB)
+      (fields
+        (field (name Reference) LED)
+        (field (name Value) LED_RCGB))
+      (pins
+        (pin (num 1) (name R) (type passive))
+        (pin (num 2) (name C) (type passive))
+        (pin (num 3) (name G) (type passive))
+        (pin (num 4) (name B) (type passive))))
     (libpart (lib arduino_shieldsNCL) (part ARDUINO_MEGA_SHIELD)
       (fields
         (field (name Reference) SHIELD)
@@ -344,15 +353,6 @@
         (pin (num GND5) (name GND5) (type power_in))
         (pin (num RST) (name RST) (type input))
         (pin (num V_IN) (name V_IN) (type power_in))))
-    (libpart (lib LED_RGB) (part LED_RCGB)
-      (fields
-        (field (name Reference) LED)
-        (field (name Value) LED_RCGB))
-      (pins
-        (pin (num 1) (name R) (type passive))
-        (pin (num 2) (name C) (type passive))
-        (pin (num 3) (name G) (type passive))
-        (pin (num 4) (name B) (type passive))))
     (libpart (lib device) (part CP1)
       (description "Condensateur polarise")
       (footprints
@@ -475,10 +475,10 @@
         (pin (num 4) (name ~) (type passive))
         (pin (num 5) (name ~) (type passive)))))
   (libraries
-    (library (logical LED_RGB)
-      (uri /home/carlosgs/GitRepos/GNBot/Electronics/KicadLibs/RaronLibs/LED_RGB/LED_RGB.lib))
     (library (logical vreg)
       (uri /home/carlosgs/GitRepos/GNBot/Electronics/KicadLibs/VREG/vreg.lib))
+    (library (logical LED_RGB)
+      (uri /home/carlosgs/GitRepos/GNBot/Electronics/KicadLibs/RaronLibs/LED_RGB/LED_RGB.lib))
     (library (logical device)
       (uri /usr/share/kicad/library/device.lib))
     (library (logical arduino_shieldsNCL)
