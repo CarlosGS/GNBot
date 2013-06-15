@@ -1,0 +1,38 @@
+Cmp-Mod V01 Created by CvPcb (2013-mar-13)-testing date = vie 14 jun 2013 17:43:20 CEST
+
+BeginCmp
+TimeStamp = /51BB34A1;
+Reference = P1;
+ValeurCmp = LDR1;
+IdModule  = LDR_2pin_connector;
+EndCmp
+
+BeginCmp
+TimeStamp = /51BB34E2;
+Reference = P2;
+ValeurCmp = LDR2;
+IdModule  = LDR_2pin_connector;
+EndCmp
+
+BeginCmp
+TimeStamp = /51BB34E8;
+Reference = P3;
+ValeurCmp = LDR3;
+IdModule  = LDR_2pin_connector;
+EndCmp
+
+BeginCmp
+TimeStamp = /51BB34EE;
+Reference = P4;
+ValeurCmp = LDR4;
+IdModule  = LDR_2pin_connector;
+EndCmp
+
+BeginCmp
+TimeStamp = /51BB3492;
+Reference = P5;
+ValeurCmp = LDR_conn;
+IdModule  = PIN_ARRAY_5x1;
+EndCmp
+
+EndListe

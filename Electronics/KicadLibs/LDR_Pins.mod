@@ -1,0 +1,36 @@
+PCBNEW-LibModule-V1  vie 14 jun 2013 17:42:49 CEST
+# encoding utf-8
+Units mm
+$INDEX
+LDR_2pin_connector
+$EndINDEX
+$MODULE LDR_2pin_connector
+Po 0 0 0 15 51BB38B8 00000000 ~~
+Li LDR_2pin_connector
+Cd Connector for LDR
+Kw CONN DEV
+Sc 0
+AR /51BB34E2
+Op 0 0 0
+T0 0 -1.905 0.762 0.762 0 0.1524 N V 21 N "P2"
+T1 0 -1.905 0.762 0.762 0 0.1524 N I 21 N "LDR2"
+DS -2.54 1.27 -2.54 -1.27 0.1524 21
+DS -2.54 -1.27 2.54 -1.27 0.1524 21
+DS 2.54 -1.27 2.54 1.27 0.1524 21
+DS 2.54 1.27 -2.54 1.27 0.1524 21
+$PAD
+Sh "1" C 1.6 1.6 0 0 0
+Dr 0.6 0 0
+At STD N 00E0FFFF
+Ne 1 "GND"
+Po -1.27 0
+$EndPAD
+$PAD
+Sh "2" C 1.5 1.5 0 0 0
+Dr 0.6 0 0
+At STD N 00E0FFFF
+Ne 2 "N-000001"
+Po 1.27 0
+$EndPAD
+$EndMODULE LDR_2pin_connector
+$EndLIBRARY
