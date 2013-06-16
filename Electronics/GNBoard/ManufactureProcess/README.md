@@ -21,7 +21,7 @@ Manufacture process for the GNBoard v0.1
 
 ![ScreenShot](https://github.com/carlosgs/GNBot/raw/master/Electronics/GNBoard/ManufactureProcess/finishedGNBoardV0.1.jpg)
 
-Here you can see in detail a pad that was cut due to a bug in the software:
+Here you can see in detail a pad that was cut due to a bug in the software. _The big decoupling capacitor was a previous try to fix the problem_
 ![ScreenShot](https://github.com/carlosgs/GNBot/raw/master/Electronics/GNBoard/ManufactureProcess/cuttedPad.jpg)
 
 License  
