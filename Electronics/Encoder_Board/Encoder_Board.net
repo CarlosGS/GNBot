@@ -1,0 +1,36 @@
+# EESchema Netlist Version 1.1 created  Mon 17 Jun 2013 16:11:43 CEST
+(
+ ( /51BF124D cny70-4 11 CNY70_s1
+  ( A +5V )
+  ( C +5V )
+  ( E N-000001 )
+  ( K N-000004 )
+ )
+ ( /51BF17EB PIN_ARRAY_3X1 K1 CONN_3
+  ( 1 N-000001 )
+  ( 2 +5V )
+  ( 3 GND )
+ )
+ ( /51BF124F R3-LARGE_PADS R1 R_led_s1
+  ( 1 GND )
+  ( 2 N-000004 )
+ )
+ ( /51BF124E R3-LARGE_PADS R3 R_led_s1
+  ( 1 GND )
+  ( 2 N-000001 )
+ )
+)
+*
+{ Allowed footprints by component:
+$component R1
+ R?
+ SM0603
+ SM0805
+$endlist
+$component R3
+ R?
+ SM0603
+ SM0805
+$endlist
+$endfootprintlist
+}

@@ -7,7 +7,7 @@ t=1;// layer width and gap width
 n=20;// number of twisty shapes around the circle
 m=50;// number of bendy parts around the circle
 
-internal_radius = 3; //9
+internal_radius = 6; //9
 
 pi=3.14159;
 rr=pi*r2/n;

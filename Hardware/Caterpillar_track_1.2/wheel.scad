@@ -7,7 +7,7 @@ t=1;// layer width and gap width
 n=20;// number of twisty shapes around the circle
 m=21;// number of bendy parts around the circle
 
-internal_radius = 3*0.95;	// 0.95 factor is to make the contact point between the
+internal_radius = 6*0.95;	// 0.95 factor is to make the contact point between the
 							// track and the wheel in the center rather than the sides
 
 pi=3.14159;
