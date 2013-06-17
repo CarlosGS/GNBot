@@ -1,0 +1,31 @@
+Cmp-Mod V01 Created by CVpcb (20090216-final) date = Mon 17 Jun 2013 16:11:43 CEST
+
+BeginCmp
+TimeStamp = /51BF124D;
+Reference = 11;
+ValeurCmp = CNY70_s1;
+IdModule  = cny70-4;
+EndCmp
+
+BeginCmp
+TimeStamp = /51BF17EB;
+Reference = K1;
+ValeurCmp = CONN_3;
+IdModule  = PIN_ARRAY_3X1;
+EndCmp
+
+BeginCmp
+TimeStamp = /51BF124F;
+Reference = R1;
+ValeurCmp = R_led_s1;
+IdModule  = R3-LARGE_PADS;
+EndCmp
+
+BeginCmp
+TimeStamp = /51BF124E;
+Reference = R3;
+ValeurCmp = R_led_s1;
+IdModule  = R3-LARGE_PADS;
+EndCmp
+
+EndListe

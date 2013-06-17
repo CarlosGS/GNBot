@@ -1,4 +1,4 @@
-update=lun 17 jun 2013 15:48:13 CEST
+update=Mon 17 Jun 2013 16:13:28 CEST
 last_client=pcbnew
 [general]
 version=1
@@ -86,9 +86,9 @@ ViaDril=250
 ViaAltD=250
 MViaDia=200
 MViaDrl=80
-Isol=60
+Isol=157
 Countlayer=2
-Lpiste=170
+Lpiste=315
 RouteTo=15
 RouteBo=0
 TypeVia=3
