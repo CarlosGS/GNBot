@@ -2,6 +2,8 @@
 // License: CC-BY-SA (http://creativecommons.org/licenses/by-sa/3.0/)
 
 #include <Servo.h>
+#include <Wire.h> //I2C Arduino Library
+#include <HMC5883L.h> //Compass library
 
 #define LED_PIN 13
 
@@ -23,6 +25,58 @@
 Servo Servo1;
 Servo Servo2;
 
+// Magnetometer
+// Store our compass as a variable.
+HMC5883L compass;
+float declinationAngle = 0;
+float readMagnetometer() {
+  // Retrived the scaled values from the compass (scaled to the configured scale).
+  MagnetometerScaled scaled = compass.ReadScaledAxis();
+  float heading = atan2(scaled.YAxis, scaled.XAxis);
+  
+  // Once you have your heading, you must then add your 'Declination Angle', which is the 'compassError' of the magnetic field in your location.
+  // Find yours here: http://www.magnetic-declination.com/
+  // Mine is: 2� 37' W, which is 2.617 Degrees, or (which we need) 0.0456752665 radians, I will use 0.0457
+  // If you cannot find your Declination, comment out these two lines, your compass will be slightly off.
+  //float declinationAngle = 0;
+  heading += declinationAngle;
+  
+  // Correct for when signs are reversed.
+  if(heading < 0)
+    heading += 2*PI;
+    
+  // Check for wrap due to addition of declination.
+  if(heading > 2*PI)
+    heading -= 2*PI;
+   
+  // Convert radians to degrees for readability.
+  float headingDegrees = heading * 180/M_PI;
+  return headingDegrees;
+}
+// Record any compassErrors that may occur in the compass.
+int compassError = 0;
+void setupMagnetometer() {
+  Serial.println("Starting the I2C interface.");
+  Wire.begin(); // Start the I2C interface.
+  
+  Serial.println("Constructing new HMC5883L");
+  compass = HMC5883L(); // Construct a new HMC5883 compass.
+  
+  Serial.println("Setting scale to +/- 1.3 Ga");
+  compassError = compass.SetScale(1.3); // Set the scale of the compass.
+  if(compassError != 0) // If there is an compassError, print it out.
+    Serial.println(compass.GetErrorText(compassError));
+    
+  Serial.println("Setting measurement mode to continous.");
+  compassError = compass.SetMeasurementMode(Measurement_Continuous); // Set the measurement mode to Continuous
+  if(compassError != 0) // If there is an compassError, print it out.
+    Serial.println(compass.GetErrorText(compassError));
+    
+  // Set our initial offset angle
+  MagnetometerScaled scaled = compass.ReadScaledAxis();
+  float heading = atan2(scaled.YAxis, scaled.XAxis);
+  declinationAngle -= heading;
+}
 
 // Music notes
 #define DO 262
@@ -110,9 +164,11 @@ void setup() {
   digitalWrite(LED_PIN, LOW);
   
   randomSeed(analogRead(A5));
-  ledRandom(255/10);
+  ledRandom(255/50);
   
-  //wait_for_button_press();
+  wait_for_button_press();
+  playMusicScale(60);
+  playInvertedMusicScale(30);
   
   Servo1.attach(SERVO_1_PIN);
   Servo2.attach(SERVO_2_PIN);
@@ -121,7 +177,9 @@ void setup() {
   Servo1.write(90);
   Servo2.write(90);
   
-  wait_for_button_press();
+  setupMagnetometer();
+  
+  //wait_for_button_press();
 }
 
 float mapf(float x, float in_min, float in_max, float out_min, float out_max)
@@ -129,29 +187,55 @@ float mapf(float x, float in_min, float in_max, float out_min, float out_max)
   return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 }
 
+float getBatteryVoltage() {
+  int val = analogRead(BATTERY_PIN);
+  return mapf(val,0,1023,0,5*2);
+}
+
 void loop() {
-  ledRandom(255/5);
+  //ledRandom(255/100);
   Servo1.write(servo1pos);
   Servo2.write(servo2pos);
   
+  //if(button_is_pressed()) {
+  //  playMusicScale(60);
+  //  playInvertedMusicScale(30);
+  //}
+  
   if(button_is_pressed()) {
-    playMusicScale(60);
-    playInvertedMusicScale(30);
+    Serial.print("Analog measure: ");
+    int val = analogRead(BATTERY_PIN);
+    Serial.print(val);
+    Serial.print(" (");
+    float voltage = mapf(val,0,1023,0,5*2); // There is a 1/2 voltage divider
+    Serial.print(voltage);
+    Serial.print("V). \n");
+  } else {
+    Serial.print("L1:");
+    Serial.print(analogRead(A1));
+    Serial.print(" L2:");
+    Serial.print(analogRead(A2));
+    Serial.print(" L3:");
+    Serial.print(analogRead(A3));
+    Serial.print(" L4:");
+    Serial.print(analogRead(A4));
+    
+    Serial.print(" M:");
+    float M_degrees = readMagnetometer();
+    Serial.print(M_degrees);
+    
+    ledRandom(255.f*0.5f*float(M_degrees/360.f));
+    
+    Serial.print(" V:");
+    Serial.print(getBatteryVoltage());
+    
+    Serial.print("\n");
   }
-  
-  Serial.print("Analog measure: ");
-  int val = analogRead(BATTERY_PIN);
-  Serial.print(val);
-  Serial.print(" (");
-  float voltage = mapf(val,0,1023,0,5*2); // There is a 1/2 voltage divider
-  Serial.print(voltage);
-  Serial.print("V). ");
-  
   servo1pos += servo1inc;
   servo2pos += servo2inc;
   int servodiff = 20;
   if(servo1pos > 90+servodiff || servo1pos < 90-servodiff) servo1inc *= -1;
   if(servo2pos > 90+servodiff || servo2pos < 90-servodiff) servo2inc *= -1;
   
-  delay(100);
+  delay(10);
  }
