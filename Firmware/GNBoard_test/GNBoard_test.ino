@@ -180,6 +180,7 @@ void setup() {
   setupMagnetometer();
   
   //wait_for_button_press();
+  ledRandom(0);
 }
 
 float mapf(float x, float in_min, float in_max, float out_min, float out_max)
@@ -187,8 +188,16 @@ float mapf(float x, float in_min, float in_max, float out_min, float out_max)
   return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 }
 
+float analogReadAverage(int pin, int samples) {
+  int result = 0;
+  for(int i=0; i<samples; i++) {
+    result += analogRead(pin);
+  }
+  return float(result)/float(samples);
+}
+
 float getBatteryVoltage() {
-  int val = analogRead(BATTERY_PIN);
+  int val = analogReadAverage(BATTERY_PIN,5);
   return mapf(val,0,1023,0,5*2);
 }
 
@@ -204,27 +213,28 @@ void loop() {
   
   if(button_is_pressed()) {
     Serial.print("Analog measure: ");
-    int val = analogRead(BATTERY_PIN);
+    int val = analogReadAverage(BATTERY_PIN,5);
     Serial.print(val);
     Serial.print(" (");
     float voltage = mapf(val,0,1023,0,5*2); // There is a 1/2 voltage divider
     Serial.print(voltage);
     Serial.print("V). \n");
   } else {
+    int averageWindow = 5;
     Serial.print("L1:");
-    Serial.print(analogRead(A1));
+    Serial.print(analogReadAverage(A1,averageWindow));
     Serial.print(" L2:");
-    Serial.print(analogRead(A2));
+    Serial.print(analogReadAverage(A2,averageWindow));
     Serial.print(" L3:");
-    Serial.print(analogRead(A3));
+    Serial.print(analogReadAverage(A3,averageWindow));
     Serial.print(" L4:");
-    Serial.print(analogRead(A4));
+    Serial.print(analogReadAverage(A4,averageWindow));
     
     Serial.print(" M:");
     float M_degrees = readMagnetometer();
     Serial.print(M_degrees);
     
-    ledRandom(255.f*0.5f*float(M_degrees/360.f));
+    //ledRandom(255.f*0.5f*float(M_degrees/360.f));
     
     Serial.print(" V:");
     Serial.print(getBatteryVoltage());
