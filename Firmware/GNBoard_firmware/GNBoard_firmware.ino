@@ -1,4 +1,4 @@
-// GNBoard Test by Carlosgs (http://carlosgs.es)
+// GNBoard Firmware by Carlosgs (http://carlosgs.es)
 // License: CC-BY-SA (http://creativecommons.org/licenses/by-sa/3.0/)
 
 #include <Servo.h>
@@ -220,8 +220,8 @@ void loop() {
   //}
   
   if(button_is_pressed()) {
-    Serial.print("BUTTON PRESSED (+10s delay)\n\r");
-    delay(10000);
+    Serial.print("BUTTON PRESSED (+5s delay)\n\r");
+    delay(5000);
   }
   
   if(Serial.available()) {
@@ -229,7 +229,7 @@ void loop() {
     while(Serial.available())
       Serial.print((char)Serial.read());
     Serial.print("\n\r");
-    delay(1000);
+    //delay(1000);
   }
   
   int averageWindow = 5;
