@@ -155,6 +155,8 @@ void ledRandom(int maxVal) {
 int servo1pos = 90,servo1inc=1;
 int servo2pos = 90,servo2inc=-2;
 
+unsigned long iniTime;
+
 void setup() {
   delay(1000);
   
@@ -172,15 +174,17 @@ void setup() {
   
   Servo1.attach(SERVO_1_PIN);
   Servo2.attach(SERVO_2_PIN);
-  Serial.begin(9600);
+  Serial.begin(115200);//9600);
   digitalWrite(LED_PIN, HIGH);
   Servo1.write(90);
   Servo2.write(90);
   
   setupMagnetometer();
   
-  //wait_for_button_press();
+  wait_for_button_press();
   ledRandom(0);
+  
+  iniTime = millis();
 }
 
 float mapf(float x, float in_min, float in_max, float out_min, float out_max)
@@ -201,6 +205,8 @@ float getBatteryVoltage() {
   return mapf(val,0,1023,0,5*2);
 }
 
+unsigned long last_timestamp = 0;
+
 void loop() {
   //ledRandom(255/100);
   Servo1.write(servo1pos);
@@ -211,41 +217,43 @@ void loop() {
   //  playInvertedMusicScale(30);
   //}
   
-  if(button_is_pressed()) {
-    Serial.print("Analog measure: ");
-    int val = analogReadAverage(BATTERY_PIN,5);
-    Serial.print(val);
-    Serial.print(" (");
-    float voltage = mapf(val,0,1023,0,5*2); // There is a 1/2 voltage divider
-    Serial.print(voltage);
-    Serial.print("V). \n");
-  } else {
-    int averageWindow = 5;
-    Serial.print("L1:");
-    Serial.print(analogReadAverage(A1,averageWindow));
-    Serial.print(" L2:");
-    Serial.print(analogReadAverage(A2,averageWindow));
-    Serial.print(" L3:");
-    Serial.print(analogReadAverage(A3,averageWindow));
-    Serial.print(" L4:");
-    Serial.print(analogReadAverage(A4,averageWindow));
-    
-    Serial.print(" M:");
-    float M_degrees = readMagnetometer();
-    Serial.print(M_degrees);
-    
-    //ledRandom(255.f*0.5f*float(M_degrees/360.f));
-    
-    Serial.print(" V:");
-    Serial.print(getBatteryVoltage());
-    
-    Serial.print("\n");
-  }
+  int averageWindow = 5;
+  Serial.print("L1:");
+  Serial.print(analogReadAverage(A1,averageWindow));
+  Serial.print(" L2:");
+  Serial.print(analogReadAverage(A2,averageWindow));
+  Serial.print(" L3:");
+  Serial.print(analogReadAverage(A3,averageWindow));
+  Serial.print(" L4:");
+  Serial.print(analogReadAverage(A4,averageWindow));
+  
+  Serial.print(" M:");
+  float M_degrees = readMagnetometer();
+  Serial.print(M_degrees);
+  
+  //ledRandom(255.f*0.5f*float(M_degrees/360.f));
+  
+  Serial.print(" V:");
+  Serial.print(getBatteryVoltage());
+  
+  unsigned long timestamp = millis()-iniTime;
+  Serial.print(" T:");
+  Serial.print(timestamp);
+  
+  Serial.print(" diffT:");
+  Serial.print(timestamp-last_timestamp);
+  
+  last_timestamp = timestamp;
+  
+  Serial.print("\n");
+  
   servo1pos += servo1inc;
   servo2pos += servo2inc;
   int servodiff = 20;
   if(servo1pos > 90+servodiff || servo1pos < 90-servodiff) servo1inc *= -1;
   if(servo2pos > 90+servodiff || servo2pos < 90-servodiff) servo2inc *= -1;
   
-  delay(10);
+  while( (millis()-iniTime-last_timestamp) < 90 ); // Sample period: ~100ms
+  
+  //delay(10);
  }

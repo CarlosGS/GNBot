@@ -414,14 +414,6 @@ module top_plate_arduino_uno(l=2)
     //-- Captive nut for drill 3
     translate([51,-15.3,-THIN_SURFACE_H])
     cylinder(r=nut_radius, h=top_plate_thickness,center=true,$fn=6);
-
-    //-- Arduino drill 4 (bottom-right)
-    translate([51,-43.3,0])
-    cylinder(r=drill_M3/2, h=top_plate_thickness+10,center=true, $fn=20);
-
-    //-- Captive nut for drill 4
-    translate([51,-43.3,-THIN_SURFACE_H])
-    cylinder(r=nut_radius, h=top_plate_thickness,center=true,$fn=6);
    }
 
     //-- Arduino drill 3 (top-right)
