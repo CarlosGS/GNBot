@@ -28,12 +28,17 @@ for LDR_DF in getFilesInDir(LDR_DF_PATH):
     LDR_data = {}
     LDR_data = loadFromFile(LDR_DF_PATH,LDR_DF)
     
+    IR1 = 1
+    IR2 = 2
+    IR3 = 4
+    IR4 = 3
+    
     offset = 45;
     LDR_data["LDR_real_pos"] = []
-    LDR_data["LDR_real_pos"].append(offset+90*2)
-    LDR_data["LDR_real_pos"].append(offset+90*3)
-    LDR_data["LDR_real_pos"].append(offset+90*1)
     LDR_data["LDR_real_pos"].append(offset+90*0)
+    LDR_data["LDR_real_pos"].append(offset+90*1)
+    LDR_data["LDR_real_pos"].append(offset+90*3)
+    LDR_data["LDR_real_pos"].append(offset+90*2)
     
     LDR_data["description"] = LDR_data["description"].replace("\n","")
     LDR_data["description"] = LDR_data["description"].replace("\r","")
@@ -52,6 +57,9 @@ for LDR_DF in getFilesInDir(LDR_DF_PATH):
     BattVoltage_raw = np.array(LDR_data["BattVoltage_raw"])
     MagAngle_raw = np.array(LDR_data["MagAngle_raw"])
     
+    # Invert LDR sensor values from [0,1023] to [1023,0] (to have 0 -> dark, 1023 -> bright)
+    for i in range(len(LDR_raw[0,:])):
+        LDR_raw[:,i] = 1023.0-LDR_raw[:,i]
     
     # Normalize sensor values
     # NOTE: Here we are using all the values, the robot only has an incremental sequence
@@ -82,7 +90,7 @@ for LDR_DF in getFilesInDir(LDR_DF_PATH):
     plt.xlabel('Time [ms]')
     
     plt.suptitle(LDR_data["beginDate"] + " " + LDR_data["description"])
-    mySaveFig(plt,LDR_DF_PATH + "png/", "Nlights:" + str(Nlights) + " " + LDR_data["beginDate"] + "_1.png")
+    #mySaveFig(plt,LDR_DF_PATH + "png/", "Nlights:" + str(Nlights) + " " + LDR_data["beginDate"] + "_1.png")
     #plt.show()
     
     
@@ -99,11 +107,12 @@ for LDR_DF in getFilesInDir(LDR_DF_PATH):
     
     ax.set_rmax(1050)
     ax.set_theta_direction('clockwise')
+    ax.set_theta_zero_location('N')
     ax.legend()
     ax.grid(True)
     
     plt.suptitle(LDR_data["beginDate"] + " " + LDR_data["description"])
-    mySaveFig(plt,LDR_DF_PATH + "png/","Nlights:" + str(Nlights) + " " + LDR_data["beginDate"] + "_2.png")
-    #plt.show()
+    #mySaveFig(plt,LDR_DF_PATH + "png/","Nlights:" + str(Nlights) + " " + LDR_data["beginDate"] + "_2.png")
+    plt.show()
     #exit()
 
