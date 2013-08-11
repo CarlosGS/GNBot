@@ -55,8 +55,8 @@ for LDR_DF in getFilesInDir(LDR_DF_PATH):
     
     # Normalize sensor values
     # NOTE: Here we are using all the values, the robot only has an incremental sequence
-    for i in range(len(LDR_raw[0,:])):
-        LDR_raw[:,i] = mapVals(LDR_raw[:,i], LDR_raw[:,i].min(), LDR_raw[:,i].max(), 0.0, 1023.0)
+    #for i in range(len(LDR_raw[0,:])):
+    #    LDR_raw[:,i] = mapVals(LDR_raw[:,i], LDR_raw[:,i].min(), LDR_raw[:,i].max(), 0.0, 1023.0)
     
     
     fig = plt.figure()
