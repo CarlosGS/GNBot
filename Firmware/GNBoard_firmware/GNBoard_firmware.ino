@@ -57,6 +57,12 @@ float readMagnetometer() {
 }
 // Record any compassErrors that may occur in the compass.
 int compassError = 0;
+void magnetometerToZero() {
+  // Set our initial offset angle
+  MagnetometerScaled scaled = compass.ReadScaledAxis();
+  float heading = atan2(scaled.YAxis, scaled.XAxis);
+  declinationAngle = -heading;
+}
 void setupMagnetometer() {
   Serial.println("Starting the I2C interface.");
   Wire.begin(); // Start the I2C interface.
@@ -75,9 +81,7 @@ void setupMagnetometer() {
     Serial.println(compass.GetErrorText(compassError));
     
   // Set our initial offset angle
-  MagnetometerScaled scaled = compass.ReadScaledAxis();
-  float heading = atan2(scaled.YAxis, scaled.XAxis);
-  declinationAngle -= heading;
+  magnetometerToZero();
 }
 
 // Music notes
@@ -158,6 +162,24 @@ int servo1pos = 90,servo1inc=1;
 int servo2pos = 90,servo2inc=-2;
 
 unsigned long iniTime;
+unsigned long last_timestamp = 0;
+
+int loggerMode = 0;
+
+void initRobot() {
+  
+  Servo1.write(90);
+  Servo2.write(90);
+  
+  magnetometerToZero();
+  
+  loggerMode = 0;
+  
+  playMusicScale(20);
+  
+  iniTime = millis();
+  last_timestamp = 0;
+}
 
 void setup() {
   delay(1000);
@@ -170,23 +192,13 @@ void setup() {
   randomSeed(analogRead(A5));
   ledRandom(255/50);
   
-  wait_for_button_press();
-  playMusicScale(60);
-  playInvertedMusicScale(30);
+  setupMagnetometer();
   
   Servo1.attach(SERVO_1_PIN);
   Servo2.attach(SERVO_2_PIN);
   Serial.begin(9600);
-  digitalWrite(LED_PIN, HIGH);
-  Servo1.write(90);
-  Servo2.write(90);
   
-  setupMagnetometer();
-  
-  wait_for_button_press();
-  ledRandom(0);
-  
-  iniTime = millis();
+  initRobot();
 }
 
 float mapf(float x, float in_min, float in_max, float out_min, float out_max)
@@ -207,12 +219,191 @@ float getBatteryVoltage() {
   return mapf(val,0,1023,0,5*2);
 }
 
-unsigned long last_timestamp = 0;
+char inBuffer[128] = "";
+int inBuffer_len = 0;
+
+void readLine(char *out) {
+  int gotLine = 0;
+  while(Serial.available()) {
+    char val = Serial.read();
+    if(val == '\n') {
+      gotLine = 1;
+      break;
+    }
+    if(val != '\r') {
+      inBuffer[inBuffer_len] = val;
+      inBuffer_len++;
+      //char strVal[2];
+      //strVal[0] = val;
+      //strVal[1] = '\0';
+      //strcat(inBuffer,strVal);
+    }
+  }
+  if(gotLine) {
+    inBuffer[inBuffer_len] = '\0';
+    strcpy(out,inBuffer);
+    //*inBuffer = '\0';
+    inBuffer_len = 0;
+  } else
+    *out = '\0';
+}
+
+char buffer[128];
 
 void loop() {
+  
+  readLine(buffer);
+  if(strlen(buffer) > 0) {
+    // Process commands
+    char sep[] = ": ,";
+    char *pch = strtok(buffer,sep);
+    
+    if(strcmp(pch,"Init") == 0) { // Init:TestString
+      pch = strtok(NULL,sep);
+      initRobot();
+      delay(500);
+      Serial.print("OK:");
+      Serial.print(pch);
+      Serial.print('\n');
+      
+    } else if(strcmp(pch,"Log") == 0) { // Log:[ON,OFF]
+      pch = strtok(NULL,sep);
+      if(strcmp(pch,"ON") == 0) {
+        loggerMode = 1;
+        iniTime = millis();
+        last_timestamp = 0;
+      } else {
+        loggerMode = 0;
+      }
+      Serial.print("Log:");
+      Serial.println(loggerMode);
+    
+    } else if(strcmp(pch,"Buzz") == 0) { // Buzz:N,freq,length
+      int number = 1;
+      int freq = DO;
+      int length = 60;
+      
+      pch = strtok(NULL,sep);
+      if(pch != NULL)
+        number = atoi(pch);
+      
+      pch = strtok(NULL,sep);
+      if(pch != NULL)
+        freq = atoi(pch);
+      
+      pch = strtok(NULL,sep);
+      if(pch != NULL)
+        length = atoi(pch);
+      Serial.println("Playing notes");
+      if (freq <= 0) {
+        playMusicScale(length);
+      } else {
+        for(int i=0; i<number; i++) 
+          playNote(freq,length);
+      }
+    
+    } else if(strcmp(pch,"LedRGB") == 0) { // LedRGB:R,G,B
+      int R = 20;
+      int G = 50;
+      int B = -1;
+      
+      pch = strtok(NULL,sep);
+      if(pch != NULL)
+        R = atoi(pch);
+      
+      pch = strtok(NULL,sep);
+      if(pch != NULL)
+        G = atoi(pch);
+      
+      pch = strtok(NULL,sep);
+      if(pch != NULL)
+        B = atoi(pch);
+      
+      Serial.println("Led RGB");
+      
+      if(B < 0) {
+        for(int i=0; i<R; i++) {
+          ledRandom(G);
+          delay(100);
+        }
+      } else {
+        ledColor(R,G,B);
+      }
+    
+    } else if(strcmp(pch,"Motor") == 0) { // Motor:L,R
+      int L = 0;
+      int R = 0;
+      
+      pch = strtok(NULL,sep);
+      if(pch != NULL)
+        L = atoi(pch);
+      
+      pch = strtok(NULL,sep);
+      if(pch != NULL)
+        R = atoi(pch);
+      
+      Serial.println("Motor");
+      
+      L += 90;
+      R += 90;
+      
+      L = 180-L;
+      
+      Servo1.write(L);
+      Servo2.write(R);
+      
+    } else if(strcmp(pch,"GoToAngle") == 0) { // GoToAngle:Degrees
+      float angleDest = 0;
+      float margin = 5.f;
+      
+      Serial.println("Go to angle");
+      
+      pch = strtok(NULL,sep);
+      if(pch != NULL)
+        angleDest = atoi(pch);
+      
+      pch = strtok(NULL,sep);
+      if(pch != NULL)
+        margin = (float)atoi(pch);
+      
+      float M_degrees = readMagnetometer();
+      
+      int spinVel = 10;
+      float error = angleDest-M_degrees;
+      if(abs(error) < 180.f) spinVel *= -1;
+      Servo1.write(90-spinVel);
+      Servo2.write(90-spinVel);
+      
+      
+      while(abs(error) > margin) {
+        Servo1.write(90-spinVel);
+        Servo2.write(90-spinVel);
+        delay(10);
+        M_degrees = readMagnetometer();
+        error = angleDest-M_degrees;
+      }
+      
+      Servo1.write(90);
+      Servo2.write(90);
+      
+    } else if(strcmp(pch,"MagSetZero") == 0) { // MagSetZero
+      magnetometerToZero();
+      
+    } else if(strcmp(pch,"MagSensorAngle") == 0) { // MagSensorAngle
+      delay(300);
+      float M_degrees = readMagnetometer();
+      Serial.print("M:");
+      Serial.println(M_degrees);
+      Serial.print('\n');
+    
+    } else {
+      Serial.print("ERROR\n");
+    }
+  }
+  
   //ledRandom(255/100);
-  Servo1.write(servo1pos);
-  Servo2.write(servo2pos);
+  //Servo1.write(servo1pos);
+  //Servo2.write(servo2pos);
   
   //if(button_is_pressed()) {
   //  playMusicScale(60);
@@ -224,14 +415,7 @@ void loop() {
     delay(5000);
   }
   
-  if(Serial.available()) {
-    Serial.print("RECEIVED: ");
-    while(Serial.available())
-      Serial.print((char)Serial.read());
-    Serial.print("\n\r");
-    //delay(1000);
-  }
-  
+  if(loggerMode) {
   int averageWindow = 5;
   Serial.print("L1:");
   Serial.print(analogReadAverage(A1,averageWindow));
@@ -261,6 +445,7 @@ void loop() {
   last_timestamp = timestamp;
   
   Serial.print("\n\r");
+  }
   
   servo1pos += servo1inc;
   servo2pos += servo2inc;
@@ -268,7 +453,7 @@ void loop() {
   if(servo1pos > 90+servodiff || servo1pos < 90-servodiff) servo1inc *= -1;
   if(servo2pos > 90+servodiff || servo2pos < 90-servodiff) servo2inc *= -1;
   
-  while( (millis()-iniTime-last_timestamp) < 90 ); // Sample period: ~100ms
+  while( (millis()-iniTime-last_timestamp) < 100-8 ); // Sample period: ~100ms
   
   //delay(10);
  }
