@@ -56,7 +56,7 @@ class GNBot(object):
         if not self.isConnected: return
         val = self.recvChar()
         while len(val) > 0:
-            if val != '\r' and val != '\n':
+            if val != '\r' and val != '\n': # This makes sense, right?
                 self.received_buffer += val # append characters
             val = self.recvChar()
         if self.received_buffer != "":
@@ -104,7 +104,8 @@ class GNBot(object):
 
     def send(self,line):
         if not self.isConnected: return
-        #print("SENDING: " + str(line))
+        self.flushRecvBuffer()
+        print("SENDING: " + str(line))
         self.BT_socket.send(line)
 
 

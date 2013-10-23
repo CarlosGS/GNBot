@@ -250,6 +250,9 @@ void readLine(char *out) {
 
 char buffer[128];
 
+int motors_oldL = 90;
+int motors_oldR = 90;
+
 void loop() {
   
   readLine(buffer);
@@ -349,8 +352,21 @@ void loop() {
       
       L = 180-L;
       
-      Servo1.write(L);
-      Servo2.write(R);
+
+      while(motors_oldL != L || motors_oldR != R) {
+        if(motors_oldL < L) motors_oldL++;
+        else if(motors_oldL > L) motors_oldL--;
+        Servo1.write(motors_oldL);
+        
+        if(motors_oldR < R) motors_oldR++;
+        else if(motors_oldR > R) motors_oldR--;
+        Servo2.write(motors_oldR);
+        
+        delay(50);
+      }
+      
+      motors_oldL = L;
+      motors_oldR = R;
       
     } else if(strcmp(pch,"GoToAngle") == 0) { // GoToAngle:Degrees
       float angleDest = 0;
@@ -366,25 +382,43 @@ void loop() {
       if(pch != NULL)
         margin = (float)atoi(pch);
       
-      float M_degrees = readMagnetometer();
+      
+      //float M_degrees = readMagnetometer();
       
       int spinVel = 10;
-      float error = angleDest-M_degrees;
-      if(abs(error) < 180.f) spinVel *= -1;
-      Servo1.write(90-spinVel);
-      Servo2.write(90-spinVel);
+      //float error = angleDest-M_degrees;
+      //if(abs(error) < 180.f) spinVel *= -1;
+      //Servo1.write(90-spinVel);
+      //Servo2.write(90-spinVel);
       
+      float error = 2*margin;
+      float M_degrees;
       
       while(abs(error) > margin) {
-        Servo1.write(90-spinVel);
-        Servo2.write(90-spinVel);
-        delay(10);
         M_degrees = readMagnetometer();
         error = angleDest-M_degrees;
+        if(error < 0.f) error += 360.f;
+        
+        if(abs(error) > 180.f) {
+          spinVel *= -1;
+          spinVel = spinVel/2;
+        }
+        
+        Servo1.write(90-spinVel);
+        Servo2.write(90-spinVel);
+        
+        delay(10);
       }
       
       Servo1.write(90);
       Servo2.write(90);
+      
+      Serial.print("Dest:");
+      Serial.print(angleDest);
+      Serial.print(" M:");
+      Serial.print(M_degrees);
+      Serial.print(" Error:");
+      Serial.println(error);
       
     } else if(strcmp(pch,"MagSetZero") == 0) { // MagSetZero
       magnetometerToZero();
