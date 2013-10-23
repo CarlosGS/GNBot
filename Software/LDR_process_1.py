@@ -81,28 +81,28 @@ for LDR_DF in getFilesInDir(LDR_DF_PATH):
     
     fig = plt.figure()
     
-    ax = fig.add_subplot(211)        
+    ax = fig.add_subplot(311)        
     ax.plot(time_raw,LDR_raw)
     ax.grid(True)
     plt.ylim((0,1050))
     ax.legend(["s1","s2","s3","s4"])
     plt.ylabel('Light intensity')
     
-    ax = fig.add_subplot(212)        
+    ax = fig.add_subplot(312)        
     ax.plot(time_raw,MagAngle_raw)
     ax.grid(True)
     plt.ylim((0,360))
     plt.ylabel('Compass angle [Deg]')
     
-#    ax = fig.add_subplot(313)        
-#    ax.plot(time_raw,BattVoltage_raw)
-#    ax.grid(True)
-#    plt.ylim((5,10))
-#    plt.ylabel('Battery voltage [V]')
+    ax = fig.add_subplot(313)        
+    ax.plot(time_raw,BattVoltage_raw)
+    ax.grid(True)
+    plt.ylim((5,10))
+    plt.ylabel('Battery voltage [V]')
     plt.xlabel('Time [ms]')
     
     plt.suptitle(LDR_data["beginDate"] + " " + LDR_data["description"])
-    #mySaveFig(plt,LDR_DF_PATH + "png/", "Nlights:" + str(Nlights) + " " + LDR_data["beginDate"] + "_1.png")
+    mySaveFig(plt,LDR_DF_PATH + "png/1/", "Nlights:" + str(Nlights) + " " + LDR_data["beginDate"] + "_1.png")
     #plt.show()
     
     
@@ -125,7 +125,7 @@ for LDR_DF in getFilesInDir(LDR_DF_PATH):
     ax.grid(True)
     
     plt.suptitle("Light intensity [0,1023]")
-    #mySaveFig(plt,LDR_DF_PATH + "png/","Nlights:" + str(Nlights) + " " + LDR_data["beginDate"] + "_2.png")
+    mySaveFig(plt,LDR_DF_PATH + "png/2/","Nlights:" + str(Nlights) + " " + LDR_data["beginDate"] + "_2.png")
     #plt.show()
     
     
@@ -188,7 +188,7 @@ for LDR_DF in getFilesInDir(LDR_DF_PATH):
     ax.grid(True)
     
     plt.suptitle("Light intensity [0,1023]")
-    #mySaveFig(plt,LDR_DF_PATH + "png/","Nlights:" + str(Nlights) + " " + LDR_data["beginDate"] + "_2.png")
+    mySaveFig(plt,LDR_DF_PATH + "png/3/","Nlights:" + str(Nlights) + " " + LDR_data["beginDate"] + "_3.png")
     #plt.show()
     
     
@@ -213,7 +213,7 @@ for LDR_DF in getFilesInDir(LDR_DF_PATH):
     ax.grid(True)
     
     plt.suptitle(LDR_data["beginDate"] + " " + LDR_data["description"])
-    #mySaveFig(plt,LDR_DF_PATH + "png/","Nlights:" + str(Nlights) + " " + LDR_data["beginDate"] + "_2.png")
-    plt.show()
+    mySaveFig(plt,LDR_DF_PATH + "png/4/","Nlights:" + str(Nlights) + " " + LDR_data["beginDate"] + "_4.png")
+    #plt.show()
     #exit()
 

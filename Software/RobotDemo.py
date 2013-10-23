@@ -43,14 +43,13 @@ robot.send("MagSetZero\n")
 def turn(angle):
     robot.send("GoToAngle:"+str(angle)+"\n")
     robot.send("LedRGB:255,0,0\n")
-    robot.send("Motor:20,20\n")
     time.sleep(3)
-    robot.send("Motor:0,0\n")
 
 turn(0)
 turn(90)
 turn(2*90)
 turn(3*90)
+turn(0)
 
 exit()
 
