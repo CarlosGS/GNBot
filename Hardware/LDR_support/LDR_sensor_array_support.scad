@@ -22,49 +22,46 @@ conn_length = 14;
 piece_height = 25;
 top_radius = 20;
 
+cover_thickness = 1;
+cover_margin = 1;
+cover_height = piece_height-5;
+
+module LDR_sensor_array_support() {
+    intersection() {
+        difference() {
+            cylinder(r=LDR_radius+LDR_depth,h=piece_height,$fn=50);
+            cube([LDR_width,LDR_width,100],center=true);
+
+            for (i = [0:LDR_count-1])
+              rotate([0,0,i*360/LDR_count+LDR_angle]) translate([LDR_radius+LDR_depth/2,0,piece_height/2])
+                cube([LDR_depth,LDR_width,2*piece_height],center=true);
+
+            translate([0,0,conn_height/2-0.01])
+              cube([conn_width,conn_length,conn_height],center=true);
+
+
+        }
+
+        union() {
+            cylinder(r=top_radius,h=piece_height-top_radius,$fn=50);
+            translate([0,0,piece_height-top_radius]) sphere(r=top_radius,$fn=100);
+        }
+
+    }//intersection
+}
+
+
+module LDR_sensor_array_support_cover() {
+color([0.9,0.9,0.9,0.6])
 intersection() {
     difference() {
-        cylinder(r=LDR_radius+LDR_depth,h=piece_height,$fn=50);
-        //cylinder(r=8/2,h=200,center=true,$fn=drill_resolution);
-        cube([LDR_width,LDR_width,100],center=true);
-
-        for (i = [0:LDR_count-1])
-          rotate([0,0,i*360/LDR_count+LDR_angle]) translate([LDR_radius+LDR_depth/2,0,piece_height/2])
-            cube([LDR_depth,LDR_width,2*piece_height],center=true);
-
-        //for (i = [0:2])
-        //  rotate([0,0,i*360/3+90]) translate([8,0,0])
-	     //   cylinder(r=drill_diameter/2,h=10,center=true,$fn=drill_resolution);
-
-        //translate([0,0,piece_height])
-        //  cube([13.5,13.5,4*2],center=true);
-
-        translate([0,0,conn_height/2-0.01])
-          cube([conn_width,conn_length,conn_height],center=true);
-
-
-    }
-
-    union() {
-        cylinder(r=top_radius,h=piece_height-top_radius,$fn=50);
-        translate([0,0,piece_height-top_radius]) sphere(r=top_radius,$fn=100);
+        cylinder(r=LDR_radius+LDR_depth+cover_margin+cover_thickness,h=cover_height,$fn=50);
+        translate([0,0,cover_height/2])
+            cylinder(r=LDR_radius+LDR_depth+cover_margin,h=cover_height+0.1,$fn=50,center=true);
     }
 
 }//intersection
-
-
-// http://www.thingiverse.com/thing:9347
-module roundedRect2D(size, radius)
-{
-    $fn=50;
-    x = size[0]-radius*2;
-    y = size[1]-radius*2;
-    z = size[2];
-
-    minkowski()
-    {
-        cube(size=[x,y,z],center=true);
-        cylinder(r=radius,h=0.00001);
-    }
 }
 
+LDR_sensor_array_support();
+LDR_sensor_array_support_cover();
