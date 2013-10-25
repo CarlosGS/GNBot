@@ -52,7 +52,7 @@ LDR_data["Ncircles"] = getValue("Number of circles",3)
 
 LDR_data["Speed"] = getValue("Spinning speed [-90,90]",8)
 
-LDR_data["AmbientLight"] = getValue("Ambient light [0,100]",50.0)
+LDR_data["AmbientLight"] = getValue("Ambient light [0,100]",10.0)
 
 
 Nlights = getValue("Number of lights",1)
