@@ -18,7 +18,10 @@ from helper import *
 # End modules
 
 # Begin configuration.
-LDR_DF_PATH = "./data/"
+if len(sys.argv) > 1:
+    LDR_DF_PATH = sys.argv[1]
+else:
+    LDR_DF_PATH = "./data/"
 # End configuration
 
 #plt.ion() # IMPORTANT: Enable real-time plotting
@@ -31,6 +34,8 @@ def diff(vals):
         result[i] = vals[i]-vals[i-1]
     return result
 
+max_LDR_vals = []
+lightDistance_vals = []
 
 for LDR_DF in getFilesInDir(LDR_DF_PATH):
     print("\n=====================================")
@@ -45,7 +50,7 @@ for LDR_DF in getFilesInDir(LDR_DF_PATH):
     IR3 = 4
     IR4 = 3
     
-    offset = 45;
+    offset = 45
     LDR_data["LDR_real_pos"] = []
     LDR_data["LDR_real_pos"].append(offset+90*0)
     LDR_data["LDR_real_pos"].append(offset+90*1)
@@ -101,7 +106,7 @@ for LDR_DF in getFilesInDir(LDR_DF_PATH):
     plt.ylabel('Battery voltage [V]')
     plt.xlabel('Time [ms]')
     
-    lightDistance = LDR_data["lights"][0]["distance"];
+    lightDistance = LDR_data["lights"][0]["distance"]
     
     plt.suptitle(LDR_data["beginDate"] + " " + LDR_data["description"] + " (Dist: " + str(lightDistance) + "cm)")
     mySaveFig(plt,LDR_DF_PATH + "png/1/", "Nlights:" + str(Nlights) + " " + LDR_data["beginDate"] + "_1.png")
@@ -144,7 +149,7 @@ for LDR_DF in getFilesInDir(LDR_DF_PATH):
         offset = float(LDR_real_pos[i])
         
         angle = np.radians(MagAngle_raw+offset)
-        angle = np.mod(angle, 2*np.pi);
+        angle = np.mod(angle, 2*np.pi)
         magnitude = LDR_raw[:,i]
         LDR_raw_all = np.hstack([LDR_raw_all,LDR_raw[:,i]])
         LDR_raw_angle_all = np.hstack([LDR_raw_angle_all,angle])
@@ -218,4 +223,35 @@ for LDR_DF in getFilesInDir(LDR_DF_PATH):
     mySaveFig(plt,LDR_DF_PATH + "png/4/","Nlights:" + str(Nlights) + " " + LDR_data["beginDate"] + "_4.png")
     #plt.show()
     #exit()
+    
+    max_LDR_vals.append(np.max(LDR_raw_all));
+    lightDistance_vals.append(lightDistance);
+
+
+
+
+
+
+# Linear plot
+fig = plt.figure()
+ax = fig.add_subplot(111)
+
+lightDistance_vals = np.array(lightDistance_vals)
+max_LDR_vals = np.array(max_LDR_vals)
+
+sortedIndices = np.argsort(lightDistance_vals)
+lightDistance_vals = lightDistance_vals[sortedIndices]
+max_LDR_vals = max_LDR_vals[sortedIndices]
+
+ax.plot(lightDistance_vals, max_LDR_vals, marker='x', markersize=10, ls='-')
+
+plt.ylabel('Light intensity [0-1024]')
+plt.xlabel('Distance [cm]')
+
+plt.suptitle("Max intensity of light vs Distance")
+mySaveFig(plt,LDR_DF_PATH + "png/","Max_intensity_vs_distance.png")
+
+plt.ylim((0,1024))
+plt.xlim((0,400))
+mySaveFig(plt,LDR_DF_PATH + "png/","Max_intensity_vs_distance_range.png")
 
