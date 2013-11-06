@@ -12,7 +12,7 @@ wheel_or_diam = 3;                     //-- O-ring section diameter
 wheel_height = 2*wheel_or_diam+0;     //-- Wheel height: change the 0 for 
                                       //-- other value (0 equals minimun height)
 //-- Parameters common to all horns
-horn_drill_diam = 1.5;
+horn_drill_diam = 2.5;
 horn_height = 6;        //-- Total height: shaft + plate
 horn_plate_height = 2;  //-- plate height
 
@@ -80,7 +80,7 @@ module horn_drills(d,n,h)
     for ( i = [0 : n-1] ) {
         rotate([0,0,i*360/n])
         translate([0,d,0])
-        cylinder(r=horn_drill_diam/2, h=h+10,center=true, $fn=6);  
+        cylinder(r=horn_drill_diam/2, h=h+10,center=true, $fn=15);  
       }
   }
 }
@@ -167,7 +167,7 @@ module Servo_wheel_rounded_horn()
 
       //-- Carved circle for the Futaba rounded horn
       translate([0,0,-wheel_height/2+horn_height-horn_plate_height]) 
-       cylinder(r=rh_diam2/2+0.25, h=2*wheel_height+10,$fn=30);
+       cylinder(r=rh_diam2/2+0.25, h=2*wheel_height+10,$fn=40);
 
       //-- small drills for the rounded horn
       horn_drills(d=rounded_horn_drill_distance, n=4, h=wheel_height);
@@ -184,7 +184,7 @@ module Servo_wheel_4_arm_horn()
       raw_wheel(or_idiam=wheel_or_idiam, or_diam=wheel_or_diam, h=wheel_height);
 
       //-- Inner drill
-      cylinder(center=true, h=2*wheel_height + 10, r=a4h_center_diam/2,$fn=20);
+      cylinder(center=true, h=2*wheel_height + 10, r=a4h_center_diam/2,$fn=40);
 
       //-- substract the 4-arm servo horn
       translate([0,0,horn_height-horn_plate_height])
@@ -205,7 +205,7 @@ module Servo_wheel_6_arm_horn()
       raw_wheel(or_idiam=wheel_or_idiam, or_diam=wheel_or_diam, h=wheel_height);
 
        //-- Inner drill
-      cylinder(center=true, h=2*wheel_height + 10, r=a6h_center_diam/2,$fn=20);
+      cylinder(center=true, h=2*wheel_height + 10, r=a6h_center_diam/2,$fn=40);
 
       //-- substract the 6-arm horn
       translate([0,0,horn_height-horn_plate_height])
@@ -218,9 +218,8 @@ module Servo_wheel_6_arm_horn()
 
 
 //-- Test!
-Servo_wheel_rounded_horn();
-translate([wheel_or_idiam+10,0,0]) Servo_wheel_4_arm_horn();
-translate([-wheel_or_idiam-10,0,0]) Servo_wheel_6_arm_horn();
+Servo_wheel_4_arm_horn();
+translate([-wheel_or_idiam-10,0,0]) Servo_wheel_4_arm_horn();
 
 
 
