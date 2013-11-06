@@ -20,6 +20,8 @@ use <fake_ultrasound.scad>
 ARDUINO_OFFSET = 20;
 THIN_SURFACE_H = 0.3*4;//0.3mm x4 layers
 
+layer_height = 0.35;
+
 top_plate_thickness = 6;//4; // Thicker plate to add strength
 robot_height = 48+top_plate_thickness-4;
 ball_caster_height = robot_height-(BallSize*BallProtrude);
@@ -147,10 +149,10 @@ module rear_part()
    translate([-cylrad,rear_c2/2,-cyl_height/2 + (BallSize/2)+top_plate_thickness-3]) 
       #sphere (BallSize/2+Airgap, $fa=5, $fs=0.1);
 
-   translate([-cylrad,rear_c2/2,-cyl_height/2 + (BallSize/2)+top_plate_thickness-3]) 
+   translate([-cylrad,rear_c2/2,-cyl_height/2+top_plate_thickness+BallSize/3]) 
    difference() {
         scale([1,1,-1]) cylinder(r=cylrad+5, h=ball_caster_height);
-        translate([0,0,10])
+        translate([0,0,9])
         sphere (cylrad+5, $fa=5, $fs=0.1);
    }
 
@@ -251,13 +253,13 @@ rotate([90,0,90])
    //-- open manually
    translate([battery_c1+battery_ear_diam/2,
               (rear_c2-battery_c2)/2+battery_ear_diam/2,
-              servo_c1-rear_c3+2-0.4])
-    cylinder(r=drill_M3/2,h=0.4, $fn=20);
+              servo_c1-rear_c3+2-layer_height])
+    cylinder(r=drill_M3/2,h=layer_height, $fn=20);
 
    translate([battery_c1+battery_ear_diam/2,
               (rear_c2-battery_c2)/2+battery_ear_diam/2+battery_c2-battery_ear_diam,
-              servo_c1-rear_c3+2-0.4])
-    cylinder(r=drill_M3/2,h=0.4, $fn=20);
+              servo_c1-rear_c3+2-layer_height])
+    cylinder(r=drill_M3/2,h=layer_height, $fn=20);
     
 }
 
