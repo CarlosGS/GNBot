@@ -34,6 +34,9 @@ def diff(vals):
         result[i] = vals[i]-vals[i-1]
     return result
 
+
+POLAR_DISTANCE_RANGE = 600 # This sets the scale of distance of the lights shown in the polar plot
+
 max_LDR_vals = []
 lightDistance_vals = []
 
@@ -123,7 +126,7 @@ for LDR_DF in getFilesInDir(LDR_DF_PATH):
         ax.plot(np.radians(MagAngle_raw+offset), LDR_raw[:,i], marker='.', markersize=2, ls='', label="Sensor "+str(i+1))
     
     for light in LDR_data["lights"]:
-        ax.plot(np.radians(light["angle"]), 1024+1050.0*light["distance"]/150.0, marker='o', markersize=50.0*(light["intensity"]/100.0), ls='')
+        ax.plot(np.radians(light["angle"]), 1024+1050.0*light["distance"]/POLAR_DISTANCE_RANGE, marker='o', markersize=50.0*(light["intensity"]/100.0), ls='')
     #plt.ylim((0,2*1050))
     ax.set_rmax(2*1050)
     ax.set_theta_direction('clockwise')
@@ -186,7 +189,7 @@ for LDR_DF in getFilesInDir(LDR_DF_PATH):
     ax.plot(roots, fit_pol(roots), marker='x', markersize=10, ls='', label="Roots")
     
     for light in LDR_data["lights"]:
-        ax.plot(np.radians(light["angle"]), 1024+1050.0*light["distance"]/150.0, marker='o', markersize=50.0*(light["intensity"]/100.0), ls='')
+        ax.plot(np.radians(light["angle"]), 1024+1050.0*light["distance"]/POLAR_DISTANCE_RANGE, marker='o', markersize=50.0*(light["intensity"]/100.0), ls='')
     #plt.ylim((0,2*1050))
     ax.set_rmax(2*1050)
     ax.set_theta_direction('clockwise')
@@ -213,7 +216,7 @@ for LDR_DF in getFilesInDir(LDR_DF_PATH):
     ax.plot(roots, fit_pol(roots), marker='x', markersize=10, ls='', label="Roots")
     
     for light in LDR_data["lights"]:
-        ax.plot(np.radians(light["angle"]), 1024+1050.0*light["distance"]/150.0, marker='o', markersize=50.0*(light["intensity"]/100.0), ls='')
+        ax.plot(np.radians(light["angle"]), 1024+1050.0*light["distance"]/POLAR_DISTANCE_RANGE, marker='o', markersize=50.0*(light["intensity"]/100.0), ls='')
     plt.ylim((0,2*1050))
     
     ax.legend()
