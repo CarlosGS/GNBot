@@ -56,9 +56,13 @@ def strTypeMatches(string,typeReq):
         return False
     return True
 
-def getValue(description,default):
+# Ask user for a value (only allowing same type as the specified default)
+def getValue(description,default,dontAsk=False):
+    if dontAsk:
+        print("\n" + description + " (Using default: " + str(default) + ")\n")
+        return default
     validType = type(default)
-    print("\n"+description + " ([Enter] for default: " + str(default) + "):")
+    print("\n" + description + " ([Enter] for default: " + str(default) + "):")
     string = sys.stdin.readline()
     if len(string) == 1: # Pressed enter
         print("Using the default.\n")

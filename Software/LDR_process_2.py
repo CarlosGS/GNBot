@@ -252,6 +252,6 @@ plt.suptitle("Max intensity of light vs Distance")
 mySaveFig(plt,LDR_DF_PATH + "png/","Max_intensity_vs_distance.png")
 
 plt.ylim((0,1024))
-plt.xlim((0,400))
+plt.xlim((0,650))
 mySaveFig(plt,LDR_DF_PATH + "png/","Max_intensity_vs_distance_range.png")
 
