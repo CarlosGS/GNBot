@@ -229,6 +229,25 @@ for LDR_DF in getFilesInDir(LDR_DF_PATH):
     
     plt.suptitle(LDR_data["beginDate"] + " " + LDR_data["description"] + " (Dist: " + str(lightDistance) + "cm)")
     mySaveFig(plt,LDR_DF_PATH + "png/4/","Nlights:" + str(Nlights) + " " + LDR_data["beginDate"] + "_4.png")
+    
+    
+    
+    
+        # Linear plot
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    
+    ax.plot(np.degrees(LDR_raw_angle_all), LDR_raw_all, marker='.', markersize=1.5, ls='', label="Datapoints")
+    
+    for light in LDR_data["lights"]:
+        ax.plot(light["angle"], 1024+1050.0*light["distance"]/POLAR_DISTANCE_RANGE, marker='o', markersize=50.0*(light["intensity"]/100.0), ls='')
+    plt.ylim((0,1024))
+    
+    ax.legend()
+    ax.grid(True)
+    
+    plt.suptitle(LDR_data["beginDate"] + " " + LDR_data["description"] + " (Dist: " + str(lightDistance) + "cm)")
+    mySaveFig(plt,LDR_DF_PATH + "png/5/","Nlights:" + str(Nlights) + " " + LDR_data["beginDate"] + "_4.png")
     #plt.show()
     #exit()
     
