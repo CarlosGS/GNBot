@@ -32,8 +32,9 @@ def saveToFile_noBak(data,path,filename):
         return ret
     raise Exception("Could not save " + path + filename)
 
+# Gets the date as a string (i.e. "2013-11-21 19:57:39.982591")
 def getDate():
-    return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S");
+    return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
 
 def saveToFile(data,path,filename):
     backupFilePath = path+"bak/"
@@ -83,7 +84,7 @@ def mySaveFig(plt,path,file):
 
 
 def discretizePolar(angle, intensity, Nsamples, radians = False):
-    # Note: assumes angle = np.mod(angle, 2*np.pi);
+    # Note: assumes angle = np.mod(angle, 2*np.pi)
     if not radians:
         angleInc = 360./float(Nsamples)
     else:
@@ -118,7 +119,7 @@ def plotClosedLine(ax, angs, vals, lab=None):
 
 # Linear interpolation of intermediate values
 def eval_intensity(vals, angle):
-    angle = np.mod(angle, 360.);
+    angle = np.mod(angle, 360.)
     Nsamples = vals.size
     inc = 360./float(Nsamples)
     prev = np.floor(angle/inc)
@@ -131,7 +132,7 @@ def lightModelCurve(Nsamples, angle=0, distance=1, intensity=1, ambient=0):
     vals = np.zeros(Nsamples)
     angs = np.arange(0., 360., 360./float(Nsamples))
     angs -= angle
-    angs = np.mod(angs, 360.);
+    angs = np.mod(angs, 360.)
     
     ambient = float(ambient)
     
@@ -146,7 +147,7 @@ def lightModelCurve(Nsamples, angle=0, distance=1, intensity=1, ambient=0):
         else:
             vals[i] = ambient
     angs += angle
-    angs = np.mod(angs, 360.);
+    angs = np.mod(angs, 360.)
     return (angs,vals)
 
 # Be careful with this function

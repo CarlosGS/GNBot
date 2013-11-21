@@ -32,51 +32,22 @@ while robot.connect() == -1:
 # Callback to close the connection when force-quitting
 def exitCallback():
     print("Closing connection...")
-    robot.send("Init:ByeBye!\n") # This will stop the robot
+    robot.send("Init:ByeBye!\n") # This will reset the robot, stopping all commands, motions.. etc
     robot.disconnect()
-
 atexit.register(exitCallback)
+
+
+
+
+print("Position the robot pointing to north and press enter!")
+val = sys.stdin.readline()
 
 # Set compass to zero
 robot.send("MagSetZero\n")
 
 
-# Variable to store all the data for each experiment
-LDR_data = {}
-
-print(" ---- Parameters for the experiment ----")
-
-LDR_data["description"] = getValue("Description:","Generic experiment")
-
-LDR_data["Ncircles"] = getValue("Number of circles",3)
-
-LDR_data["Speed"] = getValue("Spinning speed [-90,90]",8)
-
-LDR_data["AmbientLight"] = getValue("Ambient light [0,100]",10.0)
-
-
-Nlights = getValue("Number of lights",1)
-
-LDR_data["lights"] = []
-
-for i in range(Nlights):
-    light = {}
-    print("Angle of light "+str(i+1)+". Point the robot towards it and press enter...")
-    val = sys.stdin.readline()
-    angle = robot.getMagSensorAngle()
-
-    light["angle"] = getValue("Angle of light "+str(i+1)+" [0,360]",float(angle))
-    light["distance"] = getValue("Distance of light "+str(i+1)+" [cm]",50.0)
-    light["intensity"] = getValue("Intensity of light "+str(i+1)+" [0,100]",50.0)
-    LDR_data["lights"].append(light)
-
-
-#LDR_data["LDR_real_pos"] = []
-#LDR_data["LDR_real_pos"].append(45)
-#LDR_data["LDR_real_pos"].append(45*2)
-#LDR_data["LDR_real_pos"].append(45*3)
-#LDR_data["LDR_real_pos"].append(45*4)
-
+print("Move it and press enter to auto-center!")
+val = sys.stdin.readline()
 
 # Point robot to the origin
 correct = False
@@ -87,36 +58,45 @@ while not correct:
     correct = getValue("Is it almost zero? {1,0}",1)
 
 
+# Variable to store all the data for each experiment
+Position_data = {}
+
+print(" ---- Parameters for the experiment ----")
+dontAsk=True # This setting can select if the user is asked to modify/check the parameters
+Position_data["description"] = getValue("Description:","Robot localization",dontAsk)
+
+Position_data["motion"]["L"] = getValue("Left motor speed [-90,90]",0,dontAsk)
+Position_data["motion"]["R"] = getValue("Right motor speed [-90,90]",0,dontAsk)
+
+Position_data["environment"]["AmbientLight"] = getValue("Ambient light [0,100]",10.0,dontAsk)
+
 print("Press enter to begin the experiment!")
 val = sys.stdin.readline()
 
-
-LDR_data["beginDate"] = getDate()
+# Record the date and time of the beginning of the experiment
+Position_data["date"]["start"] = getDate()
 
 
 # Turn of the LED to avoid light interference
 robot.send("LedRGB:0,0,0\n")
 
-# Set compass to zero
-#robot.send("MagSetZero\n")
-
-# Reset the timer
+# Reset the timer [? TODO check and explain this!]
 robot.send("Log:OFF\n")
 
 # Set the motion
-robot.send("Motor:"+str(LDR_data["Speed"])+","+str(-LDR_data["Speed"])+"\n")
+robot.send("Motor:"+str(Position_data["motion"]["L"])+","+str(-Position_data["motion"]["R"])+"\n")
 
 # Begin logging
 robot.send("Log:ON\n")
 
 N_LDR = 4;
 
-LDR_data["LDR_raw"] = []
-LDR_data["MagAngle_raw"] = []
-LDR_data["BattVoltage_raw"] = []
-LDR_data["time_raw"] = []
+Position_data["LDR_raw"] = []
+Position_data["MagAngle_raw"] = []
+Position_data["BattVoltage_raw"] = []
+Position_data["time_raw"] = []
 
-N_circles = LDR_data["Ncircles"]
+N_circles = Position_data["Ncircles"]
 
 angle = 0
 
@@ -137,18 +117,18 @@ while 1:
                 if i < N_LDR:
                     LDR_row[i] = float(data[1])
                 elif i == N_LDR:
-                    LDR_data["MagAngle_raw"].append(float(data[1]))
+                    Position_data["MagAngle_raw"].append(float(data[1]))
                     angle = float(data[1])
                 elif i == N_LDR+1:
-                    LDR_data["BattVoltage_raw"].append(float(data[1]))
+                    Position_data["BattVoltage_raw"].append(float(data[1]))
                 elif i == N_LDR+2:
-                    LDR_data["time_raw"].append(int(data[1]))
+                    Position_data["time_raw"].append(int(data[1]))
                 i += 1
-            LDR_data["LDR_raw"].append(LDR_row)
+            Position_data["LDR_raw"].append(LDR_row)
             #print(LDR_row)
-            #print(LDR_data["MagAngle_raw"])
-            #print(LDR_data["BattVoltage_raw"])
-            #print(LDR_data["time_raw"])
+            #print(Position_data["MagAngle_raw"])
+            #print(Position_data["BattVoltage_raw"])
+            #print(Position_data["time_raw"])
             #exit()
         else:
             print("Ignoring line!")
@@ -166,20 +146,21 @@ while 1:
         break
 
 # End logging
-robot.send("Log:ON\n")
+robot.send("Log:OFF\n")
 
 # Stop the motion
 robot.send("Motor:0,0\n")
 
-LDR_data["endDate"] = getDate()
+Position_data["date"]["end"] = getDate()
 
-for key in LDR_data.keys():
+# Show the resulting data
+for key in Position_data.keys():
     print(str(key)+":")
-    print(LDR_data[key])
+    print(Position_data[key])
 
-LDR_DF = "LDR_data_" + LDR_data["beginDate"].replace(" ", "_") + "_Nlights:" + str(Nlights) + ".p"
+LDR_DF = "Position_data_" + Position_data["date"]["start"].replace(" ", "_") + ".p"
 print("Saving data to " + LDR_DF_PATH + LDR_DF)
-saveToFile(LDR_data,LDR_DF_PATH,LDR_DF)
+saveToFile(Position_data,LDR_DF_PATH,LDR_DF)
 
 exit()
 

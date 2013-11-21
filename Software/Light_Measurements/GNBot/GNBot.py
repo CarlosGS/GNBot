@@ -1,5 +1,9 @@
 #!/usr/bin/python
 
+# This file is part of GNBot (https://github.com/carlosgs/GNBot)
+# by Carlos Garcia Saura (http://carlosgs.es)
+# CC-BY-SA license (http://creativecommons.org/licenses/by-sa/3.0/)
+
 # Begin modules
 import sys
 import time
