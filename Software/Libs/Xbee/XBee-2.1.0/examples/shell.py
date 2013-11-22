@@ -15,7 +15,7 @@ supported.
 # $Id: xbee-serial-terminal.py 7 2009-12-30 16:25:08Z amitsnyderman $
 
 import sys, time, cmd, serial, binascii
-from xbee import XBee1
+from xbee import XBee
 
 class XBeeShell(cmd.Cmd):
 	def __init__(self):
@@ -57,7 +57,7 @@ class XBeeShell(cmd.Cmd):
 			print "You must set a serial port first."
 		else:
 			while 1:
-				xbee = XBee1(self.serial)
+				xbee = XBee(self.serial)
 				packet = xbee.wait_read_frame()
 				print packet
 	

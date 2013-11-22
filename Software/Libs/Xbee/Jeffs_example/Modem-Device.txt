@@ -1,0 +1,16 @@
+# To remove comments, white spaces, and blank lines, use the following:
+#       sed '/^#/d; s/\([^$]\)#.*/\1/' Modem-Device.txt | sed 's/[ \t]*$//' > modemd.txt
+# Run this script to configure the XBee radio using the following:
+#       ./XBeeTerm.py modemd.txt
+#
+baudrate 9600       # (XBeeTerm command) set the baudrate used to comm. with the XBee
+serial /dev/ttyACM0 # (XBeeTerm command) serial device which has the XBee radio
++++             # (XBee command) enter AT command mode on the XBee
+ATRE            # (XBee command) restore XBee to factory settings
+ATID B000       # (XBee command) Set the PAN ID to eight byte hex (all XBee's must have this same value)
+ATCH 0E         # (XBee command) set the Channel ID to a four byte hex (all XBee's must have same value)
+ATPL 0          # (XBee command) power level at which the RF module transmits (0 lowest / 4 highest)
+ATWR            # (XBee command) write all the changes to the XBee non-volatile memory
+ATFR            # (XBee command) reboot XBee radio
+exit            # (XBeeTerm command) exit python shell
+

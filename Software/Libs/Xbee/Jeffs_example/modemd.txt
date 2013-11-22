@@ -1,0 +1,12 @@
+baudrate 9600
+serial /dev/ttyACM1
++++
+ATRE
+ATID B000
+ATCH 0E
+ATCH
+ATPL 0
+ATWR
+ATFR
+exit
+
