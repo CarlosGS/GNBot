@@ -1,4 +1,4 @@
-EESchema Schematic File Version 2  date jue 13 jun 2013 23:11:20 CEST
+EESchema Schematic File Version 2
 LIBS:LED_RGB
 LIBS:vreg
 LIBS:arduino_shieldsNCL
@@ -33,13 +33,13 @@ LIBS:atmel
 LIBS:contrib
 LIBS:valves
 LIBS:GNBoard-cache
-EELAYER 24 0
+EELAYER 27 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
 Sheet 1 1
 Title ""
-Date "13 jun 2013"
+Date "14 jan 2014"
 Rev ""
 Comp ""
 Comment1 ""
@@ -253,7 +253,7 @@ L R R1
 U 1 1 51B88ED1
 P 1050 4000
 F 0 "R1" V 1130 4000 40  0000 C CNN
-F 1 "6k8" V 1057 4001 40  0000 C CNN
+F 1 "62k" V 1057 4001 40  0000 C CNN
 F 2 "~" V 980 4000 30  0000 C CNN
 F 3 "~" H 1050 4000 30  0000 C CNN
 	1    1050 4000
@@ -264,7 +264,7 @@ L R R5
 U 1 1 51B88EE0
 P 1750 4000
 F 0 "R5" V 1830 4000 40  0000 C CNN
-F 1 "6k8" V 1757 4001 40  0000 C CNN
+F 1 "20k" V 1757 4001 40  0000 C CNN
 F 2 "~" V 1680 4000 30  0000 C CNN
 F 3 "~" H 1750 4000 30  0000 C CNN
 	1    1750 4000
@@ -1920,4 +1920,12 @@ Wire Notes Line
 	5650 4700 5650 3550
 Wire Notes Line
 	6550 3550 6550 4700
+Text Notes 950  1950 0    60   ~ 0
+Range: 7V-20V (Meant for 2x9V batteries)
+Text Notes 1050 2750 0    60   ~ 0
+Rated 20V
+Text Notes 1550 4150 2    60   ~ 0
+0-5V
+Text Notes 950  4150 2    60   ~ 0
+0-20V
 $EndSCHEMATC
