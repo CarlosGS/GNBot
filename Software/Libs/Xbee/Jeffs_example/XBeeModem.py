@@ -31,7 +31,7 @@ TERM_INPUT_TEXT = 'bright purple'
  
 if __name__ == '__main__':
     serial = serial.Serial()
-    serial.port = '/dev/ttyACM1'
+    serial.port = '/dev/serial/by-id/usb-Digi_XStick-if00-port0'
     serial.baudrate = 9600
     serial.timeout = 1
     serial.writeTimeout = 1

@@ -1,5 +1,5 @@
 baudrate 9600
-serial /dev/ttyACM1
+serial /dev/serial/by-id/usb-Digi_XStick-if00-port0
 +++
 ATRE
 ATID B000
