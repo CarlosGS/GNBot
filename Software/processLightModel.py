@@ -88,14 +88,21 @@ for LDR_DF in getFilesInDir(LDR_DF_PATH):
     for i in range(len(LDR_raw[0,:])):
         LDR_raw[:,i] = 1023.0-LDR_raw[:,i]
     
+    Nsamples = 100
+    
     LDR_real_pos = np.array(LDR_data["LDR_real_pos"]) # Angle offset of the sensors
     anglesIn = (MagAngle_raw+float(LDR_real_pos[3])).copy()
     intensitiesIn = np.array(LDR_raw[:,3]).copy()
-    (intensitiesOut,anglesOut) = discretizePolar(anglesIn, intensitiesIn, 360)
+    (intensitiesOut,anglesOut) = discretizePolar(anglesIn, intensitiesIn, Nsamples)
     
     intensitiesOut_fft = np.fft.rfft(intensitiesOut)
-    intensitiesOut_fft[4:] = 0.
-    intensitiesOut = np.fft.irfft(intensitiesOut_fft)
+    intensitiesOut_fft[5:] = 0.
+    print(intensitiesOut_fft)
+    #anglesOut = np.linspace(0.,360.,Nsamples*2,endpoint=False)
+    #intensitiesOut = 2*np.fft.irfft(intensitiesOut_fft,Nsamples*2)
+    
+    anglesOut = np.linspace(0.,360.,100,endpoint=False)
+    intensitiesOut = [evalIFFTpoint(angle,intensitiesOut_fft,len(intensitiesOut_fft),5) for angle in anglesOut]
     
     # Normalize sensor values
     # NOTE: Here we are using all the values, the robot only has an incremental sequence

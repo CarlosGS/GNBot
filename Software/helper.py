@@ -86,6 +86,15 @@ def mySaveFig(plt,path,file):
 def myLerp(x):
     return 
 
+# http://cnx.org/content/m12844/latest/
+def evalIFFTpoint(s_point,S_coefs,N_total,N_nonzero):
+    res = 0
+    N_total = float(N_total)
+    for k in range(N_nonzero):
+        res += S_coefs[k]*np.exp(2j*np.pi*s_point*k/N_total)
+    res = float(res / N_total)
+    return res
+
 # Input:
 # anglesIn = angles corresponding to each intensity value
 # intensitiesIn = intensity corresponding to each angle value
@@ -98,9 +107,9 @@ def discretizePolar(anglesIn, intensitiesIn, Nsamples):
     for i in range(len(anglesOut)):
         angle = anglesOut[i]
         if angle > max(anglesIn):
-            angle = angle - 360.
+            angle -= 360.
         if angle < min(anglesIn):
-            angle = angle + 360.
+            angle += 360.
         try:
             (iUpper,) = np.where(anglesIn >= angle)
             iUpper = iUpper[0]
