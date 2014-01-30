@@ -32,16 +32,6 @@ else:
 
 print("Processing file: " + LDR_DF_PATH)
 
-#plt.ion() # IMPORTANT: Enable real-time plotting
-
-def diff(vals):
-    #return np.diff(vals,axis=0)
-    #return np.abs(np.fft.fft(vals))
-    result = vals
-    for i in range(len(vals)):
-        result[i] = vals[i]-vals[i-1]
-    return result
-
 
 POLAR_DISTANCE_RANGE = 600 # This sets the scale of distance of the lights shown in the polar plot
 
@@ -98,6 +88,15 @@ for LDR_DF in getFilesInDir(LDR_DF_PATH):
     for i in range(len(LDR_raw[0,:])):
         LDR_raw[:,i] = 1023.0-LDR_raw[:,i]
     
+    LDR_real_pos = np.array(LDR_data["LDR_real_pos"]) # Angle offset of the sensors
+    anglesIn = (MagAngle_raw+float(LDR_real_pos[3])).copy()
+    intensitiesIn = np.array(LDR_raw[:,3]).copy()
+    (intensitiesOut,anglesOut) = discretizePolar(anglesIn, intensitiesIn, 360)
+    
+    intensitiesOut_fft = np.fft.rfft(intensitiesOut)
+    intensitiesOut_fft[4:] = 0.
+    intensitiesOut = np.fft.irfft(intensitiesOut_fft)
+    
     # Normalize sensor values
     # NOTE: Here we are using all the values, the robot only has an incremental sequence
     #for i in range(len(LDR_raw[0,:])):
@@ -112,6 +111,8 @@ for LDR_DF in getFilesInDir(LDR_DF_PATH):
         # NOTE: here we are incorporating the knowledge of the orientation of the sensors
         offset = float(LDR_real_pos[i])
         ax.plot(np.radians(MagAngle_raw+offset), LDR_raw[:,i], marker='.', markersize=2, ls='', label="Sensor "+str(i+1))
+    
+    ax.plot(np.radians(anglesOut), intensitiesOut, marker='o', markersize=1, ls='-', label="Model")
     
     for light in LDR_data["lights"]:
         ax.plot(np.radians(light["angle"]), 1024+1050.0*light["distance"]/POLAR_DISTANCE_RANGE, marker='o', markersize=50.0*(light["intensity"]/100.0), ls='')

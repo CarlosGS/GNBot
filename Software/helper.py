@@ -82,35 +82,41 @@ def mySaveFig(plt,path,file):
     makeDirs(path)
     plt.savefig(path+file)
 
+# Linear interpolation between two values
+def myLerp(x):
+    return 
 
-def discretizePolar(angle, intensity, Nsamples, radians = False):
-    # Note: assumes angle = np.mod(angle, 2*np.pi)
-    if not radians:
-        angleInc = 360./float(Nsamples)
-    else:
-        angleInc = (2.*np.pi)/float(Nsamples)
-    result = np.zeros(Nsamples)
-    for i in range(Nsamples):
-        angleIni = i*angleInc - angleInc/2.
-        angleEnd = angleIni + angleInc
-        (indices,) = np.where((angle >= angleIni) & (angle <= angleEnd))
-        if len(indices) > 0:
-            result[i] = np.mean(intensity[indices])
-        else:
-            result[i] = -1
-    # Interpolate empty samples
-    (emptySamples,) = np.where(np.array(result) == -1)
-    for i in emptySamples:
-        prev_i = i
-        while result[prev_i] == -1:
-            prev_i -= 1
-        next_i = i
-        while result[next_i % Nsamples] == -1:
-            next_i += 1
-        dist = next_i - prev_i
-        t = float(i - prev_i)/float(dist)
-        result[i] = result[prev_i]*t + result[next_i % Nsamples]*(1.-t)
-    return result
+# Input:
+# anglesIn = angles corresponding to each intensity value
+# intensitiesIn = intensity corresponding to each angle value
+# Nsamples = number of samples in which the periodic function will be de
+def discretizePolar(anglesIn, intensitiesIn, Nsamples):
+    # anglesOut contains the discretized 360deg circumference
+    anglesOut = np.linspace(0.,360.,Nsamples,endpoint=False)
+    # Initialize the intensities vector
+    intensitiesOut = anglesOut.copy()
+    for i in range(len(anglesOut)):
+        angle = anglesOut[i]
+        if angle > max(anglesIn):
+            angle = angle - 360.
+        if angle < min(anglesIn):
+            angle = angle + 360.
+        try:
+            (iUpper,) = np.where(anglesIn >= angle)
+            iUpper = iUpper[0]
+        except:
+            (iUpper,) = np.where(anglesIn >= angle-360.)
+            iUpper = iUpper[0]
+        try:
+            (iLower,) = np.where(anglesIn <= angle)
+            iLower = iLower[-1]
+        except:
+            (iLower,) = np.where(anglesIn <= angle+360.)
+            iLower = iLower[-1]
+        # Calculate the mean value of the nearest neighbours
+        intensity = (intensitiesIn[iUpper]+intensitiesIn[iLower])/2
+        intensitiesOut[i] = intensity
+    return (intensitiesOut,anglesOut)
 
 def plotClosedLine(ax, angs, vals, lab=None):
     angs = np.append(angs,angs[0])
