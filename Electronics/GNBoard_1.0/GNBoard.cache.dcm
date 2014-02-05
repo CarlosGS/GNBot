@@ -1,0 +1,17 @@
+EESchema-DOCLIB  Version 2.0  mié 12 jun 2013 13:54:19 CEST
+#
+$CMP CP1
+D Condensateur polarise
+$ENDCMP
+#
+$CMP DIODESCH
+D Diode schottky
+K DEV DIODE
+$ENDCMP
+#
+$CMP LM2576
+D SIMPLE SWITCHER 3A Step-Down Voltage Regulator
+K spms vreg 2594 LM2594
+$ENDCMP
+#
+#End Doc Library
