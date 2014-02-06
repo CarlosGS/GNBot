@@ -1,4 +1,4 @@
-update=jue 06 feb 2014 12:40:47 CET
+update=jue 06 feb 2014 19:21:09 CET
 last_client=pcbnew
 [common]
 NetDir=
@@ -54,12 +54,12 @@ LibName33=valves
 LibName34=../KicadLibs/xbee/xbee_r1
 [pcbnew]
 version=1
-LastNetListRead=
+LastNetListRead=GNBoard.net
 UseCmpFile=1
-PadDrill="    1,000000"
-PadDrillOvalY="    1,000000"
-PadSizeH="    1,500000"
-PadSizeV="    2,500000"
+PadDrill="    0,660400"
+PadDrillOvalY="    0,660400"
+PadSizeH="    1,168400"
+PadSizeV="    1,168400"
 PcbTextSizeV="    2,032000"
 PcbTextSizeH="    1,524000"
 PcbTextThickness="    0,304800"
@@ -69,8 +69,8 @@ ModuleTextSizeThickness="    0,304800"
 SolderMaskClearance="    0,200000"
 SolderMaskMinWidth="    0,000000"
 DrawSegmentWidth="    0,381000"
-BoardOutlineThickness="    2,400000"
-ModuleOutlineThickness="    0,381000"
+BoardOutlineThickness="    0,500000"
+ModuleOutlineThickness="    0,177800"
 [pcbnew/libraries]
 LibDir=
 LibName1=../KicadLibs/switch_largePads
@@ -91,3 +91,4 @@ LibName15=valves
 LibName16=led
 LibName17=dip_sockets
 LibName18=../KicadLibs/xbee/xbee_r1
+LibName19=/home/carlosgs/GitRepos/GNBot/Electronics/KicadLibs/drill

@@ -1,4 +1,4 @@
-Cmp-Mod V01 Created by CvPcb (2013-june-11)-stable date = jue 06 feb 2014 17:36:23 CET
+Cmp-Mod V01 Created by CvPcb (2013-june-11)-stable date = jue 06 feb 2014 19:06:12 CET
 
 BeginCmp
 TimeStamp = /51B84E6F;
@@ -176,10 +176,10 @@ IdModule  = bornier2;
 EndCmp
 
 BeginCmp
-TimeStamp = /51B8F3CA;
+TimeStamp = /52F3CDCE;
 Reference = P2;
-ValeurCmp = CONN_5;
-IdModule  = PIN_ARRAY_5x1;
+ValeurCmp = LDR_1;
+IdModule  = PIN_ARRAY_2X1;
 EndCmp
 
 BeginCmp
@@ -197,10 +197,31 @@ IdModule  = PIN_ARRAY_4x1;
 EndCmp
 
 BeginCmp
+TimeStamp = /52F3CDC8;
+Reference = P5;
+ValeurCmp = LDR_2;
+IdModule  = PIN_ARRAY_2X1;
+EndCmp
+
+BeginCmp
 TimeStamp = /51B9739B;
 Reference = P6;
 ValeurCmp = DHT_Conn;
 IdModule  = PIN_ARRAY_4x1;
+EndCmp
+
+BeginCmp
+TimeStamp = /52F3CDC2;
+Reference = P7;
+ValeurCmp = LDR_3;
+IdModule  = PIN_ARRAY_2X1;
+EndCmp
+
+BeginCmp
+TimeStamp = /52F3CD81;
+Reference = P8;
+ValeurCmp = LDR_4;
+IdModule  = PIN_ARRAY_2X1;
 EndCmp
 
 BeginCmp
