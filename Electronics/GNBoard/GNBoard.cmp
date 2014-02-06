@@ -1,10 +1,10 @@
-Cmp-Mod V01 Created by CvPcb (2013-mar-13)-testing date = jue 13 jun 2013 23:06:42 CEST
+Cmp-Mod V01 Created by CvPcb (2013-june-11)-stable date = jue 06 feb 2014 17:36:23 CET
 
 BeginCmp
 TimeStamp = /51B84E6F;
 Reference = C1;
 ValeurCmp = 100uF;
-IdModule  = C1V7;
+IdModule  = C1V8;
 EndCmp
 
 BeginCmp
@@ -141,16 +141,9 @@ IdModule  = PIN_ARRAY_3X1;
 EndCmp
 
 BeginCmp
-TimeStamp = /51B988EC;
-Reference = K15;
-ValeurCmp = CNY_5;
-IdModule  = PIN_ARRAY_3X1;
-EndCmp
-
-BeginCmp
-TimeStamp = /51B988F2;
-Reference = K16;
-ValeurCmp = CNY_6;
+TimeStamp = /52F37251;
+Reference = K17;
+ValeurCmp = Nose;
 IdModule  = PIN_ARRAY_3X1;
 EndCmp
 
@@ -158,14 +151,21 @@ BeginCmp
 TimeStamp = /51B84C2F;
 Reference = L1;
 ValeurCmp = 100uH;
-IdModule  = Choke_Toroid_6,5x13mm_Vertical;
+IdModule  = Choke_Toroid_8x16mm_Vertical;
 EndCmp
 
 BeginCmp
 TimeStamp = /51B8930C;
 Reference = LED1;
 ValeurCmp = LED_RCGB;
-IdModule  = LED5_RGB_long_wide;
+IdModule  = LED5_RGB_long;
+EndCmp
+
+BeginCmp
+TimeStamp = /52F3777A;
+Reference = M1;
+ValeurCmp = XBEE;
+IdModule  = xbee_r1-XBEE;
 EndCmp
 
 BeginCmp
@@ -197,13 +197,6 @@ IdModule  = PIN_ARRAY_4x1;
 EndCmp
 
 BeginCmp
-TimeStamp = /51B95863;
-Reference = P5;
-ValeurCmp = I2C_2;
-IdModule  = PIN_ARRAY_4x1;
-EndCmp
-
-BeginCmp
 TimeStamp = /51B9739B;
 Reference = P6;
 ValeurCmp = DHT_Conn;
@@ -213,7 +206,7 @@ EndCmp
 BeginCmp
 TimeStamp = /51B88ED1;
 Reference = R1;
-ValeurCmp = 6k8;
+ValeurCmp = 62k;
 IdModule  = R3-LARGE_PADS;
 EndCmp
 
@@ -241,7 +234,7 @@ EndCmp
 BeginCmp
 TimeStamp = /51B88EE0;
 Reference = R5;
-ValeurCmp = 6k8;
+ValeurCmp = 20k;
 IdModule  = R3-LARGE_PADS;
 EndCmp
 
@@ -295,17 +288,59 @@ IdModule  = R3-LARGE_PADS;
 EndCmp
 
 BeginCmp
+TimeStamp = /52F37228;
+Reference = R13;
+ValeurCmp = 10k;
+IdModule  = R3-LARGE_PADS;
+EndCmp
+
+BeginCmp
+TimeStamp = /52F39D0D;
+Reference = R14;
+ValeurCmp = 10k;
+IdModule  = R3-LARGE_PADS;
+EndCmp
+
+BeginCmp
+TimeStamp = /52F38E6E;
+Reference = R15;
+ValeurCmp = 4k7;
+IdModule  = R3-LARGE_PADS;
+EndCmp
+
+BeginCmp
+TimeStamp = /52F3834C;
+Reference = R16;
+ValeurCmp = 4k7;
+IdModule  = R3-LARGE_PADS;
+EndCmp
+
+BeginCmp
+TimeStamp = /52F38352;
+Reference = R17;
+ValeurCmp = 7k5;
+IdModule  = R3-LARGE_PADS;
+EndCmp
+
+BeginCmp
+TimeStamp = /52F3B736;
+Reference = R18;
+ValeurCmp = 99k;
+IdModule  = R3-LARGE_PADS;
+EndCmp
+
+BeginCmp
 TimeStamp = /51B84CE1;
 Reference = SHIELD1;
 ValeurCmp = ARDUINO_MEGA_SHIELD;
-IdModule  = ARDUINO_MEGA_SHIELD;
+IdModule  = ARDUINO_MEGA_SHIELD_MOD;
 EndCmp
 
 BeginCmp
 TimeStamp = /51B8A3AE;
 Reference = SW1;
 ValeurCmp = PowerSwitch;
-IdModule  = MICROSWITCH_SPST;
+IdModule  = switch_power_custom;
 EndCmp
 
 BeginCmp
