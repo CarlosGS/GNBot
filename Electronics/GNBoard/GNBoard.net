@@ -1,7 +1,7 @@
 (export (version D)
   (design
     (source /home/carlosgs/GitRepos/GNBot/Electronics/GNBoard/GNBoard.sch)
-    (date "jue 06 feb 2014 19:47:21 CET")
+    (date "vie 07 feb 2014 01:37:04 CET")
     (tool "eeschema (2013-june-11)-stable"))
   (components
     (comp (ref D1)
@@ -294,21 +294,6 @@
         (pin (num 2) (name C) (type passive))
         (pin (num 3) (name G) (type passive))
         (pin (num 4) (name B) (type passive))))
-    (libpart (lib vreg) (part LM2576)
-      (description "SIMPLE SWITCHER 3A Step-Down Voltage Regulator")
-      (footprints
-        (fp *DIP8)
-        (fp SOIC8))
-      (fields
-        (field (name Reference) U)
-        (field (name Value) LM2576)
-        (field (name Manufacturer) "Texas Instruments"))
-      (pins
-        (pin (num 1) (name VIN) (type power_in))
-        (pin (num 2) (name VOUT) (type power_out))
-        (pin (num 3) (name GND) (type power_in))
-        (pin (num 4) (name FB) (type input))
-        (pin (num 5) (name ON/OFF) (type input))))
     (libpart (lib arduino_shieldsNCL) (part ARDUINO_MEGA_SHIELD)
       (fields
         (field (name Reference) SHIELD)
@@ -396,6 +381,21 @@
         (pin (num GND5) (name GND5) (type power_in))
         (pin (num RST) (name RST) (type input))
         (pin (num V_IN) (name V_IN) (type power_in))))
+    (libpart (lib vreg) (part LM2576)
+      (description "SIMPLE SWITCHER 3A Step-Down Voltage Regulator")
+      (footprints
+        (fp *DIP8)
+        (fp SOIC8))
+      (fields
+        (field (name Reference) U)
+        (field (name Value) LM2576)
+        (field (name Manufacturer) "Texas Instruments"))
+      (pins
+        (pin (num 1) (name VIN) (type power_in))
+        (pin (num 2) (name VOUT) (type power_out))
+        (pin (num 3) (name GND) (type power_in))
+        (pin (num 4) (name FB) (type input))
+        (pin (num 5) (name ON/OFF) (type input))))
     (libpart (lib device) (part CP1)
       (description "Condensateur polarise")
       (footprints
@@ -531,10 +531,10 @@
         (pin (num 19) (name AD1/DIO1) (type BiDi))
         (pin (num 20) (name AD0/DIO0) (type BiDi)))))
   (libraries
-    (library (logical vreg)
-      (uri ../KicadLibs/VREG/vreg.lib))
     (library (logical LED_RGB)
       (uri ../KicadLibs/RaronLibs/LED_RGB/LED_RGB.lib))
+    (library (logical vreg)
+      (uri ../KicadLibs/VREG/vreg.lib))
     (library (logical arduino_shieldsNCL)
       (uri ../KicadLibs/Arduino_Shield_Modules_for_KiCad_V3/arduino_shieldsNCL.lib))
     (library (logical device)

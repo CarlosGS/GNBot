@@ -1,4 +1,4 @@
-Cmp-Mod V01 Created by CvPcb (2013-june-11)-stable date = jue 06 feb 2014 19:06:12 CET
+Cmp-Mod V01 Created by PcbNew date = vie 07 feb 2014 01:49:38 CET
 
 BeginCmp
 TimeStamp = /51B84E6F;
@@ -354,7 +354,7 @@ BeginCmp
 TimeStamp = /51B84CE1;
 Reference = SHIELD1;
 ValeurCmp = ARDUINO_MEGA_SHIELD;
-IdModule  = ARDUINO_MEGA_SHIELD_MOD;
+IdModule  = ARDUINO_MEGA_SHIELD_040pins;
 EndCmp
 
 BeginCmp
