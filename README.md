@@ -3,9 +3,9 @@ GNBot
 
 A 3D-printable robotic platform for testing swarm algorithms  
 
-![ScreenShot](https://github.com/carlosgs/GNBot/raw/master/Publications/Media/GNBot_v1.jpg)  
-![ScreenShot](https://github.com/carlosgs/GNBot/raw/master/Publications/Media/Data generation/2013-08-10 22.36.12.jpg)  
-![ScreenShot](https://github.com/carlosgs/GNBot/raw/master/Publications/Media/Robot assembly/2013-08-08 21.00.54.jpg)  
+![ScreenShot](Publications/Media/GNBot_v1.jpg)  
+![ScreenShot](Publications/Media/Data generation/2013-08-10 22.36.12.jpg)  
+![ScreenShot](Publications/Media/Robot assembly/2013-08-08 21.00.54.jpg)  
 
 **Work in progress**  
 
