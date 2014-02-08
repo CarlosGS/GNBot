@@ -1,4 +1,4 @@
-update=jue 06 feb 2014 19:21:09 CET
+update=sáb 08 feb 2014 21:10:07 CET
 last_client=pcbnew
 [common]
 NetDir=
@@ -69,7 +69,7 @@ ModuleTextSizeThickness="    0,304800"
 SolderMaskClearance="    0,200000"
 SolderMaskMinWidth="    0,000000"
 DrawSegmentWidth="    0,381000"
-BoardOutlineThickness="    0,500000"
+BoardOutlineThickness="    0,300000"
 ModuleOutlineThickness="    0,177800"
 [pcbnew/libraries]
 LibDir=

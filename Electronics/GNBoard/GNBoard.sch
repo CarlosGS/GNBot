@@ -40,7 +40,7 @@ $Descr A3 16535 11693
 encoding utf-8
 Sheet 1 1
 Title ""
-Date "6 feb 2014"
+Date "8 feb 2014"
 Rev ""
 Comp ""
 Comment1 ""
@@ -583,12 +583,12 @@ $EndComp
 $Comp
 L GND #PWR021
 U 1 1 51B90FF1
-P 4800 4850
-F 0 "#PWR021" H 4800 4850 30  0001 C CNN
-F 1 "GND" H 4800 4780 30  0001 C CNN
-F 2 "" H 4800 4850 60  0000 C CNN
-F 3 "" H 4800 4850 60  0000 C CNN
-	1    4800 4850
+P 4800 4500
+F 0 "#PWR021" H 4800 4500 30  0001 C CNN
+F 1 "GND" H 4800 4430 30  0001 C CNN
+F 2 "" H 4800 4500 60  0000 C CNN
+F 3 "" H 4800 4500 60  0000 C CNN
+	1    4800 4500
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -615,21 +615,8 @@ F 3 "~" H 5250 4300 60  0000 C CNN
 	1    5250 4300
 	1    0    0    -1  
 $EndComp
-$Comp
-L CONN_3 K8
-U 1 1 51B91027
-P 5250 4650
-F 0 "K8" V 5200 4650 50  0000 C CNN
-F 1 "SERVO_6" V 5300 4650 40  0000 C CNN
-F 2 "~" H 5250 4650 60  0000 C CNN
-F 3 "~" H 5250 4650 60  0000 C CNN
-	1    5250 4650
-	1    0    0    -1  
-$EndComp
 Text GLabel 4600 4200 0    60   Input ~ 0
 Servo5
-Text GLabel 4600 4550 0    60   Input ~ 0
-Servo6
 $Comp
 L +5V #PWR022
 U 1 1 51B918B2
@@ -696,7 +683,7 @@ Servo4
 Text GLabel 10650 2600 2    60   Output ~ 0
 Servo5
 Text GLabel 10650 2750 2    60   Output ~ 0
-Servo6
+Nose_heat
 Text GLabel 10650 2000 2    60   Output ~ 0
 Servo1
 Text GLabel 10650 2150 2    60   Output ~ 0
@@ -1122,50 +1109,28 @@ F 3 "" H 12000 1600 60  0000 C CNN
 	1    12000 1600
 	1    0    0    -1  
 $EndComp
-Text Notes 800  7850 0    60   ~ 0
-Electronic nose
-$Comp
-L R R13
-U 1 1 52F37228
-P 2500 9150
-F 0 "R13" V 2500 9250 40  0000 C CNN
-F 1 "10k" V 2500 9100 40  0000 C CNN
-F 2 "~" V 2430 9150 30  0000 C CNN
-F 3 "~" H 2500 9150 30  0000 C CNN
-	1    2500 9150
-	0    -1   -1   0   
-$EndComp
+Text Notes 800  7800 0    60   ~ 0
+Electronic nose (TGS 2600 and alike)
 $Comp
 L GND #PWR042
 U 1 1 52F3722F
-P 2550 9000
-F 0 "#PWR042" H 2550 9000 30  0001 C CNN
-F 1 "GND" H 2550 8930 30  0001 C CNN
-F 2 "" H 2550 9000 60  0000 C CNN
-F 3 "" H 2550 9000 60  0000 C CNN
-	1    2550 9000
+P 2350 9800
+F 0 "#PWR042" H 2350 9800 30  0001 C CNN
+F 1 "GND" H 2350 9730 30  0001 C CNN
+F 2 "" H 2350 9800 60  0000 C CNN
+F 3 "" H 2350 9800 60  0000 C CNN
+	1    2350 9800
 	1    0    0    -1  
 $EndComp
 $Comp
 L +5V #PWR043
 U 1 1 52F37235
-P 2200 8800
-F 0 "#PWR043" H 2200 8890 20  0001 C CNN
-F 1 "+5V" H 2200 8890 30  0000 C CNN
-F 2 "" H 2200 8800 60  0000 C CNN
-F 3 "" H 2200 8800 60  0000 C CNN
-	1    2200 8800
-	1    0    0    -1  
-$EndComp
-$Comp
-L CONN_3 K17
-U 1 1 52F37251
-P 3100 8950
-F 0 "K17" V 3050 8950 50  0000 C CNN
-F 1 "Nose" V 3150 8950 40  0000 C CNN
-F 2 "~" H 3100 8950 60  0000 C CNN
-F 3 "~" H 3100 8950 60  0000 C CNN
-	1    3100 8950
+P 1850 9050
+F 0 "#PWR043" H 1850 9140 20  0001 C CNN
+F 1 "+5V" H 1850 9140 30  0000 C CNN
+F 2 "" H 1850 9050 60  0000 C CNN
+F 3 "" H 1850 9050 60  0000 C CNN
+	1    1850 9050
 	1    0    0    -1  
 $EndComp
 Text GLabel 12200 2050 0    60   Output ~ 0
@@ -1205,9 +1170,9 @@ F 3 "" H 13050 3750 60  0000 C CNN
 	1    13050 3750
 	1    0    0    -1  
 $EndComp
-Text GLabel 2750 8650 2    60   Output ~ 0
-Nose_V
-Text GLabel 2200 9150 0    60   Input ~ 0
+Text GLabel 2100 9450 2    60   Output ~ 0
+Nose_Vout
+Text GLabel 1300 8300 0    60   Input ~ 0
 Nose_heat
 $Comp
 L R R16
@@ -1258,20 +1223,20 @@ XBEE wireless interface
 $Comp
 L R R14
 U 1 1 52F39D0D
-P 2450 8850
-F 0 "R14" V 2450 8950 40  0000 C CNN
-F 1 "10k" V 2450 8800 40  0000 C CNN
-F 2 "~" V 2380 8850 30  0000 C CNN
-F 3 "~" H 2450 8850 30  0000 C CNN
-	1    2450 8850
-	0    -1   -1   0   
+P 2100 9700
+F 0 "R14" V 2100 9800 40  0000 C CNN
+F 1 "10k" V 2100 9650 40  0000 C CNN
+F 2 "~" V 2030 9700 30  0000 C CNN
+F 3 "~" H 2100 9700 30  0000 C CNN
+	1    2100 9700
+	0    1    1    0   
 $EndComp
 $Comp
 L R R18
 U 1 1 52F3B736
 P 3450 1250
 F 0 "R18" V 3450 1350 40  0000 C CNN
-F 1 "99k" V 3450 1200 40  0000 C CNN
+F 1 "47" V 3450 1200 40  0000 C CNN
 F 2 "~" V 3380 1250 30  0000 C CNN
 F 3 "~" H 3450 1250 30  0000 C CNN
 	1    3450 1250
@@ -1289,7 +1254,7 @@ F 3 "" H 3050 1300 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 Text GLabel 7900 3450 0    60   Input ~ 0
-Nose_V
+Nose_Vout
 Text GLabel 10650 3650 2    60   Input ~ 0
 XB_DOUT
 Text GLabel 10650 3500 2    60   Output ~ 0
@@ -1623,23 +1588,11 @@ Wire Notes Line
 Wire Notes Line
 	6250 2500 4600 2500
 Wire Wire Line
-	4800 4750 4900 4750
-Wire Wire Line
-	4800 4050 4800 4850
-Wire Wire Line
-	4800 4400 4900 4400
-Wire Wire Line
 	4800 4050 4900 4050
-Connection ~ 4800 4400
-Connection ~ 4800 4750
 Wire Wire Line
 	4900 3950 4850 3950
 Wire Wire Line
-	4850 3950 4850 4650
-Wire Wire Line
 	4850 4300 4900 4300
-Wire Wire Line
-	4850 4650 4900 4650
 Connection ~ 4850 4300
 Wire Wire Line
 	4700 4000 4850 4000
@@ -1648,8 +1601,6 @@ Wire Wire Line
 	4900 3850 4600 3850
 Wire Wire Line
 	4600 4200 4900 4200
-Wire Wire Line
-	4900 4550 4600 4550
 Wire Wire Line
 	3600 4750 3700 4750
 Wire Wire Line
@@ -2024,24 +1975,6 @@ Wire Notes Line
 	15400 1000 15400 3900
 Wire Notes Line
 	15400 3900 11700 3900
-Wire Wire Line
-	2750 8950 2550 8950
-Wire Wire Line
-	2550 8950 2550 9000
-Wire Wire Line
-	2750 8650 2700 8650
-Wire Wire Line
-	2700 8650 2700 8850
-Wire Wire Line
-	2700 8850 2750 8850
-Wire Wire Line
-	2200 8850 2200 8800
-Wire Wire Line
-	2250 9150 2200 9150
-Wire Wire Line
-	2750 9150 2750 9050
-Wire Notes Line
-	700  7700 2300 7700
 Wire Notes Line
 	4300 1450 4300 650 
 Wire Wire Line
@@ -2101,4 +2034,129 @@ Wire Notes Line
 	14350 5250 11700 5250
 Wire Notes Line
 	11700 5250 11700 4100
+$Comp
+L NPN Q1
+U 1 1 52F65D79
+P 2000 8500
+F 0 "Q1" H 2000 8350 50  0000 R CNN
+F 1 "NPN" H 2000 8650 50  0000 R CNN
+F 2 "~" H 2000 8500 60  0000 C CNN
+F 3 "~" H 2000 8500 60  0000 C CNN
+	1    2000 8500
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4850 3950 4850 4300
+Wire Wire Line
+	4800 4050 4800 4500
+Wire Wire Line
+	4900 4400 4800 4400
+Connection ~ 4800 4400
+$Comp
+L R R13
+U 1 1 52F67728
+P 1550 8400
+F 0 "R13" V 1550 8500 40  0000 C CNN
+F 1 "10k" V 1550 8350 40  0000 C CNN
+F 2 "~" V 1480 8400 30  0000 C CNN
+F 3 "~" H 1550 8400 30  0000 C CNN
+	1    1550 8400
+	0    -1   -1   0   
+$EndComp
+$Comp
+L GND #PWR048
+U 1 1 52F67A77
+P 2100 8750
+F 0 "#PWR048" H 2100 8750 30  0001 C CNN
+F 1 "GND" H 2100 8680 30  0001 C CNN
+F 2 "" H 2100 8750 60  0000 C CNN
+F 3 "" H 2100 8750 60  0000 C CNN
+	1    2100 8750
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1300 8400 1300 8300
+Wire Wire Line
+	1800 8400 1800 8500
+Wire Wire Line
+	2100 8700 2100 8750
+Wire Wire Line
+	2300 8300 2100 8300
+$Comp
+L +5V #PWR049
+U 1 1 52F6872D
+P 2250 8100
+F 0 "#PWR049" H 2250 8190 20  0001 C CNN
+F 1 "+5V" H 2250 8190 30  0000 C CNN
+F 2 "" H 2250 8100 60  0000 C CNN
+F 3 "" H 2250 8100 60  0000 C CNN
+	1    2250 8100
+	1    0    0    -1  
+$EndComp
+$Comp
+L CONN_2 P10
+U 1 1 52F6858B
+P 2650 8200
+F 0 "P10" V 2600 8200 40  0000 C CNN
+F 1 "Nose_Heater" V 2700 8200 40  0000 C CNN
+F 2 "~" H 2650 8200 60  0000 C CNN
+F 3 "~" H 2650 8200 60  0000 C CNN
+	1    2650 8200
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2300 8100 2250 8100
+Text Notes 2800 8100 0    60   ~ 0
+Inductive loads would\nrequire flyback diode\nMinimum: 7 Ohm\n(Imax=0.8A @ 5V)
+$Comp
+L CONN_2 P9
+U 1 1 52F69573
+P 1500 9450
+F 0 "P9" V 1450 9450 40  0000 C CNN
+F 1 "Nose_Sense" V 1550 9450 40  0000 C CNN
+F 2 "~" H 1500 9450 60  0000 C CNN
+F 3 "~" H 1500 9450 60  0000 C CNN
+	1    1500 9450
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	1850 9050 1850 9350
+Wire Wire Line
+	1850 9550 1850 9700
+Wire Wire Line
+	2350 9700 2350 9800
+Wire Wire Line
+	2100 9450 1950 9450
+Wire Wire Line
+	1950 9450 1950 9550
+Wire Wire Line
+	1950 9550 1850 9550
+$Comp
+L CONN_1 P11
+U 1 1 52F6A711
+P 1500 9150
+F 0 "P11" H 1580 9150 40  0000 L CNN
+F 1 "CONN_1" H 1500 9205 30  0001 C CNN
+F 2 "~" H 1500 9150 60  0000 C CNN
+F 3 "~" H 1500 9150 60  0000 C CNN
+	1    1500 9150
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	1850 9150 1650 9150
+Connection ~ 1850 9150
+Text Notes 1200 8050 0    60   ~ 0
+Heater
+Text Notes 1200 8950 0    60   ~ 0
+Sensor
+Wire Notes Line
+	700  7650 3950 7650
+Wire Notes Line
+	3950 7650 3950 9900
+Wire Notes Line
+	3950 9900 700  9900
+Wire Notes Line
+	700  9900 700  7650
+Text Notes 1950 9100 0    60   ~ 0
+The layout allows to solder the sensor\ndirectly or with a three wire cable
 $EndSCHEMATC

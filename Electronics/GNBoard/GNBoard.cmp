@@ -1,4 +1,4 @@
-Cmp-Mod V01 Created by PcbNew date = vie 07 feb 2014 01:49:38 CET
+Cmp-Mod V01 Created by CvPcb (2013-june-11)-stable date = sáb 08 feb 2014 19:55:06 CET
 
 BeginCmp
 TimeStamp = /51B84E6F;
@@ -92,13 +92,6 @@ IdModule  = PIN_ARRAY_3X1;
 EndCmp
 
 BeginCmp
-TimeStamp = /51B91027;
-Reference = K8;
-ValeurCmp = SERVO_6;
-IdModule  = PIN_ARRAY_3X1;
-EndCmp
-
-BeginCmp
 TimeStamp = /51B92A38;
 Reference = K9;
 ValeurCmp = IR3;
@@ -137,13 +130,6 @@ BeginCmp
 TimeStamp = /51B988E5;
 Reference = K14;
 ValeurCmp = CNY_4;
-IdModule  = PIN_ARRAY_3X1;
-EndCmp
-
-BeginCmp
-TimeStamp = /52F37251;
-Reference = K17;
-ValeurCmp = Nose;
 IdModule  = PIN_ARRAY_3X1;
 EndCmp
 
@@ -222,6 +208,34 @@ TimeStamp = /52F3CD81;
 Reference = P8;
 ValeurCmp = LDR_4;
 IdModule  = PIN_ARRAY_2X1;
+EndCmp
+
+BeginCmp
+TimeStamp = /52F69573;
+Reference = P9;
+ValeurCmp = Nose_Sense;
+IdModule  = PIN_ARRAY_2X1;
+EndCmp
+
+BeginCmp
+TimeStamp = /52F6858B;
+Reference = P10;
+ValeurCmp = Nose_Heater;
+IdModule  = PIN_ARRAY_2X1;
+EndCmp
+
+BeginCmp
+TimeStamp = /52F6A711;
+Reference = P11;
+ValeurCmp = CONN_1;
+IdModule  = PIN_ARRAY_1;
+EndCmp
+
+BeginCmp
+TimeStamp = /52F65D79;
+Reference = Q1;
+ValeurCmp = NPN;
+IdModule  = TO92-123;
 EndCmp
 
 BeginCmp
@@ -309,7 +323,7 @@ IdModule  = R3-LARGE_PADS;
 EndCmp
 
 BeginCmp
-TimeStamp = /52F37228;
+TimeStamp = /52F67728;
 Reference = R13;
 ValeurCmp = 10k;
 IdModule  = R3-LARGE_PADS;
@@ -346,7 +360,7 @@ EndCmp
 BeginCmp
 TimeStamp = /52F3B736;
 Reference = R18;
-ValeurCmp = 99k;
+ValeurCmp = 47;
 IdModule  = R3-LARGE_PADS;
 EndCmp
 
@@ -354,7 +368,7 @@ BeginCmp
 TimeStamp = /51B84CE1;
 Reference = SHIELD1;
 ValeurCmp = ARDUINO_MEGA_SHIELD;
-IdModule  = ARDUINO_MEGA_SHIELD_040pins;
+IdModule  = ARDUINO_MEGA_SHIELD_040pins_MOD;
 EndCmp
 
 BeginCmp
