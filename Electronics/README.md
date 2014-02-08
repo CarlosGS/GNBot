@@ -4,9 +4,9 @@ Electronics for the GNBot
 GNBoard  
 --
 Shield for Arduino Mega  
-![ScreenShot](GNBoard/Diagrams/GNBoard.jpg)  
-![ScreenShot](GNBoard/Diagrams/GNBoard_diagram.jpg)  
-![ScreenShot](GNBoard/Diagrams/GNBoard_brd.jpg)  
+![ScreenShot](GNBoard_1.0/Diagrams/GNBoard.jpg)  
+![ScreenShot](GNBoard_1.0/Diagrams/GNBoard_diagram.jpg)  
+![ScreenShot](GNBoard_1.0/Diagrams/GNBoard_brd.jpg)  
 
 **Work in progress**  
 
