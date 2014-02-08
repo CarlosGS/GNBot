@@ -1,10 +1,10 @@
-Cmp-Mod V01 Created by CvPcb (2013-june-11)-stable date = sáb 08 feb 2014 19:55:06 CET
+Cmp-Mod V01 Created by CvPcb (2013-mar-13)-testing date = jue 13 jun 2013 23:06:42 CEST
 
 BeginCmp
 TimeStamp = /51B84E6F;
 Reference = C1;
 ValeurCmp = 100uF;
-IdModule  = C1V8;
+IdModule  = C1V7;
 EndCmp
 
 BeginCmp
@@ -92,6 +92,13 @@ IdModule  = PIN_ARRAY_3X1;
 EndCmp
 
 BeginCmp
+TimeStamp = /51B91027;
+Reference = K8;
+ValeurCmp = SERVO_6;
+IdModule  = PIN_ARRAY_3X1;
+EndCmp
+
+BeginCmp
 TimeStamp = /51B92A38;
 Reference = K9;
 ValeurCmp = IR3;
@@ -134,24 +141,31 @@ IdModule  = PIN_ARRAY_3X1;
 EndCmp
 
 BeginCmp
+TimeStamp = /51B988EC;
+Reference = K15;
+ValeurCmp = CNY_5;
+IdModule  = PIN_ARRAY_3X1;
+EndCmp
+
+BeginCmp
+TimeStamp = /51B988F2;
+Reference = K16;
+ValeurCmp = CNY_6;
+IdModule  = PIN_ARRAY_3X1;
+EndCmp
+
+BeginCmp
 TimeStamp = /51B84C2F;
 Reference = L1;
 ValeurCmp = 100uH;
-IdModule  = Choke_Toroid_8x16mm_Vertical;
+IdModule  = Choke_Toroid_6,5x13mm_Vertical;
 EndCmp
 
 BeginCmp
 TimeStamp = /51B8930C;
 Reference = LED1;
 ValeurCmp = LED_RCGB;
-IdModule  = LED5_RGB_long;
-EndCmp
-
-BeginCmp
-TimeStamp = /52F3777A;
-Reference = M1;
-ValeurCmp = XBEE;
-IdModule  = xbee_r1-XBEE;
+IdModule  = LED5_RGB_long_wide;
 EndCmp
 
 BeginCmp
@@ -162,10 +176,10 @@ IdModule  = bornier2;
 EndCmp
 
 BeginCmp
-TimeStamp = /52F3CDCE;
+TimeStamp = /51B8F3CA;
 Reference = P2;
-ValeurCmp = LDR_1;
-IdModule  = PIN_ARRAY_2X1;
+ValeurCmp = CONN_5;
+IdModule  = PIN_ARRAY_5x1;
 EndCmp
 
 BeginCmp
@@ -183,10 +197,10 @@ IdModule  = PIN_ARRAY_4x1;
 EndCmp
 
 BeginCmp
-TimeStamp = /52F3CDC8;
+TimeStamp = /51B95863;
 Reference = P5;
-ValeurCmp = LDR_2;
-IdModule  = PIN_ARRAY_2X1;
+ValeurCmp = I2C_2;
+IdModule  = PIN_ARRAY_4x1;
 EndCmp
 
 BeginCmp
@@ -197,51 +211,9 @@ IdModule  = PIN_ARRAY_4x1;
 EndCmp
 
 BeginCmp
-TimeStamp = /52F3CDC2;
-Reference = P7;
-ValeurCmp = LDR_3;
-IdModule  = PIN_ARRAY_2X1;
-EndCmp
-
-BeginCmp
-TimeStamp = /52F3CD81;
-Reference = P8;
-ValeurCmp = LDR_4;
-IdModule  = PIN_ARRAY_2X1;
-EndCmp
-
-BeginCmp
-TimeStamp = /52F69573;
-Reference = P9;
-ValeurCmp = Nose_Sense;
-IdModule  = PIN_ARRAY_2X1;
-EndCmp
-
-BeginCmp
-TimeStamp = /52F6858B;
-Reference = P10;
-ValeurCmp = Nose_Heater;
-IdModule  = PIN_ARRAY_2X1;
-EndCmp
-
-BeginCmp
-TimeStamp = /52F6A711;
-Reference = P11;
-ValeurCmp = CONN_1;
-IdModule  = PIN_ARRAY_1;
-EndCmp
-
-BeginCmp
-TimeStamp = /52F65D79;
-Reference = Q1;
-ValeurCmp = NPN;
-IdModule  = TO92-123;
-EndCmp
-
-BeginCmp
 TimeStamp = /51B88ED1;
 Reference = R1;
-ValeurCmp = 62k;
+ValeurCmp = 6k8;
 IdModule  = R3-LARGE_PADS;
 EndCmp
 
@@ -269,7 +241,7 @@ EndCmp
 BeginCmp
 TimeStamp = /51B88EE0;
 Reference = R5;
-ValeurCmp = 20k;
+ValeurCmp = 6k8;
 IdModule  = R3-LARGE_PADS;
 EndCmp
 
@@ -323,59 +295,17 @@ IdModule  = R3-LARGE_PADS;
 EndCmp
 
 BeginCmp
-TimeStamp = /52F67728;
-Reference = R13;
-ValeurCmp = 10k;
-IdModule  = R3-LARGE_PADS;
-EndCmp
-
-BeginCmp
-TimeStamp = /52F39D0D;
-Reference = R14;
-ValeurCmp = 10k;
-IdModule  = R3-LARGE_PADS;
-EndCmp
-
-BeginCmp
-TimeStamp = /52F38E6E;
-Reference = R15;
-ValeurCmp = 4k7;
-IdModule  = R3-LARGE_PADS;
-EndCmp
-
-BeginCmp
-TimeStamp = /52F3834C;
-Reference = R16;
-ValeurCmp = 4k7;
-IdModule  = R3-LARGE_PADS;
-EndCmp
-
-BeginCmp
-TimeStamp = /52F38352;
-Reference = R17;
-ValeurCmp = 7k5;
-IdModule  = R3-LARGE_PADS;
-EndCmp
-
-BeginCmp
-TimeStamp = /52F3B736;
-Reference = R18;
-ValeurCmp = 47;
-IdModule  = R3-LARGE_PADS;
-EndCmp
-
-BeginCmp
 TimeStamp = /51B84CE1;
 Reference = SHIELD1;
 ValeurCmp = ARDUINO_MEGA_SHIELD;
-IdModule  = ARDUINO_MEGA_SHIELD_040pins_MOD;
+IdModule  = ARDUINO_MEGA_SHIELD;
 EndCmp
 
 BeginCmp
 TimeStamp = /51B8A3AE;
 Reference = SW1;
 ValeurCmp = PowerSwitch;
-IdModule  = switch_power_custom;
+IdModule  = MICROSWITCH_SPST;
 EndCmp
 
 BeginCmp

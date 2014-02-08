@@ -1,5 +1,5 @@
-update=mié 15 ene 2014 13:42:49 CET
-last_client=eeschema
+update=sáb 08 feb 2014 21:10:07 CET
+last_client=pcbnew
 [common]
 NetDir=
 [cvpcb]
@@ -7,44 +7,6 @@ version=1
 NetIExt=net
 [cvpcb/libraries]
 EquName1=devcms
-[pcbnew]
-version=1
-LastNetListRead=
-UseCmpFile=1
-PadDrill="    0,700000"
-PadDrillOvalY="    0,700000"
-PadSizeH="    1,500000"
-PadSizeV="    2,000000"
-PcbTextSizeV="    2,032000"
-PcbTextSizeH="    1,524000"
-PcbTextThickness="    0,304800"
-ModuleTextSizeV="    1,524000"
-ModuleTextSizeH="    1,524000"
-ModuleTextSizeThickness="    0,304800"
-SolderMaskClearance="    0,200000"
-SolderMaskMinWidth="    0,000000"
-DrawSegmentWidth="    0,381000"
-BoardOutlineThickness="    2,400000"
-ModuleOutlineThickness="    0,381000"
-[pcbnew/libraries]
-LibDir=
-LibName1=/home/carlosgs/GitRepos/GNBot/Electronics/KicadLibs/switch_largePads
-LibName2=/home/carlosgs/GitRepos/GNBot/Electronics/KicadLibs/button_largePads
-LibName3=/home/carlosgs/GitRepos/GNBot/Electronics/KicadLibs/kicad_diy_modules/diy_diodes
-LibName4=/home/carlosgs/GitRepos/GNBot/Electronics/KicadLibs/RaronLibs/LED_RGB/LED5_RGB
-LibName5=/home/carlosgs/GitRepos/GNBot/Electronics/KicadLibs/Arduino_Shield_Modules_for_KiCad_V3/arduino_shields
-LibName6=/home/carlosgs/GitRepos/GNBot/Electronics/KicadLibs/VREG/v-reg
-LibName7=/home/carlosgs/GitRepos/GNBot/Electronics/KicadLibs/BW_Chokes/Choke_Toroid_ThroughHole_RevB_06Aug2010/Choke_Toroid_ThroughHole_RevB_06Aug2010
-LibName8=sockets
-LibName9=connect
-LibName10=discret
-LibName11=pin_array
-LibName12=divers
-LibName13=libcms
-LibName14=display
-LibName15=valves
-LibName16=led
-LibName17=dip_sockets
 [general]
 version=1
 [eeschema]
@@ -56,9 +18,9 @@ RptD_Y=100
 RptLab=1
 LabSize=60
 [eeschema/libraries]
-LibName1=/home/carlosgs/GitRepos/GNBot/Electronics/KicadLibs/RaronLibs/LED_RGB/LED_RGB
-LibName2=/home/carlosgs/GitRepos/GNBot/Electronics/KicadLibs/VREG/vreg
-LibName3=/home/carlosgs/GitRepos/GNBot/Electronics/KicadLibs/Arduino_Shield_Modules_for_KiCad_V3/arduino_shieldsNCL
+LibName1=../KicadLibs/RaronLibs/LED_RGB/LED_RGB
+LibName2=../KicadLibs/VREG/vreg
+LibName3=../KicadLibs/Arduino_Shield_Modules_for_KiCad_V3/arduino_shieldsNCL
 LibName4=power
 LibName5=device
 LibName6=transistors
@@ -89,3 +51,44 @@ LibName30=opto
 LibName31=atmel
 LibName32=contrib
 LibName33=valves
+LibName34=../KicadLibs/xbee/xbee_r1
+[pcbnew]
+version=1
+LastNetListRead=GNBoard.net
+UseCmpFile=1
+PadDrill="    0,660400"
+PadDrillOvalY="    0,660400"
+PadSizeH="    1,168400"
+PadSizeV="    1,168400"
+PcbTextSizeV="    2,032000"
+PcbTextSizeH="    1,524000"
+PcbTextThickness="    0,304800"
+ModuleTextSizeV="    1,524000"
+ModuleTextSizeH="    1,524000"
+ModuleTextSizeThickness="    0,304800"
+SolderMaskClearance="    0,200000"
+SolderMaskMinWidth="    0,000000"
+DrawSegmentWidth="    0,381000"
+BoardOutlineThickness="    0,300000"
+ModuleOutlineThickness="    0,177800"
+[pcbnew/libraries]
+LibDir=
+LibName1=../KicadLibs/switch_largePads
+LibName2=../KicadLibs/button_largePads
+LibName3=../KicadLibs/kicad_diy_modules/diy_diodes
+LibName4=../KicadLibs/RaronLibs/LED_RGB/LED5_RGB
+LibName5=../KicadLibs/Arduino_Shield_Modules_for_KiCad_V3/arduino_shields
+LibName6=../KicadLibs/VREG/v-reg
+LibName7=../KicadLibs/BW_Chokes/Choke_Toroid_ThroughHole_RevB_06Aug2010/Choke_Toroid_ThroughHole_RevB_06Aug2010
+LibName8=sockets
+LibName9=connect
+LibName10=discret
+LibName11=pin_array
+LibName12=divers
+LibName13=libcms
+LibName14=display
+LibName15=valves
+LibName16=led
+LibName17=dip_sockets
+LibName18=../KicadLibs/xbee/xbee_r1
+LibName19=../KicadLibs/drill
