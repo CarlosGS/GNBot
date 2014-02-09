@@ -3,9 +3,9 @@
   (general
     (links 130)
     (no_connects 0)
-    (area 34.972134 16.7434 134.27865 76.146801)
+    (area 19.732134 20.474799 134.27865 76.146801)
     (thickness 1.6)
-    (drawings 83)
+    (drawings 84)
     (tracks 240)
     (zones 0)
     (modules 58)
@@ -60,7 +60,7 @@
     (visible_elements FFFFFF7F)
     (pcbplotparams
       (layerselection 284196865)
-      (usegerberextensions false)
+      (usegerberextensions true)
       (excludeedgelayer true)
       (linewidth 0.100000)
       (plotframeref false)
@@ -188,13 +188,13 @@
     (add_net XB_DOUT)
   )
 
-  (module ARDUINO_MEGA_SHIELD_040pins_MOD   locked (layer CopperTop) (tedit 52F42E0C) (tstamp 52F79299)
+  (module ARDUINO_MEGA_SHIELD_040pins_MOD   locked (layer CopperTop) (tedit 52F6B530) (tstamp 52F79299)
     (at 37.5412 75.1078)
     (path /51B84CE1)
-    (fp_text reference SHIELD1 (at 6.35 -57.15) (layer F.SilkS) hide
+    (fp_text reference SHIELD1 (at 7.112 -5.1054) (layer F.SilkS) hide
       (effects (font (size 1.524 1.524) (thickness 0.3048)))
     )
-    (fp_text value ARDUINO_MEGA_SHIELD (at 13.97 -54.61) (layer F.SilkS) hide
+    (fp_text value ARDUINO_MEGA_SHIELD (at -1.27 -2.0066) (layer F.SilkS) hide
       (effects (font (size 1.524 1.524) (thickness 0.3048)))
     )
     (pad 14 thru_hole oval (at 68.58 -50.8 90) (size 2.54 1.524) (drill 1.016)
@@ -2349,6 +2349,9 @@
     )
   )
 
+  (gr_text http://carlosgs.es (at 70.8152 44.7548) (layer B.SilkS)
+    (effects (font (size 2.032 1.524) (thickness 0.3048)) (justify mirror))
+  )
   (gr_text CC-BY-SA (at 66.9036 39.2176 180) (layer F.SilkS)
     (effects (font (size 2 1) (thickness 0.25)))
   )
