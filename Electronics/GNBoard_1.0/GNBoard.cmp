@@ -1,4 +1,4 @@
-Cmp-Mod V01 Created by CvPcb (2013-june-11)-stable date = sáb 08 feb 2014 19:55:06 CET
+Cmp-Mod V01 Created by CvPcb (2013-june-11)-stable date = dom 09 feb 2014 14:21:57 CET
 
 BeginCmp
 TimeStamp = /51B84E6F;
@@ -242,126 +242,126 @@ BeginCmp
 TimeStamp = /51B88ED1;
 Reference = R1;
 ValeurCmp = 62k;
-IdModule  = R3-LARGE_PADS;
+IdModule  = R3-LARGE_PADS_CUSTOM;
 EndCmp
 
 BeginCmp
 TimeStamp = /51B8931B;
 Reference = R2;
 ValeurCmp = 330;
-IdModule  = R3-LARGE_PADS;
+IdModule  = R3-LARGE_PADS_CUSTOM;
 EndCmp
 
 BeginCmp
 TimeStamp = /51B8932A;
 Reference = R3;
 ValeurCmp = 330;
-IdModule  = R3-LARGE_PADS;
+IdModule  = R3-LARGE_PADS_CUSTOM;
 EndCmp
 
 BeginCmp
 TimeStamp = /51B89339;
 Reference = R4;
 ValeurCmp = 330;
-IdModule  = R3-LARGE_PADS;
+IdModule  = R3-LARGE_PADS_CUSTOM;
 EndCmp
 
 BeginCmp
 TimeStamp = /51B88EE0;
 Reference = R5;
 ValeurCmp = 20k;
-IdModule  = R3-LARGE_PADS;
+IdModule  = R3-LARGE_PADS_CUSTOM;
 EndCmp
 
 BeginCmp
 TimeStamp = /51B8EF91;
 Reference = R6;
 ValeurCmp = 33k;
-IdModule  = R3-LARGE_PADS;
+IdModule  = R3-LARGE_PADS_CUSTOM;
 EndCmp
 
 BeginCmp
 TimeStamp = /51B8EF9E;
 Reference = R7;
 ValeurCmp = 33k;
-IdModule  = R3-LARGE_PADS;
+IdModule  = R3-LARGE_PADS_CUSTOM;
 EndCmp
 
 BeginCmp
 TimeStamp = /51B8EFA4;
 Reference = R8;
 ValeurCmp = 33k;
-IdModule  = R3-LARGE_PADS;
+IdModule  = R3-LARGE_PADS_CUSTOM;
 EndCmp
 
 BeginCmp
 TimeStamp = /51B8EFAA;
 Reference = R9;
 ValeurCmp = 33k;
-IdModule  = R3-LARGE_PADS;
+IdModule  = R3-LARGE_PADS_CUSTOM;
 EndCmp
 
 BeginCmp
 TimeStamp = /51B93EA3;
 Reference = R10;
 ValeurCmp = R;
-IdModule  = R3-LARGE_PADS;
+IdModule  = R3-LARGE_PADS_CUSTOM;
 EndCmp
 
 BeginCmp
 TimeStamp = /51B93EB2;
 Reference = R11;
 ValeurCmp = R;
-IdModule  = R3-LARGE_PADS;
+IdModule  = R3-LARGE_PADS_CUSTOM;
 EndCmp
 
 BeginCmp
 TimeStamp = /51B97512;
 Reference = R12;
 ValeurCmp = 10k;
-IdModule  = R3-LARGE_PADS;
+IdModule  = R3-LARGE_PADS_CUSTOM;
 EndCmp
 
 BeginCmp
 TimeStamp = /52F67728;
 Reference = R13;
 ValeurCmp = 10k;
-IdModule  = R3-LARGE_PADS;
+IdModule  = R3-LARGE_PADS_CUSTOM;
 EndCmp
 
 BeginCmp
 TimeStamp = /52F39D0D;
 Reference = R14;
 ValeurCmp = 10k;
-IdModule  = R3-LARGE_PADS;
+IdModule  = R3-LARGE_PADS_CUSTOM;
 EndCmp
 
 BeginCmp
 TimeStamp = /52F38E6E;
 Reference = R15;
 ValeurCmp = 4k7;
-IdModule  = R3-LARGE_PADS;
+IdModule  = R3-LARGE_PADS_CUSTOM;
 EndCmp
 
 BeginCmp
 TimeStamp = /52F3834C;
 Reference = R16;
 ValeurCmp = 4k7;
-IdModule  = R3-LARGE_PADS;
+IdModule  = R3-LARGE_PADS_CUSTOM;
 EndCmp
 
 BeginCmp
 TimeStamp = /52F38352;
 Reference = R17;
 ValeurCmp = 7k5;
-IdModule  = R3-LARGE_PADS;
+IdModule  = R3-LARGE_PADS_CUSTOM;
 EndCmp
 
 BeginCmp
 TimeStamp = /52F3B736;
 Reference = R18;
 ValeurCmp = 47;
-IdModule  = R3-LARGE_PADS;
+IdModule  = R3-LARGE_PADS_CUSTOM;
 EndCmp
 
 BeginCmp
