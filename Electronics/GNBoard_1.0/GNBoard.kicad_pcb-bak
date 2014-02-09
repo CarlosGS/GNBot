@@ -372,7 +372,7 @@
     )
   )
 
-  (module DO41_3 (layer CopperTop) (tedit 52F438CB) (tstamp 51B8C861)
+  (module DO41_3 (layer CopperTop) (tedit 52F75D96) (tstamp 52F75E94)
     (at 69.4182 57.7088)
     (descr "Diode DO41 3 pas")
     (tags D)
@@ -381,8 +381,8 @@
     (fp_text reference D1 (at 0 0) (layer F.SilkS)
       (effects (font (size 1.016 1.016) (thickness 0.254)))
     )
-    (fp_text value 1N5822 (at 0 0) (layer F.SilkS) hide
-      (effects (font (size 1.016 1.016) (thickness 0.2032)))
+    (fp_text value 1N5822 (at -0.0254 -1.8288) (layer F.SilkS)
+      (effects (font (size 0.7 0.7) (thickness 0.175)))
     )
     (fp_line (start -3.81 0) (end -2.54 0) (layer F.SilkS) (width 0.2032))
     (fp_line (start 2.54 0) (end 3.81 0) (layer F.SilkS) (width 0.2032))
@@ -1564,7 +1564,7 @@
     )
   )
 
-  (module Choke_Toroid_8x16mm_Vertical (layer CopperTop) (tedit 52F4331C) (tstamp 52F36A85)
+  (module Choke_Toroid_8x16mm_Vertical (layer CopperTop) (tedit 52F75DE2) (tstamp 52F36A85)
     (at 83.6422 72.5678 90)
     (descr "Toroid, Coil, Choke,  6,5mm x 13mm, Vertical, Inductor, Drossel, Thruhole,")
     (tags "Toroid, Coil, Choke,  6,5mm x 13mm, Vertical, Inductor, Drossel, Thruhole,")
@@ -1572,7 +1572,7 @@
     (fp_text reference L1 (at 13.716 -5.969 90) (layer F.SilkS)
       (effects (font (size 1.524 1.524) (thickness 0.3048)))
     )
-    (fp_text value 100uH (at 10.16 3.81 90) (layer F.SilkS) hide
+    (fp_text value 100uH (at 7.6454 -3.7846 90) (layer F.SilkS)
       (effects (font (size 1.50114 1.50114) (thickness 0.20066)))
     )
     (fp_line (start 16.002 0) (end 9.144 0) (layer F.SilkS) (width 0.381))
@@ -1724,7 +1724,7 @@
     )
   )
 
-  (module R3-LARGE_PADS (layer CopperTop) (tedit 47E26765) (tstamp 52F42D0E)
+  (module R3-LARGE_PADS (layer CopperTop) (tedit 47E26765) (tstamp 52F75E36)
     (at 67.0052 36.3728 180)
     (descr "Resitance 3 pas")
     (tags R)
