@@ -1374,15 +1374,15 @@
     )
   )
 
-  (module xbee_r1-XBEE (layer CopperTop) (tedit 52F4391E) (tstamp 52F3B211)
+  (module xbee_r1-XBEE (layer CopperTop) (tedit 52F784A8) (tstamp 52F3B211)
     (at 118.1862 45.1358 270)
     (path /52F3777A)
     (attr virtual)
     (fp_text reference M1 (at 13.335 -14.859 270) (layer B.SilkS) hide
       (effects (font (size 0.8382 0.8382) (thickness 0.1778)))
     )
-    (fp_text value XBEE (at 4.953 -0.381 360) (layer F.SilkS)
-      (effects (font (size 0.8382 0.8382) (thickness 0.1778)))
+    (fp_text value XBEE (at 6.8707 -0.3048 360) (layer F.SilkS)
+      (effects (font (size 2 4) (thickness 0.5)))
     )
     (fp_line (start -12.2 -9.4) (end -9.8 -11.8) (layer F.SilkS) (width 0.1778))
     (fp_line (start -9.8 -11.8) (end 9.8 -11.8) (layer F.SilkS) (width 0.1778))
