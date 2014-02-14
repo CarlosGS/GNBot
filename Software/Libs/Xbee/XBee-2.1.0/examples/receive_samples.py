@@ -13,7 +13,7 @@ received from a remote XBee.
 from xbee import XBee
 import serial
 
-PORT = '/dev/ttyACM0'
+PORT = '/dev/ttyUSB0'
 BAUD_RATE = 9600
 
 # Open serial port

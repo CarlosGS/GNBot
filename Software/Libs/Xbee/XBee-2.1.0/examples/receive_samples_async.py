@@ -14,18 +14,11 @@ from xbee import XBee
 import time
 import serial
 
-PORT = '/dev/ttyACM1'
+PORT = '/dev/ttyUSB0'
 BAUD_RATE = 9600
 
 # Open serial port
-#ser = serial.Serial(PORT, BAUD_RATE)
-
-ser = serial.Serial()
-ser.port = PORT
-ser.baudrate = BAUD_RATE
-ser.timeout = 1
-ser.writeTimeout = 1
-ser.open()
+ser = serial.Serial(PORT, BAUD_RATE)
 
 def message_received(data):
     print data
