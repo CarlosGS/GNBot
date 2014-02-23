@@ -4,6 +4,10 @@
 #include <Servo.h>
 #include <Wire.h> //I2C Arduino Library
 #include <HMC5883L.h> //Compass library
+#include <XBee.h> // XBee library (usage based on examples by Andrew Rapp)
+
+// create the XBee object
+XBee xbee = XBee();
 
 #define XbeeSerial Serial1
 
@@ -255,6 +259,35 @@ int motors_oldL = 90;
 int motors_oldR = 90;
 
 
+int statusLed = LED_G_PIN;
+int errorLed = LED_R_PIN;
+void flashLed(int pin, int times, int wait) {
+
+  for (int i = 0; i < times; i++) {
+    digitalWrite(pin, HIGH);
+    delay(wait);
+    digitalWrite(pin, LOW);
+
+    if (i + 1 < times) {
+      delay(wait);
+    }
+  }
+}
+ZBTxStatusResponse txStatus = ZBTxStatusResponse();
+
+// Modified from http://www.desert-home.com/2013/02/using-xbee-library-part-3.html
+XBeeAddress64 CoordinatorAddress = XBeeAddress64(0x00000000, 0x00000000); // Address 0 is the coordinator
+void sendXbee(const char* command){
+  ZBTxRequest zbtx = ZBTxRequest(CoordinatorAddress, (uint8_t *)command, strlen(command));
+  xbee.send(zbtx);
+}
+
+
+
+
+
+
+
 
 
 
@@ -273,14 +306,64 @@ void setup() {
   Servo2.attach(SERVO_2_PIN);
   Serial.begin(9600);
   
+  XbeeSerial.begin(9600);
+  xbee.setSerial(XbeeSerial);
+  
   initRobot();
   
   while(!button_is_pressed()) delay(10);
   
-  analogWrite(NOSE_HEAT_PIN, 128);
+  int heatVal = 128;
+  analogWrite(NOSE_HEAT_PIN, heatVal);
   while(1) {
-    Serial.print("Nose: ");
-    Serial.print(analogRead(NOSE_VOUT_PIN));
+    if(Serial.available()) {
+      int val = Serial.read()-'0';
+      if(val >= 0 && val <= 9) {
+        heatVal = map(val,0,9, 0,255);
+        analogWrite(NOSE_HEAT_PIN, heatVal);
+      }
+    }
+    
+    int noseV = analogRead(NOSE_VOUT_PIN);
+    
+    char data[128] = "";
+    sprintf(data,"Heat: %d Nose: %d", heatVal, noseV);
+    sendXbee(data);
+  /*
+  // flash TX indicator
+  flashLed(statusLed, 1, 100);
+
+  // after sending a tx request, we expect a status response
+  // wait up to half second for the status response
+  if (xbee.readPacket(500)) {
+    // got a response!
+
+    // should be a znet tx status            	
+    if (xbee.getResponse().getApiId() == ZB_TX_STATUS_RESPONSE) {
+      xbee.getResponse().getZBTxStatusResponse(txStatus);
+
+      // get the delivery status, the fifth byte
+      if (txStatus.getDeliveryStatus() == SUCCESS) {
+        // success.  time to celebrate
+        flashLed(statusLed, 5, 50);
+      } else {
+        // the remote XBee did not receive our packet. is it powered on?
+        flashLed(errorLed, 3, 500);
+      }
+    }
+  } else if (xbee.getResponse().isError()) {
+    //nss.print("Error reading packet.  Error code: ");  
+    //nss.println(xbee.getResponse().getErrorCode());
+  } else {
+    // local XBee did not provide a timely TX Status Response -- should not happen
+    flashLed(errorLed, 2, 50);
+  }*/
+    
+    
+    Serial.print("Heat: ");
+    Serial.print(heatVal);
+    Serial.print("\t Nose: ");
+    Serial.print(noseV);
     
     Serial.print("\t LDR1: ");
     Serial.print(analogRead(LDR1_PIN));
