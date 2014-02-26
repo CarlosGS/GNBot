@@ -15,21 +15,21 @@ drill_diameter = 3.5;
 
 LDR_width = 6;
 LDR_height = 5;
-LDR_depth = 3;
+LDR_depth = 4;
 
 piece_height = 40;
-top_radius = 14;
+top_radius = 16;
 
 cover_thickness = 1;
 cover_margin = 1;
 cover_height = piece_height-5;
 
 screw_support_thickness = 3;
-nut_d = 7.2; // M3
-screw_d = 4; // M3
+nut_d = 7.3; // M3
+screw_d = 4.1; // M3
 
 ring_h = 24;
-ring_thick = 2;
+ring_thick = 1.4;
 
 // Linear interpolation to fit the ring to the cone shape
 ring_r = 0.5+(1-ring_h/piece_height)*cyl_btm_r+(ring_h/piece_height)*(LDR_radius+LDR_depth);
@@ -47,10 +47,11 @@ module LDR_sensor_array_support() {
                 cube([LDR_depth,LDR_width,2*piece_height],center=true);
 
             translate([0, 0, ring_h])
-                rotate_extrude($fn = 100)
+                rotate_extrude($fn = 50)
                     translate([ring_r, 0, 0])
                         rotate([0,0,45])
-                            square([ring_thick,ring_thick]);
+                            polygon([[-ring_thick,ring_thick],[2,2],[0,0]]);
+                            //square([ring_thick,ring_thick]);
         }
 
         union() {
