@@ -8,49 +8,38 @@ LDR_count = 4;
 
 LDR_radius = 18/2;
 
-cyl_btm_r = 15/2;
-
 drill_resolution = 40;
 drill_diameter = 3.5;
 
 LDR_width = 6;
 LDR_height = 5;
-LDR_depth = 3;
+LDR_depth = 2;
 
-piece_height = 40;
-top_radius = 14;
+conn_height = 1.5;
+conn_width = 3;
+conn_length = 14;
+
+piece_height = 25;
+top_radius = 20;
 
 cover_thickness = 1;
 cover_margin = 1;
 cover_height = piece_height-5;
 
-screw_support_thickness = 3;
-nut_d = 7.2; // M3
-screw_d = 4; // M3
-
-ring_h = 24;
-ring_thick = 2;
-
-// Linear interpolation to fit the ring to the cone shape
-ring_r = 0.5+(1-ring_h/piece_height)*cyl_btm_r+(ring_h/piece_height)*(LDR_radius+LDR_depth);
-
 module LDR_sensor_array_support() {
     intersection() {
         difference() {
-            cylinder(r1=cyl_btm_r,r2=LDR_radius+LDR_depth,h=piece_height,$fn=50);
-            translate([0,0,screw_support_thickness]) // nut slot
-                cylinder(r=nut_d/2,h=100,$fn=6,center=false);
-            cylinder(r=screw_d/2,h=100,$fn=20,center=true); // screw drill
+            cylinder(r=LDR_radius+LDR_depth,h=piece_height,$fn=50);
+            cube([LDR_width,LDR_width,100],center=true);
 
             for (i = [0:LDR_count-1])
               rotate([0,0,i*360/LDR_count+LDR_angle]) translate([LDR_radius+LDR_depth/2,0,piece_height/2])
                 cube([LDR_depth,LDR_width,2*piece_height],center=true);
 
-            translate([0, 0, ring_h])
-                rotate_extrude($fn = 100)
-                    translate([ring_r, 0, 0])
-                        rotate([0,0,45])
-                            square([ring_thick,ring_thick]);
+            translate([0,0,conn_height/2-0.01])
+              cube([conn_width,conn_length,conn_height],center=true);
+
+
         }
 
         union() {
@@ -61,4 +50,18 @@ module LDR_sensor_array_support() {
     }//intersection
 }
 
+
+module LDR_sensor_array_support_cover() {
+color([0.9,0.9,0.9,0.6])
+intersection() {
+    difference() {
+        cylinder(r=LDR_radius+LDR_depth+cover_margin+cover_thickness,h=cover_height,$fn=50);
+        translate([0,0,cover_height/2])
+            cylinder(r=LDR_radius+LDR_depth+cover_margin,h=cover_height+0.1,$fn=50,center=true);
+    }
+
+}//intersection
+}
+
 LDR_sensor_array_support();
+LDR_sensor_array_support_cover();
