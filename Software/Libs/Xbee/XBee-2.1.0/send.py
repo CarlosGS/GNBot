@@ -1,15 +1,5 @@
 #! /usr/bin/python
 
-"""
-receive_samples_async.py
-
-By Paul Malmsten, 2010
-pmalmsten@gmail.com
-
-This example reads the serial port and asynchronously processes IO data
-received from a remote XBee.
-"""
-
 from xbee import ZigBee
 import time
 import serial
@@ -18,21 +8,19 @@ from pprint import pprint
 PORT = '/dev/ttyUSB1'
 BAUD_RATE = 9600
 
-# Open serial port
 ser = serial.Serial(PORT, BAUD_RATE)
 
 def message_received(data):
     pprint(data)
-    print("\n")
-    #print(data['rf_data'])
 
-# Create API object, which spawns a new thread
 zb = ZigBee(ser, escaped = True, callback=message_received)
 
-# Do other stuff in the main thread
 while True:
     try:
-        time.sleep(.1)
+        time.sleep(1)
+        #zb.send("tx", dest_addr='.\x0c', dest_addr_long='\x00\x13\xa2\x00@\x9c.\x0c', data='Hello world from root!')
+        zb.send("tx", dest_addr='\x00\x00', dest_addr_long='\x00\x00\x00\x00\x00\x00\x00\x00', data='Hello world from dest!')
+        time.sleep(5)
     except KeyboardInterrupt:
         break
 
