@@ -15,7 +15,7 @@ import time
 import serial
 from pprint import pprint
 
-PORT = '/dev/ttyUSB1'
+PORT = '/dev/ttyUSB0'
 BAUD_RATE = 9600
 
 # Open serial port
