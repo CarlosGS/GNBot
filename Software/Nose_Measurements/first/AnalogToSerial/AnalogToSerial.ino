@@ -311,17 +311,11 @@ void setup() {
   
   initRobot();
   
-  unsigned long time;
-  unsigned long oldTime;
-  
   while(!button_is_pressed()) delay(10);
   pinMode(NOSE_HEAT_PIN,OUTPUT);
-  //digitalWrite(NOSE_HEAT_PIN, HIGH);
-  //delay(5000);
+  digitalWrite(NOSE_HEAT_PIN, HIGH);
   int up = 0;
   int count = 0;
-  int firstIt = 1;
-  oldTime = micros();
   while(1) {
     int Vs = analogRead(NOSE_VOUT_PIN);
     if(button_is_pressed()) {
@@ -330,41 +324,28 @@ void setup() {
       while(1) {
       delay(500);
       Vs_new = analogRead(NOSE_VOUT_PIN);
-      Serial.print("Rst ");
-      Serial.print(Vs);
-      Serial.print(" ");
       Serial.println(Vs_new);
-      if(Vs_new < Vs) break;
+      if(Vs_new <= Vs) break;
       Vs = Vs_new;
       }
-      oldTime = micros();
-      firstIt = 1;
     } else if(up) {
       digitalWrite(NOSE_HEAT_PIN, HIGH);
-      //if(Vs >= 511) {
       if(Vs >= 511) {
         up = 0;
-        time = micros();
-        if(!firstIt) {
-          Serial.print("up ");
-          Serial.println(time-oldTime);
-        }
-        oldTime = time;
-        firstIt = 0;
+        Serial.println(Vs);
       }
     } else {
       digitalWrite(NOSE_HEAT_PIN, LOW);
       if(Vs <= 2) {
         up = 1;
-        time = micros();
-        if(!firstIt) {
-          Serial.print("dn ");
-          Serial.println(time-oldTime);
-        }
-        oldTime = time;
-        firstIt = 0;
+        Serial.println(Vs);
       }
     }
+    if(count > 0) {
+      Serial.println(Vs);
+      count = 0;
+    } else count++;
+    delay(5);
   }
   
   int heatVal = 128;
