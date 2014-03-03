@@ -32,8 +32,9 @@ def saveToFile_noBak(data,path,filename):
         return ret
     raise Exception("Could not save " + path + filename)
 
+# Gets the date as a string (i.e. "2013-11-21 19:57:39.982591")
 def getDate():
-    return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S");
+    return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
 
 def saveToFile(data,path,filename):
     backupFilePath = path+"bak/"
@@ -81,44 +82,61 @@ def mySaveFig(plt,path,file):
     makeDirs(path)
     plt.savefig(path+file)
 
+# Linear interpolation between two values
+def myLerp(x):
+    return 
 
-def discretizePolar(angle, intensity, Nsamples, radians = False):
-    # Note: assumes angle = np.mod(angle, 2*np.pi);
-    if not radians:
-        angleInc = 360./float(Nsamples)
-    else:
-        angleInc = (2.*np.pi)/float(Nsamples)
-    result = np.zeros(Nsamples)
-    for i in range(Nsamples):
-        angleIni = i*angleInc - angleInc/2.
-        angleEnd = angleIni + angleInc
-        (indices,) = np.where((angle >= angleIni) & (angle <= angleEnd))
-        if len(indices) > 0:
-            result[i] = np.mean(intensity[indices])
-        else:
-            result[i] = -1
-    # Interpolate empty samples
-    (emptySamples,) = np.where(np.array(result) == -1)
-    for i in emptySamples:
-        prev_i = i
-        while result[prev_i] == -1:
-            prev_i -= 1
-        next_i = i
-        while result[next_i % Nsamples] == -1:
-            next_i += 1
-        dist = next_i - prev_i
-        t = float(i - prev_i)/float(dist)
-        result[i] = result[prev_i]*t + result[next_i % Nsamples]*(1.-t)
-    return result
+# http://cnx.org/content/m12844/latest/
+def evalIFFTpoint(s_point,S_coefs,N_total):
+    res = 0
+    N_total = float(N_total)
+    s_point = float(s_point)
+    for k in range(len(S_coefs)):
+        k = float(k)
+        res += S_coefs[k]*np.exp(2.j*np.pi*s_point*k/N_total)
+    res = float(res) / N_total
+    return res
+
+# Input:
+# anglesIn = angles corresponding to each intensity value
+# intensitiesIn = intensity corresponding to each angle value
+# Nsamples = number of samples in which the periodic function will be de
+def discretizePolar(anglesIn, intensitiesIn, Nsamples):
+    # anglesOut contains the discretized 360deg circumference
+    anglesOut = np.linspace(0.,360.,Nsamples,endpoint=False)
+    # Initialize the intensities vector
+    intensitiesOut = anglesOut.copy()
+    for i in range(len(anglesOut)):
+        angle = anglesOut[i]
+        if angle > max(anglesIn):
+            angle -= 360.
+        if angle < min(anglesIn):
+            angle += 360.
+        try:
+            (iUpper,) = np.where(anglesIn >= angle)
+            iUpper = iUpper[0]
+        except:
+            (iUpper,) = np.where(anglesIn >= angle-360.)
+            iUpper = iUpper[0]
+        try:
+            (iLower,) = np.where(anglesIn <= angle)
+            iLower = iLower[-1]
+        except:
+            (iLower,) = np.where(anglesIn <= angle+360.)
+            iLower = iLower[-1]
+        # Calculate the mean value of the nearest neighbours
+        intensity = (intensitiesIn[iUpper]+intensitiesIn[iLower])/2
+        intensitiesOut[i] = intensity
+    return (intensitiesOut,anglesOut)
 
 def plotClosedLine(ax, angs, vals, lab=None):
-    angs = np.append(angs,angs[0])
+    angs = np.append(angs,angs[0]) # Note: input values will be changed! Should work on the copy of the data
     vals = np.append(vals,vals[0])
     ax.plot(angs, vals, label=lab)
 
 # Linear interpolation of intermediate values
 def eval_intensity(vals, angle):
-    angle = np.mod(angle, 360.);
+    angle = np.mod(angle, 360.)
     Nsamples = vals.size
     inc = 360./float(Nsamples)
     prev = np.floor(angle/inc)
@@ -131,7 +149,7 @@ def lightModelCurve(Nsamples, angle=0, distance=1, intensity=1, ambient=0):
     vals = np.zeros(Nsamples)
     angs = np.arange(0., 360., 360./float(Nsamples))
     angs -= angle
-    angs = np.mod(angs, 360.);
+    angs = np.mod(angs, 360.)
     
     ambient = float(ambient)
     
@@ -146,7 +164,7 @@ def lightModelCurve(Nsamples, angle=0, distance=1, intensity=1, ambient=0):
         else:
             vals[i] = ambient
     angs += angle
-    angs = np.mod(angs, 360.);
+    angs = np.mod(angs, 360.)
     return (angs,vals)
 
 # Be careful with this function

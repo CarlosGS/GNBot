@@ -77,8 +77,8 @@ for sensor_i in data[DIST_NEAR]['vals'].iterkeys(): # Run for each sensor (usual
     # Example: y = fit_func(x, *fit_func_coefs[sensor_i])
     # Same as: y = fit_func(x, fit_func_coefs[0], fit_func_coefs[1], fit_func_coefs[2])
     
-    PLOT_FITTING = False
-    if PLOT_FITTING:
+    PLOT = False
+    if PLOT:
         # Plot the resulting curve and the measurements
         xlong = np.linspace(0,DIST_FAR,50)
         plt.figure()
@@ -108,8 +108,8 @@ for sensor_i in data[DIST_NEAR]['vals'].iterkeys(): # Run for each sensor (usual
         data[dist]['vals_cal'][sensor_i] = fit_func_inv(data[dist]['vals'][sensor_i], *fit_func_coefs[sensor_i])
 
 # Polar plot with the calibrated measurements
-PLOT_FITTING = False
-if PLOT_FITTING:
+PLOT_CALIBRATED_MEASUREMENTS = False
+if PLOT_CALIBRATED_MEASUREMENTS:
     for dist in sorted(data.iterkeys()):
         fig = plt.figure()
         ax = fig.add_subplot(111,polar=True)
@@ -128,23 +128,120 @@ if PLOT_FITTING:
         plt.close(fig)
 
 
-# Light model
-DIST_MAX = 1200
-DIST_MIN = 600
+ANALYTICAL_LIGHT_MODEL = False
+if ANALYTICAL_LIGHT_MODEL:
+    DIST = 100.
+    DIST_MAX = max(data[DIST]['vals_cal'][0])
+    DIST_MIN = DIST
 
-angle = np.linspace(0,360,)
-model = 
+    N_samples = 360
+    angles = np.linspace(0,2.*np.pi,num=N_samples,endpoint=False)
+    model = np.copy(angles)
+    for n in range(N_samples):
+        angle = angles[n]
+        if angle < np.pi/2. or angle > 3.*np.pi/2:
+            model[n] = DIST_MAX-(DIST_MAX-DIST_MIN)*np.abs(np.cos(angle))
+        else:
+            model[n] = DIST_MAX
+        #model[n] = DIST_MIN+(DIST_MAX-DIST_MIN)*0.5+(DIST_MAX-DIST_MIN)*0.5*np.cos(angle*1.-np.pi)
+    #model = DIST_MIN*np.abs(np.cos(angle/2.)) + DIST_MAX*np.abs(np.cos(angle/2.+np.pi/2.))
+    #model1 = np.linspace(DIST_MIN,DIST_MAX,num=360/2,endpoint=False)
+    #model2 = np.linspace(DIST_MAX,DIST_MIN,num=360/2,endpoint=False)
+    #model = np.append(model1,model2)
 
-fig = plt.figure()
-ax = fig.add_subplot(111,polar=True)
-plt.plot(np.radians(angle),model, marker='.', markersize=3, ls='', label="Model")
-ax.set_rmax(DIST_MAX) # Set larger range, since sensors not pointing directly to the light source will output longer distances
-ax.set_theta_direction('clockwise')
-ax.set_theta_zero_location('N')
-ax.legend(loc='upper left')
-ax.grid(True)
-plt.suptitle("Light model at " + str(DIST_MIN) + "cm)")
-#mySaveFig(plt,"graphs/","LDR_response_at_" + str(dist) + "cm.png")
-plt.show()
-plt.close(fig)
+    plt.figure()
+    angles_ = np.radians(data[DIST]['angles'][0])
+    values = data[DIST]['vals_cal'][0]
+    plt.plot(angles_, values, marker='.', markersize=3, ls='')
+    plt.plot(angles_+angles_[-1], values, marker='.', markersize=3, ls='')
+    plt.plot(angles, model)
+    plt.plot(angles+angles[-1], model)
+    plt.show()
+
+
+    fig = plt.figure()
+    ax = fig.add_subplot(111,polar=True)
+    plt.plot(angles_,values, marker='.', markersize=3, ls='', label="Measured")
+    plt.plot(angles,model, label="Model")
+    ax.set_rmax(DIST_FAR*3)
+    ax.set_theta_direction('clockwise')
+    ax.set_theta_zero_location('N')
+    ax.legend(loc='upper left')
+    ax.grid(True)
+    plt.suptitle("Light model at " + str(DIST) + "cm")
+    #mySaveFig(plt,"graphs/","LDR_response_at_" + str(dist) + "cm.png")
+    plt.show()
+    plt.close(fig)
+
+
+# Numerical light model
+NUMERICAL_LIGHT_MODEL = True
+if NUMERICAL_LIGHT_MODEL:
+    N_resample = 360
+    N_samples_fft = 30
+    for DIST in [DIST_NEAR,DIST_FAR]:
+        distance_model_sum = np.zeros(N_samples_fft)
+        for sensor_i in data[DIST]['vals_cal'].iterkeys():
+            # First step: uniformly resampling the intensity values
+            angles_measured = data[DIST]['angles'][sensor_i]
+            distance_measured = np.array(data[DIST]['vals_cal'][sensor_i])
+            (distance_model,angles_model) = discretizePolar(angles_measured, distance_measured, N_resample)
+            
+            # Second step: smoothing the data using the FFT
+            FFT_SMOOTHING = True
+            if FFT_SMOOTHING:
+                distance_model_fft = np.fft.rfft(distance_model)
+                 # Store the first coefficients of the FFT, this acts as a low-pass filter
+                distance_model_fft = distance_model_fft[:4]
+                distance_model = np.fft.irfft(distance_model_fft,N_samples_fft)*N_samples_fft/N_resample
+                #distance_model = [evalIFFTpoint(angle,distance_model_fft,Nsamples) for angle in range(Nsamples)]
+                angles_model = np.linspace(0.,2.*np.pi,num=N_samples_fft,endpoint=False)
+            else:
+                angles_model = np.radians(angles_model)
+            angles_measured = np.radians(angles_measured)
+            
+            distance_model_sum += distance_model
+            
+            PLOT_LIGHT_MODEL = False
+            if PLOT_LIGHT_MODEL:
+                fig = plt.figure()
+                ax = fig.add_subplot(111,polar=True)
+                plt.plot(angles_measured,distance_measured, marker='.', markersize=3, ls='', label="Measured")
+                plt.plot(angles_model,distance_model, label="Model")
+                ax.set_rmax(DIST_FAR*3)
+                ax.set_theta_direction('clockwise')
+                ax.set_theta_zero_location('N')
+                ax.legend(loc='upper left')
+                ax.grid(True)
+                plt.suptitle("Light model for sensor " + str(sensor_i+1) + " at " + str(DIST) + "cm")
+                #mySaveFig(plt,"graphs/","LDR_response_at_" + str(dist) + "cm.png")
+                plt.show()
+                plt.close(fig)
+        
+        distance_model_sum /= len(data[DIST]['vals_cal'])
+        data[DIST]['distance_model'] = np.copy(distance_model_sum)
+        data[DIST]['angles_model'] = np.copy(angles_model)
+    
+    angles_model = data[DIST_NEAR]['angles_model']
+    for dist in sorted(data.iterkeys()):
+        # Linear interpolation of the model
+        t = mapVals(dist, DIST_NEAR,DIST_FAR, 0.,1.)
+        distance_model = (1-t)*data[DIST_NEAR]['distance_model'] + t*data[DIST_FAR]['distance_model']
+        
+        fig = plt.figure()
+        ax = fig.add_subplot(111,polar=True)
+        for sensor_i in data[dist]['vals_cal'].iterkeys():
+            angle = np.radians(data[dist]['angles'][sensor_i])
+            value = np.array(data[dist]['vals_cal'][sensor_i])
+            plt.plot(angle,value, marker='.', markersize=3, ls='', label="Sensor "+str(sensor_i+1))
+        plt.plot(angles_model,distance_model, label="Model")
+        ax.set_rmax(DIST_FAR*3) # Set larger range, since sensors not pointing directly to the light source will output longer distances
+        ax.set_theta_direction('clockwise')
+        ax.set_theta_zero_location('N')
+        ax.legend(loc='upper left')
+        ax.grid(True)
+        plt.suptitle("Estimated distance D(phi) of each sensor to a light (with lamp at phi=0, D=" + str(dist) + "cm)")
+        #mySaveFig(plt,"graphs/model/","LDR_response_at_" + str(dist) + "cm.png")
+        plt.show()
+        plt.close(fig)
 
