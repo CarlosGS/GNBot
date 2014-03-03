@@ -77,8 +77,8 @@ for sensor_i in data[DIST_NEAR]['vals'].iterkeys(): # Run for each sensor (usual
     # Example: y = fit_func(x, *fit_func_coefs[sensor_i])
     # Same as: y = fit_func(x, fit_func_coefs[0], fit_func_coefs[1], fit_func_coefs[2])
     
-    PLOT = False
-    if PLOT:
+    PLOT_CURVE_FITTING = False
+    if PLOT_CURVE_FITTING:
         # Plot the resulting curve and the measurements
         xlong = np.linspace(0,DIST_FAR,50)
         plt.figure()
@@ -106,6 +106,8 @@ for sensor_i in data[DIST_NEAR]['vals'].iterkeys(): # Run for each sensor (usual
     for dist in data.iterkeys():
         if not 'vals_cal' in data[dist].keys(): data[dist]['vals_cal'] = {}
         data[dist]['vals_cal'][sensor_i] = fit_func_inv(data[dist]['vals'][sensor_i], *fit_func_coefs[sensor_i])
+
+saveToFile_noBak(fit_func_coefs,"./","fit_func_coefs.p")
 
 # Polar plot with the calibrated measurements
 PLOT_CALIBRATED_MEASUREMENTS = False
@@ -178,7 +180,7 @@ if ANALYTICAL_LIGHT_MODEL:
 NUMERICAL_LIGHT_MODEL = True
 if NUMERICAL_LIGHT_MODEL:
     N_resample = 360
-    N_samples_fft = 30
+    N_samples_fft = 360
     for DIST in [DIST_NEAR,DIST_FAR]:
         distance_model_sum = np.zeros(N_samples_fft)
         for sensor_i in data[DIST]['vals_cal'].iterkeys():
@@ -192,7 +194,7 @@ if NUMERICAL_LIGHT_MODEL:
             if FFT_SMOOTHING:
                 distance_model_fft = np.fft.rfft(distance_model)
                  # Store the first coefficients of the FFT, this acts as a low-pass filter
-                distance_model_fft = distance_model_fft[:4]
+                distance_model_fft = distance_model_fft[:10]
                 distance_model = np.fft.irfft(distance_model_fft,N_samples_fft)*N_samples_fft/N_resample
                 #distance_model = [evalIFFTpoint(angle,distance_model_fft,Nsamples) for angle in range(Nsamples)]
                 angles_model = np.linspace(0.,2.*np.pi,num=N_samples_fft,endpoint=False)
@@ -201,6 +203,7 @@ if NUMERICAL_LIGHT_MODEL:
             angles_measured = np.radians(angles_measured)
             
             distance_model_sum += distance_model
+            #distance_model_sum = distance_model
             
             PLOT_LIGHT_MODEL = False
             if PLOT_LIGHT_MODEL:
@@ -244,4 +247,7 @@ if NUMERICAL_LIGHT_MODEL:
         #mySaveFig(plt,"graphs/model/","LDR_response_at_" + str(dist) + "cm.png")
         plt.show()
         plt.close(fig)
+
+
+saveToFile_noBak(data_light_model,"./","data_light_model.p")
 

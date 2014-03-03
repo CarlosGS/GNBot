@@ -32,7 +32,7 @@ ydata = [1] * 1000
 fftlen = len(ydata)/2;
 fftdata = [0] * fftlen
 plt.ion()
-fig = plt.figure(figsize=(20.0, 7.0))
+fig = plt.figure(figsize=(15.0, 8.0))
 
 ax2 = fig.add_subplot( 212 )
 lineFFT, = plt.plot(fftdata, linewidth=0.0001)
@@ -43,7 +43,7 @@ ax1 = fig.add_subplot( 211 )
 ax1.set_yscale('log')
 line, = plt.plot(ydata, linewidth=0.0001)
 line.set_antialiased(False)
-plt.ylim([1000,1000000000])
+plt.ylim([100,1000000000])
 
 plt.tight_layout()
 plt.show()
