@@ -3,6 +3,7 @@ from xbee import ZigBee
 import time
 import serial
 from pprint import pprint
+import math
 
 from matplotlib import pyplot as plt
 import numpy as np
@@ -15,7 +16,7 @@ from helper import *
 
 
 # check http://www.lebsanft.org/?p=48
-WINDOW_LEN = 300
+WINDOW_LEN = 1000
 ydata1 = [0] * WINDOW_LEN
 ydata2 = [0] * WINDOW_LEN
 
@@ -26,7 +27,7 @@ ax1 = fig.add_subplot( 211 )
 #ax1.set_yscale('log')
 line1, = plt.plot(ydata1, linewidth=0.0001)
 line1.set_antialiased(False)
-plt.ylim([0,360])
+plt.ylim([-180,180])
 
 ax2 = fig.add_subplot( 212 )
 line2, = plt.plot(ydata2, linewidth=0.0001)
@@ -41,23 +42,38 @@ plt.show()
 
 updated = 0
 
-PORT = '/dev/ttyUSB1'
+PORT = '/dev/ttyUSB0'
 BAUD_RATE = 9600
 
 # Open serial port
 ser = serial.Serial(PORT, BAUD_RATE)
 
+magnetometerCalibration = {'xmax': -620.0, 'xmin': -1153.0, 'ymax': 391.0, 'ymin': -152.0} # Manually calibrated
+CALIBRATE_MAGNETOMETER = False
+def readCompassAngle(x,y):
+    global magnetometerCalibration
+    compassX = float(x)
+    compassY = float(y)
+    if CALIBRATE_MAGNETOMETER:
+        if magnetometerCalibration['xmin'] > compassX: magnetometerCalibration['xmin'] = compassX
+        if magnetometerCalibration['xmax'] < compassX: magnetometerCalibration['xmax'] = compassX
+        if magnetometerCalibration['ymin'] > compassY: magnetometerCalibration['ymin'] = compassY
+        if magnetometerCalibration['ymax'] < compassY: magnetometerCalibration['ymax'] = compassY
+        pprint(magnetometerCalibration)
+    compassX = mapVals(compassX, magnetometerCalibration['xmin'],magnetometerCalibration['xmax'], -1.,1.)
+    compassY = mapVals(compassY, magnetometerCalibration['ymin'],magnetometerCalibration['ymax'], -1.,1.)
+    angle = math.degrees(math.atan2(compassY,compassX))
+    return angle
+
 def message_received(data):
     global updated
     if 'rf_data' in data.keys():
         rf_data = data['rf_data']
-        print(rf_data)
+        #print(rf_data)
         
         data_vals = rf_data.split()
-        
-        compass = data_vals[1]
-        compass = float(compass[1:])
-        ydata1.append(compass)
+        angle = readCompassAngle(data_vals[1],data_vals[2])
+        ydata1.append(angle)
         del ydata1[0]
         
         batt_ADC = data_vals[0]

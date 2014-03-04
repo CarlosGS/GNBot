@@ -76,6 +76,7 @@ def getValue(description,default,dontAsk=False):
 
 
 def mapVals(x, in_min, in_max, out_min, out_max):
+    if (in_max - in_min) == 0: return out_max
     return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
 
 def mySaveFig(plt,path,file):

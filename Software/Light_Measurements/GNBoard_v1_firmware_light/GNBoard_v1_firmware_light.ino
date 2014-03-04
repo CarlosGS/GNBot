@@ -44,14 +44,41 @@ XBee xbee = XBee();
 Servo Servo1;
 Servo Servo2;
 
+
+float mapf(float x, float in_min, float in_max, float out_min, float out_max)
+{
+  return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+}
+
 // Magnetometer
 // Store our compass as a variable.
 HMC5883L compass;
 float declinationAngle = 0;
+float compass_yMax = -1;
+float compass_yMin = 1;
+float compass_xMax = -1;
+float compass_xMin = 1;
 float readMagnetometer() {
+  MagnetometerRaw raw = compass.ReadRawAxis();
+  return raw.XAxis;
   // Retrived the scaled values from the compass (scaled to the configured scale).
   MagnetometerScaled scaled = compass.ReadScaledAxis();
-  float heading = atan2(scaled.YAxis, scaled.XAxis);
+  if(scaled.YAxis > compass_yMax)
+    compass_yMax = scaled.YAxis;
+  if(scaled.YAxis < compass_yMin)
+    compass_yMin = scaled.YAxis;
+  if(scaled.XAxis > compass_xMax)
+    compass_xMax = scaled.XAxis;
+  if(scaled.XAxis < compass_xMin)
+    compass_xMin = scaled.XAxis;
+  float y = mapf(scaled.YAxis, compass_yMin, compass_yMax, -1, 1);
+  float x = mapf(scaled.XAxis, compass_xMin, compass_xMax, -1, 1);
+  float heading = atan2(y, x);
+  return scaled.XAxis;
+  Serial.print("YAxis:");
+  Serial.print(scaled.YAxis);
+  Serial.print("YAxis:");
+  Serial.println(scaled.YAxis);
   
   // Once you have your heading, you must then add your 'Declination Angle', which is the 'compassError' of the magnetic field in your location.
   // Find yours here: http://www.magnetic-declination.com/
@@ -88,7 +115,7 @@ void setupMagnetometer() {
   compass = HMC5883L(); // Construct a new HMC5883 compass.
   
   Serial.println("Setting scale to +/- 1.3 Ga");
-  compassError = compass.SetScale(1.3); // Set the scale of the compass.
+  compassError = compass.SetScale(0.88); // Set the scale of the compass.
   if(compassError != 0) // If there is an compassError, print it out.
     Serial.println(compass.GetErrorText(compassError));
     
@@ -211,11 +238,6 @@ void initRobot() {
 
 
 
-
-float mapf(float x, float in_min, float in_max, float out_min, float out_max)
-{
-  return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
-}
 
 float analogReadAverage(int pin, int samples) {
   int result = 0;
@@ -349,18 +371,19 @@ void setup() {
       int ldr4 = analogRead(LDR4_PIN);
       float angle = readMagnetometer();
       
-      char angle_str[9];
-      dtostrf(angle, 0, 2, angle_str);
-      //Serial.println(angle);
+      MagnetometerRaw magnetometer_raw = compass.ReadRawAxis();
       char data[256] = "";
-      sprintf(data,"B%d A%s %d %d %d %d", batt,angle_str,ldr1,ldr2,ldr3,ldr4);
+      sprintf(data,"B%d %d %d %d %d %d %d %d", batt,magnetometer_raw.XAxis,magnetometer_raw.YAxis,magnetometer_raw.ZAxis,ldr1,ldr2,ldr3,ldr4);
       sendXbee(data);
     }
     
     if(button_is_pressed()) {
       int spinVel = 5;
+      delay(500);
+      if(button_is_pressed()) spinVel = 10;
       Servo1.write(90-spinVel);
       Servo2.write(90-spinVel);
+      delay(500);
     }
     
   }
