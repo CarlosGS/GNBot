@@ -87,7 +87,7 @@ plt.show()
 
 updated = 0
 
-PORT = '/dev/ttyUSB1'
+PORT = '/dev/ttyUSB0'
 BAUD_RATE = 9600
 
 # Open serial port
@@ -133,7 +133,7 @@ def message_received(data):
         
         spinSpeed = 10
         forwardSpeed = 0
-        dstAngle = 90*cos(time.time()/5.)
+        dstAngle = 90*cos(time.time()/2.)
         
         angle -= dstAngle
         
