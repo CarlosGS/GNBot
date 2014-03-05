@@ -16,6 +16,8 @@ import numpy as np
 
 from helper import *
 
+import struct
+
 
 WORLD_SIZE = (600.,300.)
 LANDMARK_POS = (-90.,-90.)
@@ -85,7 +87,7 @@ plt.show()
 
 updated = 0
 
-PORT = '/dev/ttyUSB0'
+PORT = '/dev/ttyUSB1'
 BAUD_RATE = 9600
 
 # Open serial port
@@ -108,8 +110,14 @@ def readCompassAngle(x,y):
     angle = degrees(atan2(compassY,compassX))
     return angle
 
+robot_dest_addr_long = None
 def message_received(data):
-    global updated, robotAngle
+    global updated, robotAngle, robot_dest_addr_long
+    #print(data)
+    if not robot_dest_addr_long:
+        robot_dest_addr_long = data['source_addr_long']
+        print("Robot address: ")
+        pprint(robot_dest_addr_long)
     if 'rf_data' in data.keys():
         rf_data = data['rf_data']
         #print(rf_data)
@@ -122,12 +130,37 @@ def message_received(data):
         robotAngle = radians(angle)
         redrawRobotPosition()
         
+        spinSpeed = 10
+        forwardSpeed = 0
+        dstAngle = 0
+        
+        angle -= dstAngle
+        
+        if abs(angle) < 0.5:
+            spinSpeed = 0
+        elif abs(angle) < 3:
+            spinSpeed = 2
+        elif abs(angle) < 5:
+            spinSpeed = 3
+        elif abs(angle) < 20:
+            spinSpeed = 4
+        
+        if angle < 0:
+            robotSetMotors(forwardSpeed+spinSpeed,forwardSpeed-spinSpeed)
+        else:
+            robotSetMotors(forwardSpeed-spinSpeed,forwardSpeed+spinSpeed)
+        
         batt_ADC = data_vals[0]
         batt_ADC = float(batt_ADC[1:])
         battV = mapVals(batt_ADC,0.,1023., 0.,21.1765); # Voltage divider with 22k in series with 6k8
         ydata2.append(battV)
         del ydata2[0]
         updated = 0
+
+def robotSetMotors(L,R):
+    if not robot_dest_addr_long: return
+    rf_data = struct.pack('b', L) + struct.pack('b', R)
+    zb.send("tx", dest_addr='\xFF\xFE', dest_addr_long=robot_dest_addr_long, data=rf_data)
 
 # Create API object, which spawns a new thread
 zb = ZigBee(ser, escaped = True, callback=message_received)
@@ -156,6 +189,8 @@ while True:
         else: time.sleep(0.01)
     except KeyboardInterrupt:
         break
+
+robotSetMotors(0,0)
 
 # halt() must be called before closing the serial
 # port in order to ensure proper thread shutdown

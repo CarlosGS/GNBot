@@ -38,8 +38,8 @@ XBee xbee = XBee();
 
 #define BUZZER_PIN 8
 
-#define SERVO_1_PIN 7
-#define SERVO_2_PIN 6
+#define SERVO_1_PIN 7 // left
+#define SERVO_2_PIN 6 // right
 
 Servo Servo1;
 Servo Servo2;
@@ -357,7 +357,21 @@ void setup() {
     if (xbee.getResponse().isAvailable()) {
       if (xbee.getResponse().getApiId() == ZB_RX_RESPONSE) {
         xbee.getResponse().getZBRxResponse(rx);
-        rx.getData(0);
+        int len = rx.getDataLength();
+        if(len == 2) {
+          char L = rx.getData(0);
+          char R = rx.getData(1);
+          if(L == 0) Servo1.detach();
+          else {
+            Servo1.attach(SERVO_1_PIN);
+            Servo1.write(90-L);
+          }
+          if(R == 0) Servo2.detach();
+          else {
+            Servo2.attach(SERVO_2_PIN);
+            Servo2.write(90+R);
+          }
+        }
       }
     }
     
