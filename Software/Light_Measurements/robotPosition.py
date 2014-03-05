@@ -61,7 +61,7 @@ plt.tight_layout()
 plt.show()
 
 # check http://www.lebsanft.org/?p=48
-WINDOW_LEN = 1000
+WINDOW_LEN = 20*60*1000/100
 ydata1 = [0] * WINDOW_LEN
 ydata2 = [0] * WINDOW_LEN
 
@@ -114,6 +114,7 @@ robot_dest_addr_long = None
 def message_received(data):
     global updated, robotAngle, robot_dest_addr_long
     #print(data)
+    if not ('source_addr_long' in data.keys()) or not ('rf_data' in data.keys()): return
     if not robot_dest_addr_long:
         robot_dest_addr_long = data['source_addr_long']
         print("Robot address: ")
@@ -132,7 +133,7 @@ def message_received(data):
         
         spinSpeed = 10
         forwardSpeed = 0
-        dstAngle = 0
+        dstAngle = 90*cos(time.time()/5.)
         
         angle -= dstAngle
         
