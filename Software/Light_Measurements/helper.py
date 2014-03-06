@@ -98,11 +98,27 @@ def evalIFFTpoint(s_point,S_coefs,N_total):
     res = float(res) / N_total
     return res
 
+# http://stackoverflow.com/questions/2566412/find-nearest-value-in-numpy-array
+def find_nearest(array,value):
+    idx = (np.abs(array-value)).argmin()
+    return idx
+
 # Input:
 # anglesIn = angles corresponding to each intensity value
 # intensitiesIn = intensity corresponding to each angle value
 # Nsamples = number of samples in which the periodic function will be de
 def discretizePolar(anglesIn, intensitiesIn, Nsamples):
+    # anglesOut contains the discretized 360deg circumference
+    anglesOut = np.linspace(0.,360.,Nsamples,endpoint=False)
+    # Initialize the intensities vector
+    intensitiesOut = anglesOut.copy()
+    for i in range(Nsamples):
+        angle = anglesOut[i]
+        index = find_nearest(anglesIn,angle)
+        intensitiesOut[i] = intensitiesIn[index]
+    return (intensitiesOut,anglesOut)
+
+def discretizePolar_bak(anglesIn, intensitiesIn, Nsamples):
     # anglesOut contains the discretized 360deg circumference
     anglesOut = np.linspace(0.,360.,Nsamples,endpoint=False)
     # Initialize the intensities vector
@@ -129,6 +145,12 @@ def discretizePolar(anglesIn, intensitiesIn, Nsamples):
         intensity = (intensitiesIn[iUpper]+intensitiesIn[iLower])/2
         intensitiesOut[i] = intensity
     return (intensitiesOut,anglesOut)
+
+def sample_point(angle, angles, intensities):
+    angle = angle % 360.
+    index = find_nearest(angles,angle)
+    intensity = intensities[index]
+    return intensity
 
 def plotClosedLine(ax, angs, vals, lab=None):
     angs = np.append(angs,angs[0]) # Note: input values will be changed! Should work on the copy of the data

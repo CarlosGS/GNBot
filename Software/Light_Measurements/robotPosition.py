@@ -12,6 +12,7 @@ from pprint import pprint
 from math import *
 
 from matplotlib import pyplot as plt
+from matplotlib.widgets import Slider, Button, RadioButtons
 import numpy as np
 
 from helper import *
@@ -24,6 +25,104 @@ LANDMARK_POS = (-90.,-90.)
 
 robotPosition = (30.,100.)
 robotAngle = radians(45.)
+
+
+# Load our data model
+data = loadFromFile("./","LDR_data_light_model.p")
+model = {}
+model_distances = sorted(data.iterkeys())
+dist_close = float(model_distances[0])
+dist_middle = float(model_distances[1])
+dist_far = float(model_distances[2])
+for sensor_i in range(4):
+    model[sensor_i] = {}
+    model[sensor_i]['angles'] = data[dist_close]['angles_model'][sensor_i]
+    model[sensor_i]['intensities'] = {}
+    for distances in model_distances:
+        model[sensor_i]['intensities'][distances] = data[distances]['distance_model'][sensor_i]
+
+offsetAngle = 0 # average initial angle value for the three measurements
+for dist in data.keys():
+    offsetAngle += data[dist]['iniAngle']
+offsetAngle /= float(len(data.keys()))
+#offsetAngle = 86
+L_R_x = LANDMARK_POS[0]-dist_close
+L_R_y = LANDMARK_POS[1]-dist_close
+angleFromLight = -degrees(atan2(L_R_y,L_R_x))
+offsetAngle -= angleFromLight
+offsetAngle = offsetAngle % 360.
+print("Offset angle: " + str(offsetAngle))
+
+def sampleModelPoint(sensor_i,distance,angle):
+    angles = model[sensor_i]['angles']
+    if distance < dist_middle:
+        t = (distance-dist_close)/(dist_middle-dist_close)
+        intensities = (1.-t)*model[sensor_i]['intensities'][dist_close] + t*model[sensor_i]['intensities'][dist_middle]
+    else:
+        t = (distance-dist_middle)/(dist_far-dist_middle)
+        intensities = (1.-t)*model[sensor_i]['intensities'][dist_middle] + t*model[sensor_i]['intensities'][dist_far]
+    return sample_point(angle, angles, intensities)
+
+SHOW_LIGHT_MODEL = False
+if SHOW_LIGHT_MODEL:
+    currentLDR = 0
+    angles_model = np.linspace(0.,360.,num=50,endpoint=False)
+    angles_model_radians = np.radians(angles_model)
+    distance_model = [sampleModelPoint(currentLDR,400,angle) for angle in angles_model]
+
+    fig = plt.figure()
+    ax = fig.add_subplot(111,polar=True)
+    l, = plt.plot(angles_model_radians,distance_model, label="Model")
+    ax.set_rmax(model_distances[-1]*3)
+    ax.set_theta_direction('clockwise')
+    ax.set_theta_zero_location('N')
+    ax.legend(loc='upper left')
+    ax.grid(True)
+    #plt.axis([0, 1, -10, 10])
+
+    axcolor = 'lightgoldenrodyellow'
+    axdist = plt.axes([0.25, 0.1, 0.65, 0.03], axisbg=axcolor)
+    axangle  = plt.axes([0.25, 0.15, 0.65, 0.03], axisbg=axcolor)
+
+    sdist = Slider(axdist, 'Distance', 0., 700., valinit=model_distances[0])
+    sangle = Slider(axangle, 'Angle', 0., 360., valinit=0.)
+
+    def update(val):
+        distance_model = [sampleModelPoint(currentLDR,sdist.val,angle) for angle in angles_model]
+        l.set_ydata(distance_model)
+        fig.canvas.draw_idle()
+    sdist.on_changed(update)
+    sangle.on_changed(update)
+
+    resetax = plt.axes([0.8, 0.025, 0.1, 0.04])
+    button = Button(resetax, 'Reset', color=axcolor, hovercolor='0.975')
+    def reset(event):
+        sdist.reset()
+        sangle.reset()
+    button.on_clicked(reset)
+
+    rax = plt.axes([0.025, 0.5, 0.15, 0.15], axisbg=axcolor)
+    radio = RadioButtons(rax, (0,1,2,3), active=0)
+    def colorfunc(label):
+        global currentLDR
+        currentLDR = int(label)
+        update(0)
+    radio.on_clicked(colorfunc)
+
+    plt.show()
+    plt.close(fig)
+
+
+def evaluateError(angle,distance,m1,m2,m3,m4):
+    offset = 45.
+    angle += offset
+    s1 = sampleModelPoint(0,distance,angle+90*2)
+    s2 = sampleModelPoint(1,distance,angle+90*3)
+    s3 = sampleModelPoint(2,distance,angle+90*0)
+    s4 = sampleModelPoint(3,distance,angle+90*1)
+    return (s1-m1)**2+(s2-m2)**2+(s3-m3)**2+(s4-m4)**2
+
+
 
 
 plt.ion() # Real time plotting
@@ -61,7 +160,7 @@ plt.tight_layout()
 plt.show()
 
 # check http://www.lebsanft.org/?p=48
-WINDOW_LEN = 20*60*1000/100
+WINDOW_LEN = 500#20*60*1000/100
 ydata1 = [0] * WINDOW_LEN
 ydata2 = [0] * WINDOW_LEN
 
@@ -72,7 +171,7 @@ ax1 = fig.add_subplot( 211 )
 #ax1.set_yscale('log')
 line1, = plt.plot(ydata1, linewidth=0.0001)
 line1.set_antialiased(False)
-plt.ylim([-180,180])
+plt.ylim([0,360])
 
 ax2 = fig.add_subplot( 212 )
 line2, = plt.plot(ydata2, linewidth=0.0001)
@@ -112,7 +211,7 @@ def readCompassAngle(x,y):
 
 robot_dest_addr_long = None
 def message_received(data):
-    global updated, robotAngle, robot_dest_addr_long
+    global updated, robotAngle, robot_dest_addr_long, robotPosition
     #print(data)
     if not ('source_addr_long' in data.keys()) or not ('rf_data' in data.keys()): return
     if not robot_dest_addr_long:
@@ -125,31 +224,40 @@ def message_received(data):
         
         data_vals = rf_data.split()
         angle = readCompassAngle(data_vals[1],data_vals[2])
+        angle -= offsetAngle
+        angle = angle % 360.
+        #print(angle)
         ydata1.append(angle)
         del ydata1[0]
         
+        robot_LDR_vals = {}
+        for sensor_i in range(4):
+           data_vals_i = sensor_i + 4 # items 4,5,6,7
+           robot_LDR_vals[sensor_i] = 1023.-float(data_vals[data_vals_i])
+        
+        m1 = robot_LDR_vals[0]
+        m2 = robot_LDR_vals[1]
+        m3 = robot_LDR_vals[2]
+        m4 = robot_LDR_vals[3]
+        
+        minErr = 9000000.
+        newPos = (0,0)
+        for x in np.linspace(0.,WORLD_SIZE[0],num=10):
+            for y in np.linspace(0.,WORLD_SIZE[1],num=10):
+                L_R_x = LANDMARK_POS[0]-x
+                L_R_y = LANDMARK_POS[1]-y
+                absolute_angleToLight = (-degrees(atan2(L_R_y,L_R_x))) % 360.
+                angleToLight = angle-absolute_angleToLight
+                distanceToLight = np.sqrt((x-LANDMARK_POS[0])**2+(y+LANDMARK_POS[1])**2)
+                #print()
+                angleToLight = angleToLight % 360.
+                err = evaluateError(angleToLight,distanceToLight,m1,m2,m3,m4)
+                if minErr > err:
+                    minErr = err
+                    newPos = (x,y)
+        robotPosition = newPos
         robotAngle = radians(angle)
         redrawRobotPosition()
-        
-        spinSpeed = 10
-        forwardSpeed = 0
-        dstAngle = 90*cos(time.time()/2.)
-        
-        angle -= dstAngle
-        
-        if abs(angle) < 0.5:
-            spinSpeed = 0
-        elif abs(angle) < 3:
-            spinSpeed = 2
-        elif abs(angle) < 5:
-            spinSpeed = 3
-        elif abs(angle) < 20:
-            spinSpeed = 4
-        
-        if angle < 0:
-            robotSetMotors(forwardSpeed+spinSpeed,forwardSpeed-spinSpeed)
-        else:
-            robotSetMotors(forwardSpeed-spinSpeed,forwardSpeed+spinSpeed)
         
         batt_ADC = data_vals[0]
         batt_ADC = float(batt_ADC[1:])
