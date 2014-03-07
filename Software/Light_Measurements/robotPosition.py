@@ -20,12 +20,14 @@ from helper import *
 import struct
 
 
-WORLD_SIZE = (600.,300.)
+WORLD_SIZE = (600.,600.)
 LANDMARK_POS = (-90.,-90.)
 
 robotPosition = (30.,100.)
 robotAngle = radians(45.)
 
+# Load the sensor calibration coefficients
+fit_func_coefs = loadFromFile("./","fit_func_coefs.p")
 
 # Load our data model
 data = loadFromFile("./","LDR_data_light_model.p")
@@ -63,7 +65,7 @@ def sampleModelPoint(sensor_i,distance,angle):
         intensities = (1.-t)*model[sensor_i]['intensities'][dist_middle] + t*model[sensor_i]['intensities'][dist_far]
     return sample_point(angle, angles, intensities)
 
-SHOW_LIGHT_MODEL = False
+SHOW_LIGHT_MODEL = True
 if SHOW_LIGHT_MODEL:
     currentLDR = 0
     angles_model = np.linspace(0.,360.,num=50,endpoint=False)
@@ -73,7 +75,7 @@ if SHOW_LIGHT_MODEL:
     fig = plt.figure()
     ax = fig.add_subplot(111,polar=True)
     l, = plt.plot(angles_model_radians,distance_model, label="Model")
-    ax.set_rmax(model_distances[-1]*3)
+    ax.set_rmax(model_distances[-1]*4)
     ax.set_theta_direction('clockwise')
     ax.set_theta_zero_location('N')
     ax.legend(loc='upper left')
@@ -209,6 +211,9 @@ def readCompassAngle(x,y):
     angle = degrees(atan2(compassY,compassX))
     return angle
 
+def fit_func_inv(y, a, b, c): # Inverse function, analitically determined
+    return (-1/b) * np.log((y - c) / a)
+
 robot_dest_addr_long = None
 def message_received(data):
     global updated, robotAngle, robot_dest_addr_long, robotPosition
@@ -234,6 +239,7 @@ def message_received(data):
         for sensor_i in range(4):
            data_vals_i = sensor_i + 4 # items 4,5,6,7
            robot_LDR_vals[sensor_i] = 1023.-float(data_vals[data_vals_i])
+           robot_LDR_vals[sensor_i] = fit_func_inv(robot_LDR_vals[sensor_i], *fit_func_coefs[sensor_i])
         
         m1 = robot_LDR_vals[0]
         m2 = robot_LDR_vals[1]
@@ -242,8 +248,8 @@ def message_received(data):
         
         minErr = 9000000.
         newPos = (0,0)
-        for x in np.linspace(0.,WORLD_SIZE[0],num=10):
-            for y in np.linspace(0.,WORLD_SIZE[1],num=10):
+        for x in np.linspace(10.,200.,num=20):
+            for y in np.linspace(10.,200.,num=20):
                 L_R_x = LANDMARK_POS[0]-x
                 L_R_y = LANDMARK_POS[1]-y
                 absolute_angleToLight = (-degrees(atan2(L_R_y,L_R_x))) % 360.

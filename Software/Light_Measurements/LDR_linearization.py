@@ -20,8 +20,8 @@ import math
 def LDRtoResistance(v_adc):
     Vc = 5.
     Rl = 33000.
-    if v_adc <= 0: v_adc = 0.000001
-    Vout = mapVals(v_adc,0,1023, 0.,Vc)
+    if v_adc <= 0: v_adc = 0.00001
+    Vout = mapVals(v_adc,0,1023., 0.,Vc)
     Rs = Rl*Vout/(Vc-Vout)
     return Rs
 
@@ -29,6 +29,13 @@ def LDRtoResistance(v_adc):
 def fit_func(x, a, b, c): # Exponential decay function, to be fitted to the measurements
     return a * np.exp(-b * x) + c
 def fit_func_inv(y, a, b, c): # Inverse function, analitically determined
+    res = np.copy(y)
+    for i in range(len(y)):
+        if y[i] - c <= 0:
+            res[i] = min(y)*4
+        else:
+            res[i] =  (-1/b) * np.log((y[i] - c) / a)
+    #return res
     return (-1/b) * np.log((y - c) / a)
 
 # Load the data (LDR values and angle, indexed by the distance to the light source)
@@ -50,7 +57,7 @@ for dist in sorted(data.iterkeys()):
 print("===== Calibrating each sensor with three points =====")
 DIST_NEAR = 100
 DIST_MIDDLE = 200
-DIST_FAR = 600
+DIST_FAR = 300
 print("Near: "+str(DIST_NEAR)+"[cm] Middle: "+str(DIST_MIDDLE)+"[cm] Far: "+str(DIST_FAR)+"[cm]")
 
 fit_func_coefs = {} # Stores the fitted coefficients for all the sensors
@@ -79,14 +86,14 @@ for sensor_i in data[DIST_NEAR]['vals'].iterkeys(): # Run for each sensor (usual
     # Three point curve fitting
     x = np.array([DIST_NEAR,DIST_MIDDLE,DIST_FAR])
     y = np.array([val_near,val_middle,val_far])
-    fit_func_coefs[sensor_i], pcov = curve_fit(fit_func, x, y,[1023.,0,0],maxfev = 100000) # Very important to give reasonable initial coefficients
+    fit_func_coefs[sensor_i], pcov = curve_fit(fit_func, x, y,[1023.,0,0],maxfev = 1000000) # Very important to give reasonable initial coefficients
     print("Calculated coefficients: "+str(fit_func_coefs[sensor_i]))
     # NOTE for fit_func_coefs[sensor_i]
     # The coefficients can be passed to the chosen fitting functions using an * before, which expands them as arguments
     # Example: y = fit_func(x, *fit_func_coefs[sensor_i])
     # Same as: y = fit_func(x, fit_func_coefs[0], fit_func_coefs[1], fit_func_coefs[2])
     
-    PLOT_CURVE_FITTING = False
+    PLOT_CURVE_FITTING = True
     if PLOT_CURVE_FITTING:
         # Plot the resulting curve and the measurements
         xlong = np.linspace(0,DIST_FAR,50)
@@ -114,7 +121,17 @@ for sensor_i in data[DIST_NEAR]['vals'].iterkeys(): # Run for each sensor (usual
     # Calibrate all measurements of current sensor with the calculated parameters
     for dist in data.iterkeys():
         if not 'vals_cal' in data[dist].keys(): data[dist]['vals_cal'] = {}
+        print("Sensor:",sensor_i)
         data[dist]['vals_cal'][sensor_i] = fit_func_inv(data[dist]['vals'][sensor_i], *fit_func_coefs[sensor_i])
+#print(fit_func_coefs[0])
+#print(data[600]['vals'][0],fit_func_coefs[0])
+
+#fig = plt.figure()
+#ax = fig.add_subplot(111)
+#plt.plot(data[600]['vals'][0])
+#plt.plot(fit_func_inv(data[600]['vals'][0], *fit_func_coefs[0]))
+#plt.show()
+#plt.close(fig)
 
 saveToFile_noBak(fit_func_coefs,"./","fit_func_coefs.p")
 
@@ -220,7 +237,7 @@ if NUMERICAL_LIGHT_MODEL:
             data[DIST]['angles_model'][sensor_i] = np.degrees(angles_model)
             data[DIST]['distance_model'][sensor_i] = distance_model
             
-            PLOT_LIGHT_MODEL = False
+            PLOT_LIGHT_MODEL = True
             if PLOT_LIGHT_MODEL:
                 fig = plt.figure()
                 ax = fig.add_subplot(111,polar=True)
