@@ -57,7 +57,7 @@ for dist in sorted(data.iterkeys()):
 print("===== Calibrating each sensor with three points =====")
 DIST_NEAR = 100
 DIST_MIDDLE = 200
-DIST_FAR = 300
+DIST_FAR = 600
 print("Near: "+str(DIST_NEAR)+"[cm] Middle: "+str(DIST_MIDDLE)+"[cm] Far: "+str(DIST_FAR)+"[cm]")
 
 fit_func_coefs = {} # Stores the fitted coefficients for all the sensors

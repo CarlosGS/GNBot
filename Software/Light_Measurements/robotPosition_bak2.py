@@ -32,10 +32,7 @@ fit_func_coefs = loadFromFile("./","fit_func_coefs.p")
 # Load our data model
 data = loadFromFile("./","LDR_data_light_model.p")
 model = {}
-DIST_NEAR = 100
-DIST_MIDDLE = 200
-DIST_FAR = 600
-model_distances = [DIST_NEAR,DIST_MIDDLE,DIST_FAR]
+model_distances = sorted(data.iterkeys())
 dist_close = float(model_distances[0])
 dist_middle = float(model_distances[1])
 dist_far = float(model_distances[2])
@@ -48,7 +45,6 @@ for sensor_i in range(4):
 
 offsetAngle = 0 # average initial angle value for the three measurements
 for dist in data.keys():
-    print(data[dist]['iniAngle'])
     offsetAngle += data[dist]['iniAngle']
 offsetAngle /= float(len(data.keys()))
 #offsetAngle = 86
@@ -196,7 +192,7 @@ PORT = '/dev/ttyUSB0'
 BAUD_RATE = 9600
 
 # Open serial port
-#ser = serial.Serial(PORT, BAUD_RATE)
+ser = serial.Serial(PORT, BAUD_RATE)
 
 magnetometerCalibration = {'xmax': -620.0, 'xmin': -1153.0, 'ymax': 391.0, 'ymin': -152.0} # Manually calibrated
 CALIBRATE_MAGNETOMETER = False
@@ -222,45 +218,28 @@ robot_dest_addr_long = None
 def message_received(data):
     global updated, robotAngle, robot_dest_addr_long, robotPosition
     #print(data)
-#    if not ('source_addr_long' in data.keys()) or not ('rf_data' in data.keys()): return
-#    if not robot_dest_addr_long:
-#        robot_dest_addr_long = data['source_addr_long']
-#        print("Robot address: ")
-#        pprint(robot_dest_addr_long)
-#    if 'rf_data' in data.keys():
-    if 1:
-        #rf_data = data['rf_data']
+    if not ('source_addr_long' in data.keys()) or not ('rf_data' in data.keys()): return
+    if not robot_dest_addr_long:
+        robot_dest_addr_long = data['source_addr_long']
+        print("Robot address: ")
+        pprint(robot_dest_addr_long)
+    if 'rf_data' in data.keys():
+        rf_data = data['rf_data']
         #print(rf_data)
         
-        #data_vals = rf_data.split()
-        #angle = readCompassAngle(data_vals[1],data_vals[2])
-        #angle -= offsetAngle
-        #angle = angle % 360.
-        angle = angleFromLight
+        data_vals = rf_data.split()
+        angle = readCompassAngle(data_vals[1],data_vals[2])
+        angle -= offsetAngle
         angle = angle % 360.
         #print(angle)
         ydata1.append(angle)
         del ydata1[0]
         
         robot_LDR_vals = {}
-#        for sensor_i in range(4):
-#            data_vals_i = sensor_i + 4 # items 4,5,6,7
-#            robot_LDR_vals[sensor_i] = 1023.-float(data_vals[data_vals_i])
-#            robot_LDR_vals[sensor_i] = fit_func_inv(robot_LDR_vals[sensor_i], *fit_func_coefs[sensor_i])
-        x = 300
-        y = 300
-        L_R_x = LANDMARK_POS[0]-x
-        L_R_y = LANDMARK_POS[1]-y
-        absolute_angleToLight = (-degrees(atan2(L_R_y,L_R_x))) % 360.
-        angleToLight = angle-absolute_angleToLight
-        distanceToLight = np.sqrt((x-LANDMARK_POS[0])**2+(y+LANDMARK_POS[1])**2)
-        angleToLight = angleToLight % 360.
-        offset = 45.
-        angleToLight += offset
-        robot_LDR_vals[0] = sampleModelPoint(sensor_i,distanceToLight,angleToLight+90*2)
-        robot_LDR_vals[1] = sampleModelPoint(sensor_i,distanceToLight,angleToLight+90*3)
-        robot_LDR_vals[2] = sampleModelPoint(sensor_i,distanceToLight,angleToLight+90*0)
-        robot_LDR_vals[3] = sampleModelPoint(sensor_i,distanceToLight,angleToLight+90*1)
+        for sensor_i in range(4):
+           data_vals_i = sensor_i + 4 # items 4,5,6,7
+           robot_LDR_vals[sensor_i] = 1023.-float(data_vals[data_vals_i])
+           robot_LDR_vals[sensor_i] = fit_func_inv(robot_LDR_vals[sensor_i], *fit_func_coefs[sensor_i])
         
         m1 = robot_LDR_vals[0]
         m2 = robot_LDR_vals[1]
@@ -269,8 +248,8 @@ def message_received(data):
         
         minErr = 9000000.
         newPos = (0,0)
-        for x in np.linspace(50.,600.,num=30):
-            for y in np.linspace(50.,600.,num=30):
+        for x in np.linspace(10.,200.,num=20):
+            for y in np.linspace(10.,200.,num=20):
                 L_R_x = LANDMARK_POS[0]-x
                 L_R_y = LANDMARK_POS[1]-y
                 absolute_angleToLight = (-degrees(atan2(L_R_y,L_R_x))) % 360.
@@ -286,7 +265,7 @@ def message_received(data):
         robotAngle = radians(angle)
         redrawRobotPosition()
         
-        batt_ADC = "B512" #data_vals[0]
+        batt_ADC = data_vals[0]
         batt_ADC = float(batt_ADC[1:])
         battV = mapVals(batt_ADC,0.,1023., 0.,21.1765); # Voltage divider with 22k in series with 6k8
         ydata2.append(battV)
@@ -299,12 +278,11 @@ def robotSetMotors(L,R):
     zb.send("tx", dest_addr='\xFF\xFE', dest_addr_long=robot_dest_addr_long, data=rf_data)
 
 # Create API object, which spawns a new thread
-#zb = ZigBee(ser, escaped = True, callback=message_received)
+zb = ZigBee(ser, escaped = True, callback=message_received)
 
 # Do other stuff in the main thread
 while True:
     try:
-        message_received("ajshkjash")
         if not updated:
             updated = 1
             #ymin = float(min(ydata))-1
@@ -324,7 +302,6 @@ while True:
             fig.canvas.draw() # redraw the plot
             fig_world.canvas.draw()
         else: time.sleep(0.01)
-        time.sleep(0.1)
     except KeyboardInterrupt:
         break
 
