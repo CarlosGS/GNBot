@@ -135,7 +135,7 @@ atexit.register(exitCallback)
 
 DIST_NEAR = 100
 DIST_MIDDLE = 200
-DIST_FAR = 300
+DIST_FAR = 600
 DistancesList = [DIST_NEAR, DIST_MIDDLE, DIST_FAR]
 for dist in DistancesList:
     print("Position the robot at D=" + str(dist) + "cm, pointing to the lamp, and press enter! Battery: "+str(round(robot_battery,2))+"V")

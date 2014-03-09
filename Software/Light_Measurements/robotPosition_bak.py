@@ -87,7 +87,7 @@ plt.show()
 
 updated = 0
 
-PORT = '/dev/ttyUSB1'
+PORT = '/dev/ttyUSB0'
 BAUD_RATE = 9600
 
 # Open serial port

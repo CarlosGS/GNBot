@@ -29,14 +29,15 @@ def LDRtoResistance(v_adc):
 def fit_func(x, a, b, c): # Exponential decay function, to be fitted to the measurements
     return a * np.exp(-b * x) + c
 def fit_func_inv(y, a, b, c): # Inverse function, analitically determined
+    #return y
     res = np.copy(y)
     for i in range(len(y)):
         if y[i] - c <= 0:
-            res[i] = min(y)*4
+            res[i] = 600*3
         else:
             res[i] =  (-1/b) * np.log((y[i] - c) / a)
-    #return res
-    return (-1/b) * np.log((y - c) / a)
+    return res
+    #return (-1/b) * np.log((y - c) / a)
 
 # Load the data (LDR values and angle, indexed by the distance to the light source)
 data = loadFromFile("./","logged_data_LDR.p")
@@ -237,7 +238,7 @@ if NUMERICAL_LIGHT_MODEL:
             data[DIST]['angles_model'][sensor_i] = np.degrees(angles_model)
             data[DIST]['distance_model'][sensor_i] = distance_model
             
-            PLOT_LIGHT_MODEL = True
+            PLOT_LIGHT_MODEL = False
             if PLOT_LIGHT_MODEL:
                 fig = plt.figure()
                 ax = fig.add_subplot(111,polar=True)

@@ -22,7 +22,7 @@ import random
 
 
 WORLD_SIZE = (600.,600.)
-LANDMARK_POS = (0.,0.)
+LANDMARK_POS = (-90.,-90.)
 
 robotPosition = (30.,100.)
 robotPositions = range(2)
@@ -73,7 +73,7 @@ def sampleModelPoint(sensor_i,distance,angle):
         intensities = (1.-t)*model[sensor_i]['intensities'][dist_middle] + t*model[sensor_i]['intensities'][dist_far]
     return sample_point(angle, angles, intensities)
 
-SHOW_LIGHT_MODEL = True
+SHOW_LIGHT_MODEL = False
 if SHOW_LIGHT_MODEL:
     currentLDR = 0
     angles_model = np.linspace(0.,360.,num=50,endpoint=False)
@@ -144,6 +144,13 @@ def redrawRobotPosition():
     robotSize = 15./2.
     x = robotPosition[0]
     y = robotPosition[1]
+    robotPositions[0].append(x)
+    robotPositions[1].append(y)
+    if not robotPositions_world:
+        robotPositions_world, = ax_world.plot(robotPositions[0],robotPositions[1])
+    else:
+        robotPositions_world.set_xdata(robotPositions[0])
+        robotPositions_world.set_ydata(robotPositions[1])
     dx = robotSize*cos(robotAngle)
     dy = robotSize*-sin(robotAngle)
     if robot_world:
@@ -156,16 +163,10 @@ def redrawRobotPosition():
         robot_world.set_y(y)
         robot_world.set_dx(dx)
         robot_world.set_dy(dy)
-    robotPositions[0].append(x)
-    robotPositions[1].append(y)
-    if not robotPositions_world:
-        robotPositions_world, = ax_world.plot(robotPositions[0],robotPositions[1])
-    else:
-        robotPositions_world.set_xdata(robotPositions[0])
-        robotPositions_world.set_ydata(robotPositions[1])
+        
 
 
-N_particles = 100
+N_particles = 50
 particles = range(N_particles)
 for i in range(N_particles):
     particles[i] = {}
@@ -177,11 +178,11 @@ for i in range(N_particles):
 particles_plotX = [p['x'] for p in particles]
 particles_plotY = [p['y'] for p in particles]
 
+particles_world, = ax_world.plot(particles_plotX,particles_plotY, 'ro', markersize=2)
+landmark_world, = ax_world.plot(LANDMARK_POS[0],LANDMARK_POS[1], 'yo', markersize=50)
 robot_world = None
 robotPositions_world = None
 redrawRobotPosition()
-particles_world, = ax_world.plot(particles_plotX,particles_plotY, 'ro', markersize=0.5)
-landmark_world, = ax_world.plot(LANDMARK_POS[0],LANDMARK_POS[1], 'yo', markersize=50)
 
 plt.xlim([LANDMARK_POS[0],WORLD_SIZE[0]])
 plt.ylim([LANDMARK_POS[1],WORLD_SIZE[1]])
@@ -220,7 +221,7 @@ PORT = '/dev/ttyUSB0'
 BAUD_RATE = 9600
 
 # Open serial port
-ser = serial.Serial(PORT, BAUD_RATE)
+#ser = serial.Serial(PORT, BAUD_RATE)
 
 magnetometerCalibration = {'xmax': -620.0, 'xmin': -1153.0, 'ymax': 391.0, 'ymin': -152.0} # Manually calibrated
 CALIBRATE_MAGNETOMETER = False
@@ -240,65 +241,57 @@ def readCompassAngle(x,y):
     return angle
 
 def fit_func_inv(y, a, b, c): # Inverse function, analitically determined
-    #return y
-    res = 0
-    if y - c <= 0:
-        res = DIST_FAR*3
-    else:
-        res =  (-1/b) * np.log((y - c) / a)
-    return res
-    #return (-1/b) * np.log((y - c) / a)
+    return (-1/b) * np.log((y - c) / a)
 
 robot_dest_addr_long = None
 velocity = [0,0]
-processing = False
 def message_received(data):
-    global updated, robotAngle, robot_dest_addr_long, robotPosition, particles, velocity, processing, end
-    if processing or end:
-        print("Skipping")
-        return
+    global updated, robotAngle, robot_dest_addr_long, robotPosition, particles, velocity
     #print(data)
-    if not ('source_addr_long' in data.keys()) or not ('rf_data' in data.keys()): return
-    if not robot_dest_addr_long:
-        robot_dest_addr_long = data['source_addr_long']
-        print("Robot address: ")
-        pprint(robot_dest_addr_long)
-    if 'rf_data' in data.keys():
-        processing = True
-#    if 1:
-        rf_data = data['rf_data']
+#    if not ('source_addr_long' in data.keys()) or not ('rf_data' in data.keys()): return
+#    if not robot_dest_addr_long:
+#        robot_dest_addr_long = data['source_addr_long']
+#        print("Robot address: ")
+#        pprint(robot_dest_addr_long)
+#    if 'rf_data' in data.keys():
+    if 1:
+        #rf_data = data['rf_data']
         #print(rf_data)
         
-        data_vals = rf_data.split()
-        angle = readCompassAngle(data_vals[1],data_vals[2])
-        angle -= offsetAngle
-        angle = angle % 360.
-        #angle = angleFromLight#+time.time()*57.
+        #data_vals = rf_data.split()
+        #angle = readCompassAngle(data_vals[1],data_vals[2])
+        #angle -= offsetAngle
         #angle = angle % 360.
+        angle = angleFromLight#+time.time()*57.
+        angle = angle % 360.
         #print(angle)
         ydata1.append(angle)
         del ydata1[0]
         
         robot_LDR_vals = {}
-        for sensor_i in range(4):
-            data_vals_i = sensor_i + 4 # items 4,5,6,7
-            robot_LDR_vals[sensor_i] = 1023.-float(data_vals[data_vals_i])
-            robot_LDR_vals[sensor_i] = fit_func_inv(robot_LDR_vals[sensor_i], *fit_func_coefs[sensor_i])
-        #print(robot_LDR_vals)
-#        x = 300+50*cos(0.4*time.time())
-#        y = 300+100*sin(0.4*time.time())
-#        L_R_x = LANDMARK_POS[0]-x
-#        L_R_y = LANDMARK_POS[1]-y
-#        absolute_angleToLight = (-degrees(atan2(L_R_y,L_R_x))) % 360.
-#        angleToLight = angle-absolute_angleToLight
-#        distanceToLight = np.sqrt((x-LANDMARK_POS[0])**2+(y+LANDMARK_POS[1])**2)
-#        angleToLight = angleToLight % 360.
-#        offset = 45.
-#        angleToLight += offset
-#        robot_LDR_vals[0] = sampleModelPoint(0,distanceToLight,angleToLight+90*2)
-#        robot_LDR_vals[1] = sampleModelPoint(1,distanceToLight,angleToLight+90*3)
-#        robot_LDR_vals[2] = sampleModelPoint(2,distanceToLight,angleToLight+90*0)
-#        robot_LDR_vals[3] = sampleModelPoint(3,distanceToLight,angleToLight+90*1)
+#        for sensor_i in range(4):
+#            data_vals_i = sensor_i + 4 # items 4,5,6,7
+#            robot_LDR_vals[sensor_i] = 1023.-float(data_vals[data_vals_i])
+#            robot_LDR_vals[sensor_i] = fit_func_inv(robot_LDR_vals[sensor_i], *fit_func_coefs[sensor_i])
+        x = 300+50*cos(0.4*time.time())
+        y = 300+100*sin(0.4*time.time())
+        L_R_x = LANDMARK_POS[0]-x
+        L_R_y = LANDMARK_POS[1]-y
+        absolute_angleToLight = (-degrees(atan2(L_R_y,L_R_x))) % 360.
+        angleToLight = angle-absolute_angleToLight
+        distanceToLight = np.sqrt((x-LANDMARK_POS[0])**2+(y+LANDMARK_POS[1])**2)
+        angleToLight = angleToLight % 360.
+        offset = 45.
+        angleToLight += offset
+        robot_LDR_vals[0] = sampleModelPoint(0,distanceToLight,angleToLight+90*2)
+        robot_LDR_vals[1] = sampleModelPoint(1,distanceToLight,angleToLight+90*3)
+        robot_LDR_vals[2] = sampleModelPoint(2,distanceToLight,angleToLight+90*0)
+        robot_LDR_vals[3] = sampleModelPoint(3,distanceToLight,angleToLight+90*1)
+        
+        m1 = robot_LDR_vals[0]
+        m2 = robot_LDR_vals[1]
+        m3 = robot_LDR_vals[2]
+        m4 = robot_LDR_vals[3]
         
         # Give more importance to the sensors pointing closest to the light
         vals = [robot_LDR_vals[key] for key in robot_LDR_vals.keys()]
@@ -307,37 +300,30 @@ def message_received(data):
         sensor_i_min2 = np.argmin(vals)
         robot_LDR_pond = {}
         for sensor_i in range(4):
-            if sensor_i_min1 == sensor_i or sensor_i_min2 == sensor_i:
-                robot_LDR_pond[sensor_i] = 1.
-            else:
-                robot_LDR_pond[sensor_i] = 0.5
+            robot_LDR_pond[sensor_i] = sensor_i_min1 == sensor_i or sensor_i_min2 == sensor_i
         #print(robot_LDR_vals)
         #print(robot_LDR_pond)
         # 3) Resample: new set of particles are chosen such that each particle survives in proportion to its weight
         for i in range(N_particles):
-            if particles[i]['w'] > 0.99/N_particles and within(particles[i]['x'],0,WORLD_SIZE[0]) and within(particles[i]['y'],0,WORLD_SIZE[1]):
-                continue
-            if random.uniform(0,100) < 20:
-                particles[i]['x'] = random.uniform(0,WORLD_SIZE[0])
-                particles[i]['y'] = random.uniform(0,WORLD_SIZE[1])
-                particles[i]['ang'] = angle+random.normalvariate(0,90)
-                particles[i]['ang'] = particles[i]['ang'] % 360.
-                particles[i]['w'] = 0.
-            else:
-                noise = 50
-                particles[i]['x'] = random.normalvariate(robotPosition[0],noise)
-                particles[i]['y'] = random.normalvariate(robotPosition[1],noise)
-                particles[i]['ang'] = angle+random.normalvariate(0,2)
-                particles[i]['ang'] = particles[i]['ang'] % 360.
-                particles[i]['w'] = 0.
+            if particles[i]['w'] < 0.5/N_particles:
+                if random.uniform(0,100) > 10 and within(particles[i]['x'],0,WORLD_SIZE[0]) and within(particles[i]['y'],0,WORLD_SIZE[1]):
+                    noise = 15
+                    particles[i]['x'] = random.normalvariate(robotPosition[0],noise)
+                    particles[i]['y'] = random.normalvariate(robotPosition[1],noise)
+                    particles[i]['ang'] = angle+random.normalvariate(0,2)
+                    particles[i]['ang'] = particles[i]['ang'] % 360.
+                    particles[i]['w'] = 0.
+                else:
+                    particles[i]['x'] = random.uniform(0,WORLD_SIZE[0])
+                    particles[i]['y'] = random.uniform(0,WORLD_SIZE[1])
+                    particles[i]['ang'] = angle+random.normalvariate(0,90)
+                    particles[i]['ang'] = particles[i]['ang'] % 360.
+                    particles[i]['w'] = 0.
         
         # 1) Prediction: for each particle, sample and add random, noisy values from action model
         for i in range(N_particles):
             particles[i]['x'] += velocity[0]*random.uniform(0,1.5)
             particles[i]['y'] += velocity[1]*random.uniform(0,1.5)
-            noise = 1
-            particles[i]['x'] += random.normalvariate(0,noise)
-            particles[i]['y'] += random.normalvariate(0,noise)
             noise = 1
             particles[i]['ang'] += random.normalvariate(0,noise)
             particles[i]['ang'] = particles[i]['ang'] % 360.
@@ -355,7 +341,7 @@ def message_received(data):
             angleToLight = angleToLight % 360.
             
             compass_STD = 1.
-            ldr_STD = 8.
+            ldr_STD = 5.
             
             mean_angle = particles[i]['ang']
             particles[i]['w'] = 0.#pdf(mean_angle, compass_STD, angle)
@@ -393,15 +379,13 @@ def message_received(data):
         avgY = 0.
         n = 0
         for i in range(N_particles):
-            if particles[i]['w'] < 0.9/N_particles:
-                continue    
             avgX += particles[i]['x']*particles[i]['w']
             avgY += particles[i]['y']*particles[i]['w']
             n += particles[i]['w']
         avgX /= n
         avgY /= n
         
-        newPos = (avgX,avgY)
+        #newPos = (avgX,avgY)
         
 #        minErr = 9000000.
 #        newPos = (0,0)
@@ -420,78 +404,31 @@ def message_received(data):
 #                    newPos = (x,y)
         velocity[0] = newPos[0]-robotPosition[0]
         velocity[1] = newPos[1]-robotPosition[1]
-        if abs(velocity[0]) > 5: velocity[0] = 0
-        if abs(velocity[1]) > 5: velocity[1] = 0
+        if abs(velocity[0]) > 30: velocity[0] = 0
+        if abs(velocity[1]) > 30: velocity[1] = 0
         robotPosition = newPos
         robotAngle = radians(angle)
         redrawRobotPosition()
         
-        spinSpeed = 3
-        forwardSpeed = 15
-        dstAngle = 0
-        
-        x = robotPosition[0]
-        y = robotPosition[1]
-        destx = 0
-        desty = 0
-        L_R_x = destx-x
-        L_R_y = desty-y
-        absolute_angleToLight = (-degrees(atan2(L_R_y,L_R_x))) % 360.
-        angleToLight = angle-absolute_angleToLight
-        distanceToLight = np.sqrt((x-destx)**2+(y+destx)**2)
-        #angleToLight = angleToLight % 360.
-        angle = angleToLight
-        #angle = mapVals(angle,0.,360.,-180.,180.)
-        #angle = angle % 360.
-        #print(angle)
-        if abs(angle) < 0.5:
-            spinSpeed *= 0
-        elif abs(angle) < 20:
-            spinSpeed *= 2
-        elif abs(angle) < 30:
-            spinSpeed *= 3
-        elif abs(angle) < 40:
-            spinSpeed *= 4
-        else:
-            spinSpeed *= 5
-        
-#        if distanceToLight > 30:
-#            forwardSpeed = int(mapVals(distanceToLight,100.,0.,20.,5.))
-#            if forwardSpeed > 15: forwardSpeed = 15
-#            spinSpeed *= mapVals(distanceToLight,100.,0.,1.,2.)
-#            spinSpeed = int(spinSpeed)
-#            if spinSpeed > 10: spinSpeed = 10
-#        else:
-#            forwardSpeed = 0
-#            spinSpeed = 0
-        
-#        if angle < 0:
-#            robotSetMotors(forwardSpeed+spinSpeed,forwardSpeed-spinSpeed)
-#        else:
-#            robotSetMotors(forwardSpeed-spinSpeed,forwardSpeed+spinSpeed)
-        
-        batt_ADC = data_vals[0]
+        batt_ADC = "B512" #data_vals[0]
         batt_ADC = float(batt_ADC[1:])
         battV = mapVals(batt_ADC,0.,1023., 0.,21.1765); # Voltage divider with 22k in series with 6k8
         ydata2.append(battV)
         del ydata2[0]
         updated = 0
-        processing = False
 
 def robotSetMotors(L,R):
     if not robot_dest_addr_long: return
     rf_data = struct.pack('b', L) + struct.pack('b', R)
     zb.send("tx", dest_addr='\xFF\xFE', dest_addr_long=robot_dest_addr_long, data=rf_data)
 
-
-end = False
 # Create API object, which spawns a new thread
-zb = ZigBee(ser, escaped = True, callback=message_received)
+#zb = ZigBee(ser, escaped = True, callback=message_received)
 
 # Do other stuff in the main thread
 while True:
     try:
-        #message_received("ajshkjash")
+        message_received("ajshkjash")
         if not updated:
             updated = 1
             #ymin = float(min(ydata))-1
@@ -517,12 +454,10 @@ while True:
             fig.canvas.draw() # redraw the plot
             fig_world.canvas.draw()
         else: time.sleep(0.01)
-        #time.sleep(0.1)
+        time.sleep(0.1)
     except KeyboardInterrupt:
         break
 
-end = True
-time.sleep(0.2)
 robotSetMotors(0,0)
 
 # halt() must be called before closing the serial

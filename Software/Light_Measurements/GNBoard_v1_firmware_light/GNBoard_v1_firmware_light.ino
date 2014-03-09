@@ -329,8 +329,8 @@ void setup() {
   
   setupMagnetometer();
   
-  Servo1.attach(SERVO_1_PIN);
-  Servo2.attach(SERVO_2_PIN);
+  //Servo1.attach(SERVO_1_PIN);
+  //Servo2.attach(SERVO_2_PIN);
   Serial.begin(115200);
   
   XbeeSerial.begin(9600);
@@ -356,6 +356,9 @@ void setup() {
     xbee.readPacket();
     if (xbee.getResponse().isAvailable()) {
       if (xbee.getResponse().getApiId() == ZB_RX_RESPONSE) {
+        //ledColor(64,0,0);
+        //delay(10);
+        //ledColor(0,0,0);
         xbee.getResponse().getZBRxResponse(rx);
         int len = rx.getDataLength();
         if(len == 2) {
@@ -379,11 +382,11 @@ void setup() {
     if(iniTime-100 > last_timestamp) {
       last_timestamp = iniTime;
       int batt = analogRead(BATTERY_PIN);
-      int ldr1 = analogRead(LDR1_PIN);
-      int ldr2 = analogRead(LDR2_PIN);
-      int ldr3 = analogRead(LDR3_PIN);
-      int ldr4 = analogRead(LDR4_PIN);
-      float angle = readMagnetometer();
+      int ldr1 = round(analogReadAverage(LDR1_PIN,8));
+      int ldr2 = round(analogReadAverage(LDR2_PIN,8));
+      int ldr3 = round(analogReadAverage(LDR3_PIN,8));
+      int ldr4 = round(analogReadAverage(LDR4_PIN,8));
+      //float angle = readMagnetometer();
       
       MagnetometerRaw magnetometer_raw = compass.ReadRawAxis();
       char data[256] = "";
@@ -395,6 +398,8 @@ void setup() {
       int spinVel = 5;
       delay(500);
       if(button_is_pressed()) spinVel = 10;
+      Servo1.attach(SERVO_1_PIN);
+      Servo2.attach(SERVO_2_PIN);
       Servo1.write(90-spinVel);
       Servo2.write(90-spinVel);
       delay(500);

@@ -10,6 +10,7 @@ import os
 import sys
 
 import numpy as np
+import math
 
 # Misc functions:
 
@@ -193,4 +194,17 @@ def lightModelCurve(Nsamples, angle=0, distance=1, intensity=1, ambient=0):
 # Be careful with this function
 def isSameAngle(ang1, ang2, margin=10.):
     return ang1+margin > ang2 and ang1-margin < ang2
+
+
+# Function: Pdf
+# -------------------------
+# Returns the Guassian (aka Normal) probability density of a distribution with
+# a given mean and std producing a given value.
+def pdf(mean, std, value):
+    u = float(value - mean) / abs(std)
+    y = (1.0 / (math.sqrt(2 * math.pi) * abs(std))) * math.exp(-u * u / 2.0)
+    return y
+
+def within(x,min,max):
+    return (x > min and x < max)
 
