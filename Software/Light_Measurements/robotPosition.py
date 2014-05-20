@@ -22,7 +22,7 @@ import random
 
 
 WORLD_SIZE = (600.,600.)
-LANDMARK_POS = (0.,0.)
+LANDMARK_POS = (WORLD_SIZE[0]/2.,WORLD_SIZE[1]/2.)
 
 robotPosition = (30.,100.)
 robotPositions = range(2)
@@ -38,7 +38,7 @@ data = loadFromFile("./","LDR_data_light_model.p")
 model = {}
 DIST_NEAR = 100
 DIST_MIDDLE = 200
-DIST_FAR = 600
+DIST_FAR = 500
 model_distances = [DIST_NEAR,DIST_MIDDLE,DIST_FAR]
 dist_close = float(model_distances[0])
 dist_middle = float(model_distances[1])
@@ -183,8 +183,8 @@ redrawRobotPosition()
 particles_world, = ax_world.plot(particles_plotX,particles_plotY, 'ro', markersize=0.5)
 landmark_world, = ax_world.plot(LANDMARK_POS[0],LANDMARK_POS[1], 'yo', markersize=50)
 
-plt.xlim([LANDMARK_POS[0],WORLD_SIZE[0]])
-plt.ylim([LANDMARK_POS[1],WORLD_SIZE[1]])
+plt.xlim([0,WORLD_SIZE[0]])
+plt.ylim([0,WORLD_SIZE[1]])
 ax_world.set_aspect('equal')
 plt.tight_layout()
 plt.show()

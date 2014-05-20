@@ -76,7 +76,7 @@ def message_received(datain):
         variance = 9999
         if len(data['IRdist']) > 60:
             variance = np.std(data['IRdist'][-50:-1])
-        if robot_IRdist > 634: or variance < 1.8:
+        if robot_IRdist > 634 or variance < 1.8:
             backing_up = True
             waiting = 10
         if not backing_up:
@@ -130,7 +130,7 @@ atexit.register(exitCallback)
 time.sleep(1)
 
 
-robot_speed = 5
+robot_speed = 60
 
 
 print("Let's measure the real speed of the robot. Mark the current position.")
