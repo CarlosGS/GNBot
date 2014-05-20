@@ -19,7 +19,7 @@ use <fake_ultrasound.scad>
 
 ARDUINO_OFFSET = 20;
 layer_height = 0.35;
-THIN_SURFACE_H = 0.35*4;//0.3mm x4 layers
+THIN_SURFACE_H = 0.35*5;//0.3mm x4 layers
 
 top_plate_thickness = 6;//4; // Thicker plate to add strength
 robot_height = 2.5+48+top_plate_thickness-4;
@@ -186,8 +186,12 @@ module front_part(l=0)
     translate([battery_c1-front_thickness,battery_ear_diam-(battery_c2-rear_c2)/2,
                -rear_c3+servo_c1+battery_holder_front_thickness+0.01])
     cube([battery_ear_diam+l, battery_c2-2*battery_ear_diam, rear_c3-battery_holder_front_thickness]);
+    // Hole for 9V batteries
     translate([battery_c1-front_thickness,(rear_c2-battery_holder_front_width)/2,
                -rear_c3+servo_c1+battery_holder_front_thickness+0.01])
+    cube([battery_ear_diam+l, battery_holder_front_width, battery_c3-4]);
+    translate([battery_c1-front_thickness-5,(rear_c2-battery_holder_front_width)/2,
+               -rear_c3+servo_c1-0.01])
     cube([battery_ear_diam+l, battery_holder_front_width, battery_c3-4]);
 
 //  ---------- FRONT TEXT ----------------

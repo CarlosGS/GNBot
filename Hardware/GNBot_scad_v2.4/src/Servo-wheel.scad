@@ -7,7 +7,7 @@
 //-------------------------------------------------------------
 
 //-- Wheel parameters
-wheel_or_idiam = 50+2.5;                   //-- O-ring inner diameter
+wheel_or_idiam = 50+2*(3.25);                   //-- O-ring inner diameter
 wheel_or_diam = 3;                     //-- O-ring section diameter
 wheel_height = 2*wheel_or_diam+0;     //-- Wheel height: change the 0 for 
                                       //-- other value (0 equals minimun height)

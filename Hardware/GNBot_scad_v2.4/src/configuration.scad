@@ -7,7 +7,7 @@ drill_M3 = 3.8;
 
 //-- captive Nuts
 nut_h = 3.4;
-nut_radius = 8/2;
+nut_radius = 7.5/2;
 
 //------------------------------------------------
 //-- Servo parameters
@@ -32,7 +32,7 @@ servo_c10 = 9.6;
 battery_c1 = 49;
 battery_holder_front_width = 53.5;
 battery_c2 = 51.5;
-battery_holder_front_gap = 8;
+battery_holder_front_gap = 8+0.5;
 battery_holder_front_thickness = 0.35*4;
 battery_c3 = 12+battery_holder_front_gap;
 battery_ear_diam = 9;
@@ -52,9 +52,9 @@ rear_edge_rad = 3;
 
 //-- Ball caster parameters
 WallThickness = 2.25; //thickness of the retaining wall
-BallSize = 16.2;  //diameter of  your ball bearing.
+BallSize = 16.2+0.5;  //diameter of  your ball bearing.
 Airgap = .65;  // Gap between ball and wall  
-BallProtrude = .35; //percentage of ball radius sticking out 
+BallProtrude = .43; //percentage of ball radius sticking out 
 WheelDiameter = 56;  //what size wheels you will use.
 
 //-- Wheels parameters

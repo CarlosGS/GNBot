@@ -4,7 +4,6 @@
 //-- with 4 "ears" for screwing to the chassis
 //---------------------------------------------------------
 include <configuration.scad>
-use <Parameterized_battery_holder.scad>
 
 //-------------------------------
 //-- Battery holder ears
@@ -26,35 +25,7 @@ module ear(do, h)
   }
 }
 
-//-------------------------------
-//--- Battery holder
-//-------------------------------
-module battery()
-{
-  union() {
-
-    //-- Main part: a battery holder for 4 AAA batteries
-    battery_holder(size=0,num=4);
-
-    //-- Add the 4 ears
-    translate([-battery_c1/2,-battery_c2/2,-battery_c3/2])
-      ear(do=battery_ear_diam, h=battery_ear_h);
-
-    translate([-battery_c1/2, battery_c2/2-battery_ear_diam,-battery_c3/2])
-      ear(do=battery_ear_diam, h=battery_ear_h);
-
-    translate([battery_c1/2, battery_c2/2-battery_ear_diam,-battery_c3/2])
-    mirror([1,0,0])
-    ear(do=battery_ear_diam,  h=battery_ear_h);
-
-    translate([battery_c1/2, -battery_c2/2,-battery_c3/2])
-    mirror([1,0,0])
-    ear(do=battery_ear_diam,  h=battery_ear_h);
-  }
+translate([0,-battery_c2/2,0]) {
+  ear(do=battery_ear_diam, h=battery_ear_h);
+  cube([6,battery_c2,battery_ear_h+3]);
 }
-
-//-- This is for testing/printing the battery holder
-translate([0,0,battery_c3/2])
-battery();
-
-
