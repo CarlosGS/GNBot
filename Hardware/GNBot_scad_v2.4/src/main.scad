@@ -73,12 +73,12 @@ module rear_part_body()
    //-- one cylinder but two. When assembling the robot, these holes should be
    //-- open manually
    translate([-battery_ear_diam/2, (rear_c2-battery_c2)/2+battery_ear_diam/2,
-          servo_c1-rear_c3-1])
+          servo_c1-rear_c3-layer_height])
     cylinder(r=drill_M3/2,h=2, $fn=20);
 
     translate([-battery_ear_diam/2,
           (rear_c2-battery_c2)/2+battery_ear_diam/2+battery_c2-battery_ear_diam,
-          servo_c1-rear_c3-1])
+          servo_c1-rear_c3-layer_height])
     cylinder(r=drill_M3/2,h=2, $fn=20);
 
     //-- Space for the captive nuts
@@ -358,13 +358,20 @@ module top_plate_arduino_uno(l=2)
   difference() {
     translate(trans1)
     difference() {
-      translate([ARDUINO_OFFSET,0,0])
-      roundedBox([top_plate_c1+l,top_plate_c2,top_plate_thickness],
+      translate([ARDUINO_OFFSET,0,0]) union() {
+        roundedBox([top_plate_c1+l,top_plate_c2,top_plate_thickness],
                   r=frame_corner_radius);
+        // Support for the frontal IR sensor
+        translate([(top_plate_c1+l)/2,0,0]) difference() {
+          roundedBox([(9+2)*2,11+4,top_plate_thickness],
+                  r=frame_corner_radius);
+          roundedBox([9*2,11,top_plate_thickness+1],
+                  r=frame_corner_radius);
+        }
+      }
       translate([ARDUINO_OFFSET,0,0])
       translate([-(battery_ear_diam+l+5)/2+(top_plate_c1+l)/2-front_thickness-2-4+3,0,0])
-      roundedBox([battery_ear_diam+l+5-4-10, battery_c2-2*battery_ear_diam-10, rear_c3+10],
-               r=frame_corner_radius);
+      roundedBox([battery_ear_diam+l+5-4-10, battery_c2-2*battery_ear_diam-10, rear_c3+10],r=frame_corner_radius);
 
       translate([-(top_plate_c1+l-skymega_lx)/2 + 3,0,0])
 /*      union() {

@@ -218,8 +218,8 @@ module Servo_wheel_6_arm_horn()
 
 
 //-- Test!
-Servo_wheel_4_arm_horn();
-translate([-wheel_or_idiam-10,0,0]) Servo_wheel_4_arm_horn();
+Servo_wheel_6_arm_horn();
+translate([-wheel_or_idiam-10,0,0]) Servo_wheel_6_arm_horn();
 
 
 

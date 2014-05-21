@@ -7,7 +7,7 @@ drill_M3 = 3.8;
 
 //-- captive Nuts
 nut_h = 3.4;
-nut_radius = 7.5/2;
+nut_radius = 7.3/2;
 
 //------------------------------------------------
 //-- Servo parameters
