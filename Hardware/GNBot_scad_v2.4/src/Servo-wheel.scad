@@ -27,15 +27,15 @@ rounded_horn_drill_distance = 7.3;
 //-- Futaba 3003 4-arm horn parameters
 a4h_end_diam = 5;
 a4h_center_diam = 10;
-a4h_arm_length = 15;
+a4h_arm_length = 15+0.5;
 a4h_drill_distance = 13.3;
 
 
 //-- Futaba 3003 6-arm horn parameters
 a6h_end_diam = 5;
 a6h_center_diam = 10;
-a6h_arm_length=10;
-a6h_arm_base_diam=7.5;
+a6h_arm_length=10+0.5;
+a6h_arm_base_diam=7.5+0.5;
 a6h_drill_distance = 10.9;
 
 
