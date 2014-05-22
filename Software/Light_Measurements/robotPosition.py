@@ -141,7 +141,7 @@ ax_world = fig_world.add_subplot( 111 )
 
 def redrawRobotPosition():
     global ax_world, robotPosition, robotAngle, robot_world, robotPositions, robotPositions_world
-    robotSize = 15./2.
+    robotSize = 3*15./2.
     x = robotPosition[0]
     y = robotPosition[1]
     dx = robotSize*cos(robotAngle)
@@ -149,23 +149,22 @@ def redrawRobotPosition():
     if robot_world:
         robot_world.remove()
         robot_world = None
+    robotPositions[0].append(x)
+    robotPositions[1].append(y)
+    if not robotPositions_world:
+        robotPositions_world, = ax_world.plot(robotPositions[0],robotPositions[1], 'c')
+    else:
+        robotPositions_world.set_xdata(robotPositions[0])
+        robotPositions_world.set_ydata(robotPositions[1])
     if not robot_world:
-        robot_world = ax_world.arrow(x,y,dx,dy, shape='full', lw=1, length_includes_head=True, width=robotSize/2., head_width=robotSize)
+        robot_world = ax_world.arrow(x,y,dx,dy, shape='full', lw=1, length_includes_head=True, width=robotSize/2., head_width=robotSize, zorder=100)
     else:
         robot_world.set_x(x)
         robot_world.set_y(y)
         robot_world.set_dx(dx)
         robot_world.set_dy(dy)
-    robotPositions[0].append(x)
-    robotPositions[1].append(y)
-    if not robotPositions_world:
-        robotPositions_world, = ax_world.plot(robotPositions[0],robotPositions[1])
-    else:
-        robotPositions_world.set_xdata(robotPositions[0])
-        robotPositions_world.set_ydata(robotPositions[1])
 
-
-N_particles = 100
+N_particles = 500
 particles = range(N_particles)
 for i in range(N_particles):
     particles[i] = {}
@@ -177,11 +176,12 @@ for i in range(N_particles):
 particles_plotX = [p['x'] for p in particles]
 particles_plotY = [p['y'] for p in particles]
 
+particles_world, = ax_world.plot(particles_plotX,particles_plotY, 'ro', markersize=3)
+landmark_world, = ax_world.plot(LANDMARK_POS[0],LANDMARK_POS[1], 'yo', markersize=50)
+
 robot_world = None
 robotPositions_world = None
 redrawRobotPosition()
-particles_world, = ax_world.plot(particles_plotX,particles_plotY, 'ro', markersize=0.5)
-landmark_world, = ax_world.plot(LANDMARK_POS[0],LANDMARK_POS[1], 'yo', markersize=50)
 
 plt.xlim([0,WORLD_SIZE[0]])
 plt.ylim([0,WORLD_SIZE[1]])
@@ -317,7 +317,7 @@ def message_received(data):
         for i in range(N_particles):
             if particles[i]['w'] > 0.99/N_particles and within(particles[i]['x'],0,WORLD_SIZE[0]) and within(particles[i]['y'],0,WORLD_SIZE[1]):
                 continue
-            if random.uniform(0,100) < 20:
+            if random.uniform(0,100) < 25:
                 particles[i]['x'] = random.uniform(0,WORLD_SIZE[0])
                 particles[i]['y'] = random.uniform(0,WORLD_SIZE[1])
                 particles[i]['ang'] = angle+random.normalvariate(0,90)
