@@ -363,10 +363,10 @@ module top_plate_arduino_uno(l=2)
                   r=frame_corner_radius);
         // Support for the frontal IR sensor
         translate([(top_plate_c1+l)/2,0,0]) difference() {
-          roundedBox([(8+2)*2,10+4,top_plate_thickness],
+          roundedBox([(8+2)*2,11+4,top_plate_thickness],
                   r=frame_corner_radius);
-          roundedBox([8*2,10,top_plate_thickness+1],
-                  r=frame_corner_radius);
+          roundedBox([8*2,11,top_plate_thickness+1],
+                  r=frame_corner_radius/4);
         }
       }
       translate([ARDUINO_OFFSET,0,0])
