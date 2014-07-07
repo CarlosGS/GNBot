@@ -1,4 +1,4 @@
-GNBot: robotic platform for coop. search
+GNBot: robotic platform for cooperative search strategies
 =====
 
 Low-cost 3D-printable robot design for testing cooperative search algorithms.  
