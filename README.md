@@ -1,7 +1,7 @@
-GNBot: low-cost platform for swarm robotics
+GNBot: robotic platform for coop. search
 =====
 
-A 3D-printable robotic platform for testing swarm algorithms.  
+Low-cost 3D-printable robot design for testing cooperative search algorithms.  
 
 
 ![ScreenShot](Publications/Media/GNBot_1.0_swarm.jpg)  
