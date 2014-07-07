@@ -11,6 +11,13 @@ Regarding swarm robotics, printbots have been preferred over other solutions for
 
 ![ScreenShot](Pictures/GNBot_1.0_hardware.png)  
 
+
+**Visual markers for video tracking with OpenCV**  
+![ScreenShot](Pictures/GNBot_opencv_markers.png)  
+
+
+
+
 License  
 --
 License: **Attribution - Share Alike - Creative Commons (<http://creativecommons.org/licenses/by-sa/3.0/>)**  
