@@ -9,6 +9,9 @@ Low-cost 3D-printable robot design for testing cooperative search algorithms.
 
 The GNBot design allows the construction of a swarm of remotely-controlled robots that have multimodal sensory input (perceiving light, distance, temperature, humidity and orientation with an electronic compass) and are capable of detecting odor sources such as the low-profile target shown on the left.  
 
+**Demonstration video of the swarm of GNBots used for Lévy-walk-based search:**
+[![Demonstration video of the swarm of GNBots used for Levy-walk-based search](http://img.youtube.com/vi/HuAor0oZO_s/0.jpg)](http://www.youtube.com/watch?v=HuAor0oZO_s)  
+
 These robots are also energy efficient, open-source and easy to expand to allow the implementation of a great variety of cooperative search strategies (including those that use range information from each sensor modality with a characterization of the uncertainty of odor sources, and also the ones that use classical heuristic or brute-force approaches for search). Most importantly, the standardization of the platform could finally provide a fair base of comparison for evaluating differences in efficiency among these odor search strategies.  
 
 
