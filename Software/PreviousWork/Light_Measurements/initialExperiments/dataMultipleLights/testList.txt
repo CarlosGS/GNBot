@@ -1,0 +1,21 @@
+
+Two runs of each, different ambient light
+
+No lights: OK
+
+One light: OK -> LED
+
+Two lights: OK -> LED
+
+Three lights: OK -> 2x LED, 1x Conventional
+
+Four lights: OK -> 2x LED, 2x Conventional
+
+
+Intensity:
+LED lamp: 60
+Conventional lamp: 30
+
+Ambient nolights = 20
+Ambient lights = 40
+

@@ -10,6 +10,7 @@ import os
 import sys
 
 import numpy as np
+import math
 
 # Misc functions:
 
@@ -76,6 +77,7 @@ def getValue(description,default,dontAsk=False):
 
 
 def mapVals(x, in_min, in_max, out_min, out_max):
+    if (in_max - in_min) == 0: return out_max
     return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
 
 def mySaveFig(plt,path,file):
@@ -87,19 +89,37 @@ def myLerp(x):
     return 
 
 # http://cnx.org/content/m12844/latest/
-def evalIFFTpoint(s_point,S_coefs,N_total,N_nonzero):
+def evalIFFTpoint(s_point,S_coefs,N_total):
     res = 0
     N_total = float(N_total)
-    for k in range(N_nonzero):
-        res += S_coefs[k]*np.exp(2j*np.pi*s_point*k/N_total)
-    res = float(res / N_total)
+    s_point = float(s_point)
+    for k in range(len(S_coefs)):
+        k = float(k)
+        res += S_coefs[k]*np.exp(2.j*np.pi*s_point*k/N_total)
+    res = float(res) / N_total
     return res
+
+# http://stackoverflow.com/questions/2566412/find-nearest-value-in-numpy-array
+def find_nearest(array,value):
+    idx = (np.abs(array-value)).argmin()
+    return idx
 
 # Input:
 # anglesIn = angles corresponding to each intensity value
 # intensitiesIn = intensity corresponding to each angle value
 # Nsamples = number of samples in which the periodic function will be de
 def discretizePolar(anglesIn, intensitiesIn, Nsamples):
+    # anglesOut contains the discretized 360deg circumference
+    anglesOut = np.linspace(0.,360.,Nsamples,endpoint=False)
+    # Initialize the intensities vector
+    intensitiesOut = anglesOut.copy()
+    for i in range(Nsamples):
+        angle = anglesOut[i]
+        index = find_nearest(anglesIn,angle)
+        intensitiesOut[i] = intensitiesIn[index]
+    return (intensitiesOut,anglesOut)
+
+def discretizePolar_bak(anglesIn, intensitiesIn, Nsamples):
     # anglesOut contains the discretized 360deg circumference
     anglesOut = np.linspace(0.,360.,Nsamples,endpoint=False)
     # Initialize the intensities vector
@@ -127,8 +147,14 @@ def discretizePolar(anglesIn, intensitiesIn, Nsamples):
         intensitiesOut[i] = intensity
     return (intensitiesOut,anglesOut)
 
+def sample_point(angle, angles, intensities):
+    angle = angle % 360.
+    index = find_nearest(angles,angle)
+    intensity = intensities[index]
+    return intensity
+
 def plotClosedLine(ax, angs, vals, lab=None):
-    angs = np.append(angs,angs[0])
+    angs = np.append(angs,angs[0]) # Note: input values will be changed! Should work on the copy of the data
     vals = np.append(vals,vals[0])
     ax.plot(angs, vals, label=lab)
 
@@ -168,4 +194,17 @@ def lightModelCurve(Nsamples, angle=0, distance=1, intensity=1, ambient=0):
 # Be careful with this function
 def isSameAngle(ang1, ang2, margin=10.):
     return ang1+margin > ang2 and ang1-margin < ang2
+
+
+# Function: Pdf
+# -------------------------
+# Returns the Guassian (aka Normal) probability density of a distribution with
+# a given mean and std producing a given value.
+def pdf(mean, std, value):
+    u = float(value - mean) / abs(std)
+    y = (1.0 / (math.sqrt(2 * math.pi) * abs(std))) * math.exp(-u * u / 2.0)
+    return y
+
+def within(x,min,max):
+    return (x > min and x < max)
 
