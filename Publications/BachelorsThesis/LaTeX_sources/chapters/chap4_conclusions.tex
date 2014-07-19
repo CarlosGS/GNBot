@@ -1,0 +1,63 @@
+\chapter{Conclusions and future work}
+\label{chap:conclusions}
+\vspace{-1.5cm}
+
+
+Whilst cooperative robotic search is a field that has been widely studied for many years, the use of olfactory sensors in mobile platforms seems to have raised less interest. The reason is that odor localization tasks often require cooperative strategies that have to tackle the great deal of uncertainty that can be present in the definition of the search area, the latency of odor sources, the effective detection ranges and efficiency of each sensor modality, the available resources and their estimated duration, etc.
+Bio-inspired strategies that can adapt the search characteristics using context-dependent multimodal sensor integration (cf. Fig. \ref{fig:introduction/simulated_levy_walks}) could be of help in situations with such restrictions.
+
+
+Among the odor monitoring services that would take benefit from research advancements on these fields are applications such as gas leak detection and localization, detection of illegal items of security concern (such as drugs or explosives), air monitoring in public spaces, environmental surveillance of large geographic areas, etc.
+These particularly critical tasks are very complex to solve exclusively with man-made devices, specially since time becomes particularly relevant as the odor sources gradually fade in intensity. Still, it is often seen that these odor localization problems can be solved, as animals are used for those kind of tasks with good results.
+Using bio-inspired cooperation among a large amount of robots could finally provide efficient solutions that can deal with the uncertainty and time constrains that are characteristic of those odor search problems.
+
+
+
+The wide variety of possibilities for designing and implementing bio-inspired searches which rely on different sensory information integration and motor decision making, calls for novel flexible robotic platforms that can meet the requirements arising from handling uncertainty and resource availability within these paradigms. The approach taken by this project addressed this issue with the creation of a new robotic platform, the GNBot, an integrated solution that tries to provide maximum flexibility, scalability and reuse (cf. Fig. \ref{fig:design/GNBot_parts}). The platform has been designed to serve as a standardized method for the implementation and test of those kind of bio-inspired odor search strategies in the real world.
+
+
+
+
+
+
+
+
+
+
+The developed robot has been designed to have 3D-printable pieces in combination with standardized parts, which allows an easy and fast replication. To demonstrate this, a swarm of four identical robots was assembled.
+The GNBoard electronics, present on each GNBot, have also been designed to allow an easy assembly and to facilitate multi-sensor integration. By default, they can incorporate an active-sensing artificial nose, an infra-red distance sensor, temperature and humidity sensors, an electronic compass and also battery monitoring. The incorporation of the widely-available Arduino MEGA as the processor board also simplifies the implementation process.
+
+
+Bidirectional wireless communication with the robots has been implemented using the ZigBee protocol, and an abstraction layer was created in order to allow higher-level programming and facilitate development. The Python programming language was used for its simplicity and for being open-source.
+The centralized communication approach that has been presented (cf. Fig. \ref{fig:design/topology}) allows the abstraction of all the computational requirements to a root computer, which means that all the information of an experiment can be easily accessed in real time and each robot is effectively commanded as a peripheral.
+
+
+The project has also studied various systems for the localization of robots in the search area (Section \ref{sect:realTimePositionMeasurement}).
+These systems are of vital importance not only for the implementation of some search strategies, but also in the research context to allow the efficiency analysis of a given search.
+A computer-vision tracking algorithm has been implemented using OpenCV to allow the use of high definition cameras for real time identification of the robot position and orientation.
+The implementation has also been made open-source and could be reused for other video tracking or surveillance tasks such as neuroethological studies that involve animal position monitoring.
+The also studied landmark-based systems could potentially be used in combination with computer vision and other techniques in order to improve the resolution of robot localization, and to permit the adaptation to each different real-world context. For instance, whilst the precision of GPS signals themselves cannot be sufficient for the odor localization task, integration of local landmark tracking could help to achieve the required resolution.
+
+As the platform is easy to expand and energy efficient, it could be easily re-purposed for implementing many other mobile-sensing surveillance systems, since it allows the incorporation of the great variety of multimodal sensors that may be needed (i.e. vibration, soundwave or movement detectors, infra-red or ultra-violet target search, etc).
+The implemented closed-loop way-point navigation system could also be reused for these and other tasks that involve mobile robotics.
+
+
+
+Finally, all of the features implemented in the GNBot platform have been validated. The multimodal sensory input, including the performance of the integrated battery monitoring system, was characterized and particular interest was given to the evaluation of the robot's autonomous positioning capabilities in combination with the odor detection system.
+
+
+%\vspace{-0.5cm}
+\subsection*{Future work}
+
+Appart from robot validation, the next scientific use for the assembled robots will be the implementation and real-world validation of a bio-inspired collaborative L\'{e}vy strategy that is being developed at \emph{Grupo de Neurocomputaci\'{o}n Biol\'{o}gica} for the search of multiple odor sources in the environment.
+Other strategies will be later on tested and their performance compared in a real-world environment, all thanks to the presence of the GNBot as a standardized robotic platform.
+
+
+Other interesting research paths could involve the incorporation of further multi-sensorial input such as directional air flow sensors. The state of the art has shown that these sensors can provide beneficial information to odor search algorithms, so it would be very interesting to integrate such sensing capabilities into the robot.
+Studies that involve odor discrimination would also be possible with the developed GNBoard electronics as it allows temperature modulation for the odor sensor (cf. Fig. \ref{fig:design/artificialNose_polarization}). Another research path could be pheromone-driven robots \cite{vazquez2013integracion, Purnamadjaja07} whose interactions are made by means of odor generation and perception.
+
+
+Finally, the last specified requirement was the open-source publication of the platform, and thus the development of the GNBot is kept openly acessible\footnote{\url{https://github.com/carlosgs/GNBot/}} to allow its re-use and evolution by the scientific community.
+
+
+\newpage \thispagestyle{empty} % Página vacía 

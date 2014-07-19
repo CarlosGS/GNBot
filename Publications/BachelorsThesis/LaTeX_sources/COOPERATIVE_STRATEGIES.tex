@@ -1,0 +1,224 @@
+
+% Template based on work by Pedro Tome Gonzalez (2008), thanks a lot for sharing!
+
+%% Los margenes, tipo de hoja y estilo BOOK
+\documentclass[a4paper,12pt,twoside,openright,titlepage]{book}
+\usepackage[a4paper,left=1.25in,right=1.25in]{geometry}
+%\usepackage[a4paper,left=1.5in,right=1in]{geometry} % UNCOMMENT FOR PRINTABLE VERSION (with side margins)
+\usepackage[T1]{fontenc}    %Ineterprete de tíldes
+%\usepackage[Latin1]{inputenc}
+\usepackage{amsmath,amssymb}    %Paquete de entornos matematicos
+\usepackage{natbib}
+\usepackage[english,spanish]{babel}
+\selectlanguage{english} 
+\usepackage{graphicx}
+\usepackage{psfrag}
+\usepackage{quotchap}
+\usepackage{epsfig}
+\usepackage[all]{xy}
+
+\usepackage[ pdftex, plainpages = false, pdfpagelabels, 
+             pdfpagelayout = useoutlines,
+             bookmarks,
+             hyperfootnotes = false,
+             bookmarksopen = true,
+             bookmarksnumbered = true,
+             breaklinks = true,
+             linktocpage,
+             pagebackref,
+             colorlinks = false,  % was true
+             linkcolor = blue,
+             urlcolor  = blue,
+             citecolor = red,
+             anchorcolor = green,
+             hyperindex = true,
+             hyperfigures
+             ]{hyperref} 
+
+\usepackage{epsfig}
+\usepackage{makeidx}
+\usepackage{ifthen}
+\usepackage{multicolpar}    %Para poner texto en columnas en plan articulo intercalado con texto normal
+\usepackage{multicol,multirow}
+
+\usepackage{url}        %Para direcciones web
+\usepackage{marvosym}   %Para imprimir el simbolo de \EUR euro
+%\usepackage{eurosym}   %Para imprimir el simbolo de \euro euro
+\usepackage{fancybox}   %Para tablas con bordes redondeados
+\usepackage{pdflscape}
+
+\usepackage{setspace}
+\usepackage{eurosym}
+
+
+%% Modificación de la plantilla para adaptarla a los requisitos de PFC
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+%%% Cabeceras y pies de página
+\fancyhead[CE,CO]{\emph{Detection and localization of odorants with robots and artificial noses}}
+\fancyhead[LE,LO,RE,RO]{}
+\fancyfoot[LE,RO]{\thepage}
+\fancyfoot[CE,CO]{\leftmark}
+
+\renewcommand{\footrulewidth}{.6pt}
+
+
+%Definiciones de funciones para los titulos
+\newlength\salto
+\setlength{\salto}{3.5ex plus 1ex minus .2ex}
+
+\newlength\resalto
+\setlength{\resalto}{2.3ex plus.2ex}
+
+\newcommand{\lsection}[1]
+                {\section{#1}
+                \vskip-.9\resalto   %%%% Aquí reculo el posible salto por defecto de \section
+                \hrule
+                \vskip+.9\salto}  %%%% vuelvo a realizar el salto (puedes poner otra vez el 90%)
+
+
+%Para imágenes de entornos estáticos \captionFigure{Texto Caption}{Texto Label}
+\newcommand{\captionFigure}[3]{
+    \refstepcounter{figure}
+    \textbf{Figure \thefigure:} \textbf{#1.} #3 \label{#2}
+    \addcontentsline{lof}{section}{\thefigure.\ #1\label{#2}}
+}
+
+%Para imágenes de entornos estáticos \NOcaptionFigure{Texto Caption}{Texto Label} "No escribe el caption"
+\newcommand{\NOcaptionFigure}[2]{
+    \refstepcounter{figure}
+    \addcontentsline{lof}{figure}{\thefigure.\ #1\label{#2}}
+}
+
+
+\newcommand{\captionTable}[3]{
+    \refstepcounter{table}
+    \textbf{Table \thetable:} \textbf{#1.} #3 \label{#2}
+    \addcontentsline{lot}{section}{\thetable.\ #1\label{#2}}
+}
+
+
+
+%% Datos del PFC
+\newcommand{\titulo}{Cooperative strategies for the detection and localization of odorants with robots and artificial noses}
+\newcommand{\autor}{Carlos Garcia-Saura}
+\newcommand{\director}{Nombre Apellido1 Apellido2}
+\newcommand{\tutor}{Pablo Varona Martinez}
+\newcommand{\vocal}{Nombre Apellido1 Apellido2}
+\newcommand{\vocalsup}{Nombre Apellido1 Apellido2}
+\newcommand{\presidente}{Nombre Apellido1 Apellido2}
+\newcommand{\presidentesup}{Nombre Apellido1 Apellido2}
+\newcommand{\fecha}{June 2014}
+\newcommand{\carrera}{Degree in Telecommunication Technology and Service Engineering}
+
+
+\usepackage{graphicx}
+\begin{document}
+
+\renewcommand\listtablename{List of Tables}
+\renewcommand\listfigurename{List of Figures}
+\renewcommand\contentsname{Table of Contents}
+\renewcommand\bibname{Bibliography}
+\renewcommand\chaptername{Chapter}
+\renewcommand\appendixname{Appendix}
+\renewcommand\spanishtablename{Table}
+%\renewcommand\appendixpagename{Anexos}
+
+\newenvironment{packed_enum}{
+\begin{enumerate}
+  \setlength{\itemsep}{1pt}
+  \setlength{\parskip}{0pt}
+  \setlength{\parsep}{0pt}
+}{\end{enumerate}}
+
+\newenvironment{packed_itemize}{
+\begin{itemize}
+  \setlength{\itemsep}{1pt}
+  \setlength{\parskip}{0pt}
+  \setlength{\parsep}{0pt}
+}{\end{itemize}}
+
+
+
+\setlength{\baselineskip}{18pt}  %% Espacio interlinea
+\setlength{\parskip}{6pt plus 1pt minus 1pt} %% Espacio interpárrafo
+
+\input{portada}
+
+\frontmatter %Define el cuerpo inicial del libro en numeración con letras romanas
+
+\input{primera_pag}
+
+%\onehalfspacing
+\input{resumen}
+
+\onehalfspacing
+\input{acknowledgements}
+
+\singlespacing
+\tableofcontents
+
+\newpage \thispagestyle{empty} % Página vacía
+
+
+\addcontentsline{toc}{chapter}{\listfigurename}    %Para que aparezca en el índice
+\listoffigures
+  \newpage \thispagestyle{empty} % Página vacía
+
+
+%\addcontentsline{toc}{chapter}{\listtablename}    %Para que aparezca en el índice
+%\listoftables
+%  \newpage \thispagestyle{empty} % Página vacía
+
+\input{glossary}
+
+\onehalfspacing
+\mainmatter %Define el cuerpo principal del libro numeración normal.
+
+%\input{preambulo}
+
+\input{chapters/chap1_intro}
+
+%\input{cap_intro_bio}
+
+%\input{cap_sistemas}
+
+%\input{chapters/chap2_stateoftheart}
+
+\input{chapters/chap2_design}
+
+\input{chapters/chap3_experiments}
+
+\input{chapters/chap4_conclusions}
+
+%\input{publications}
+
+
+%\input{acknowledgements}
+
+\singlespacing
+\addcontentsline{toc}{chapter}{\bibname}    %Agregamos al índice el capitulo de bibliografía 
+\bibliographystyle{unsrt}   %plain pero ordenado en orden de aparicion en documento principal
+\bibliography{robots}
+\onehalfspacing
+
+\appendix   %Indicamos que lo que viene a continuación son apéndices
+
+%\frontmatter %Para poner los anexos en numeros romanos
+
+%\input{anexo_presupuesto}
+
+%\input{anexo_pliegocondiciones}
+
+%\input{anexo_manualuso}
+
+\input{appendix_lightLandmarkLocalization}
+
+\input{appendix_circuits}
+
+\input{appendix_designStrategies}
+
+%Hoja final en blanco
+\newpage \thispagestyle{empty} % Página vacía
+
+\end{document}

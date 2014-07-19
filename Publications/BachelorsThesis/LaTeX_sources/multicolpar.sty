@@ -1,0 +1,69 @@
+%% Save file as: MULTICOLPAR.STY        Source: FILESERV@SHSU.BITNET  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  File multicolpar.sty
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% by
+% Mauro Orlandini <orlandini@lheavx.gsfc.nasa.gov>
+% Modified by Max Hailperin <max@nic.gac.edu>
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%   This LaTeX style, writes different paragraphs in different columns
+% the number of columns is free), as
+%   This is the first paragraph  |  This is the second paragraph and its
+%   and text follows...          |  own text follows...
+%
+%   This is the third paragraph  |  This is the fourth paragraph...
+%   and text follows...          |
+%
+% This format is useful for translated articles, in which there is the
+% original language in the first column and the translated version in
+% the second.
+%
+% Usage: \begin{multicolpar}{N}
+%         ... text ...
+%        \end{multicolpar}
+%
+% where N is the number of columns in which the text will be displayed.
+% Warning: Inside the environment, each blank line (ie a \par) will correspond
+%          to a paragraph, therefore do not leave blank lines soon after the
+%          \begin{multicolpar}{N} command and soon before the \end{multicolpar}
+%          command (unless you want so).
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newenvironment{multicolpar}[1]{\begin{trivlist}\item[]%
+\multicolumnparallelparagraphs{#1}{2em}}%
+{\endmulticolumnparallelparagraphs\end{trivlist}}
+
+\newcount\columnsleft   \newcount\totalcolumns   \newdimen\separation
+
+\def\multicolumnparallelparagraphs#1#2{%
+    \hbadness5000 \vbadness9999 \tolerance9999
+    \totalcolumns=#1   \separation=#2   \let\xpar=\par
+    \vskip\parskip
+    \columnsleft=#1\relax
+    \hbox to\hsize\bgroup
+    \let\par\nextmulticolumnparallelparagraph
+    \dimen0=#2\advance\hsize-\columnsleft\dimen0 \advance\hsize\dimen0
+    \divide\hsize\columnsleft\relax
+    \vtop\bgroup}
+\def\nextmulticolumnparallelparagraph{%
+    \egroup
+    \advance\columnsleft-1
+    \ifnum\columnsleft>0
+        \hfil\vtop\bgroup
+    \else
+	\egroup
+        \xpar\vskip\baselineskip\xpar
+        \multicolumnparallelparagraphs\totalcolumns\separation
+    \fi}
+
+\def\endmulticolumnparallelparagraphs{%
+    \egroup
+    \advance\columnsleft-1
+    \ifnum\columnsleft>0
+        \hfil\vtop\bgroup\hbox to \hsize{}
+        \endmulticolumnparallelparagraphs
+    \else
+	\egroup
+        \xpar
+    \fi}
