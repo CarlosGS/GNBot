@@ -12,6 +12,7 @@ The star architecture shown on the left serves as the base to emulate a wide ran
 
 The approach used is to abstract all the calculations to a root computer, effectively using each robot as a peripheral.
 A centralized infrastructure is used to command each autonomous robot independently, but a convenient layer of abstraction will also allow testing algorithms that are decentralized (see panels **a-d** in the topology figure. Main advantages of this approach are:  
+
 1. First, it is able to reduce costs since robots are kept simple, with reduced computational ability. For a fixed funding, cutting down the cost of each robot makes it possible to create more of them and thus have a bigger swarm.  
 1. Second, as all data flows through the root node, it can be logged and analyzed in order to evaluate the performance of each algorithm and allows easier debugging. Having all information in one place is particularly convenient when testing distributed algorithms.  
 1. Third, it provides a layer of abstraction. The code that specifies the behavior of each robot runs on the central computer, and thus a high-level programming language can be used (<http://www.python.org/> was selected for this project). This way it is possible to focus on developing the algorithms rather than dealing with the limitations of memory and power of the micro-controller on board each robot.  
