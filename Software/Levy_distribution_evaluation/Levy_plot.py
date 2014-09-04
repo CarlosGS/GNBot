@@ -16,14 +16,14 @@ import random
 random.seed() # Set random seed using system time
 
 def getRandomLevyDistance():
-	alpha = 2
+	alpha = 1.5
 	minDistance = 10
 	levyVal = pow(random.random(),(-1./alpha)) * minDistance
 	#if levyVal < minDistance:
 	#	levyVal = minDistance
 	return levyVal
 
-N_evaluations = 1000
+N_evaluations = 100
 
 levy_evals = [getRandomLevyDistance() for i in range(N_evaluations)]
 
@@ -49,6 +49,14 @@ for i in range(N_evaluations):
 		prevY = levy_evals_y[i-1]
 	levy_evals_x[i] = prevX + r*np.cos(theta)
 	levy_evals_y[i] = prevY + r*np.sin(theta)
+	if False: # Take in account wall collisions
+		worldRadius = 300/2 # cm
+		if (np.sqrt(levy_evals_x[i]**2+levy_evals_y[i]**2)) > worldRadius:
+			x = levy_evals_x[i]
+			y = levy_evals_y[i]
+			#(k*x)**2+(k*y)**2 = worldRadius**2
+			levy_evals_x[i] = levy_evals_x[i-1]
+			levy_evals_y[i] = levy_evals_y[i-1]
 
 plt.figure()
 plt.plot(levy_evals_x, levy_evals_y)
