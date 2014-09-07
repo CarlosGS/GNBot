@@ -24,7 +24,7 @@ totalSimulatedDistance = robotSpeed * 60 * 10 # cm
 worldRadius = 300/2 # cm
 deltaPos = 1 # cm # The minimum simulation step (~robot sampling rate)
 backupDistance = 5 # The distance the robot will back up when an obstacle is detected
-angleDriftErrorRange = 0.5 # degrees
+angleDriftErrorRange = 0.1 # degrees
 distanceSensorRange = 10 # cm # object detection threshold
 
 # Levy parameters
@@ -55,31 +55,135 @@ plt.figure()
 allPosX = []
 allPosY = []
 
-for plots in range(5):
+walkType = 1 # 1 Levy, 2 Wall bounce (simple), 3 Wall bounce, 4 Spiral
+
+N_robots = 5
+
+for plots in range(N_robots):
 	pos_x = []
 	pos_y = []
 	remainingDistance = totalSimulatedDistance
 	x = 0
 	y = 0
+	
+	driftError = getRandomDriftError()
+	
+	theta = 0
+	bounceCount = 0
+	timeCounter = 0
+	
 	#for i in range(N_evaluations):
 	while remainingDistance > 0:
-		theta = random.random()*2*np.pi
-		r = getRandomLevyDistance()
-	
-		while r > 0:
-			theta += getRandomDriftError()
-			x = x + deltaPos*np.cos(theta)
-			y = y + deltaPos*np.sin(theta)
-			remainingDistance -= deltaPos
-			if (np.sqrt(x**2+y**2)) > worldRadius-distanceSensorRange:
-				theta += getRandomDriftError()
-				x = x - backupDistance*np.cos(theta)
-				y = y - backupDistance*np.sin(theta)
+		if walkType == 1: # Levy wals
+			theta = random.random()*2*np.pi
+			r = getRandomLevyDistance()
+			while r > 0 and remainingDistance > 0:
+				theta += driftError
+				x = x + deltaPos*np.cos(theta)
+				y = y + deltaPos*np.sin(theta)
 				remainingDistance -= deltaPos
-				break
-			pos_x.append(x)
-			pos_y.append(y)
-			r -= deltaPos
+				if (np.sqrt(x**2+y**2)) > worldRadius-distanceSensorRange:
+					theta -= driftError
+					x = x - backupDistance*np.cos(theta)
+					y = y - backupDistance*np.sin(theta)
+					remainingDistance -= backupDistance
+					pos_x.append(x)
+					pos_y.append(y)
+					break
+				pos_x.append(x)
+				pos_y.append(y)
+				r -= deltaPos
+		elif walkType == 2: # Wall bounce (simple)
+			if theta == 0:
+				theta = random.random()*2*np.pi
+			if bounceCount == 0:
+				bounceCount = round(random.random())
+			while True and remainingDistance > 0:
+				offsetDistance = minDistance
+				theta += driftError
+				x = x + deltaPos*np.cos(theta)
+				y = y + deltaPos*np.sin(theta)
+				remainingDistance -= deltaPos
+				if (np.sqrt(x**2+y**2)) > worldRadius-distanceSensorRange:
+					theta -= driftError
+					x = x - backupDistance*np.cos(theta)
+					y = y - backupDistance*np.sin(theta)
+					remainingDistance -= backupDistance
+					pos_x.append(x)
+					pos_y.append(y)
+					theta += (45+90)*pi/180.
+					
+					bounceCount += 1
+					break
+				pos_x.append(x)
+				pos_y.append(y)
+		elif walkType == 3: # Wall bounce
+			if theta == 0:
+				theta = random.random()*2*np.pi
+			if bounceCount == 0:
+				bounceCount = round(random.random())
+			while True and remainingDistance > 0:
+				offsetDistance = minDistance
+				theta += driftError
+				x = x + deltaPos*np.cos(theta)
+				y = y + deltaPos*np.sin(theta)
+				remainingDistance -= deltaPos
+				if (np.sqrt(x**2+y**2)) > worldRadius-distanceSensorRange:
+					theta -= driftError
+					x = x - backupDistance*np.cos(theta)
+					y = y - backupDistance*np.sin(theta)
+					remainingDistance -= backupDistance
+					pos_x.append(x)
+					pos_y.append(y)
+					
+					if bounceCount%2:
+						theta += 90*pi/180.
+					else:
+						theta -= 90*pi/180.
+					x = x + offsetDistance*np.cos(theta)
+					y = y + offsetDistance*np.sin(theta)
+					remainingDistance -= offsetDistance
+					pos_x.append(x)
+					pos_y.append(y)
+					
+					if (np.sqrt(x**2+y**2)) > worldRadius-distanceSensorRange:
+						x = x - 2*offsetDistance*np.cos(theta)
+						y = y - 2*offsetDistance*np.sin(theta)
+						remainingDistance -= 2*offsetDistance
+						pos_x.append(x)
+						pos_y.append(y)
+					
+					if bounceCount%2:
+						theta += 90*pi/180.
+					else:
+						theta -= 90*pi/180.
+					
+					bounceCount += 1
+					break
+				pos_x.append(x)
+				pos_y.append(y)
+		elif walkType == 4: # Spiral
+			if theta == 0:
+				theta = random.random()*2*np.pi
+			while True and remainingDistance > 0:
+				theta += driftError
+				theta += (90*pi/180.)/(sqrt(N_robots*minDistance*0.7595*timeCounter)+1)
+				#theta += (90*pi/180.)/(sqrt(minDistance*0.7595*timeCounter)+1)
+				x = x + deltaPos*np.cos(theta)
+				y = y + deltaPos*np.sin(theta)
+				remainingDistance -= deltaPos
+				timeCounter += deltaPos
+				if (np.sqrt(x**2+y**2)) > worldRadius-distanceSensorRange:
+					theta -= driftError
+					x = x - backupDistance*np.cos(theta)
+					y = y - backupDistance*np.sin(theta)
+					remainingDistance -= backupDistance
+					pos_x.append(x)
+					pos_y.append(y)
+					theta += 90*pi/180.
+					break
+				pos_x.append(x)
+				pos_y.append(y)
 	plt.plot(pos_x, pos_y)
 	allPosX += pos_x
 	allPosY += pos_y
