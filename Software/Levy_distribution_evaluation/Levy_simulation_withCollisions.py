@@ -53,11 +53,11 @@ plt.figure()
 allPosX = []
 allPosY = []
 
-walkType = 1 # 1 Levy, 2 Wall bounce (simple), 3 Wall bounce, 4 Spiral
+walkType = 4 # 1 Levy, 2 Wall bounce (simple), 3 Wall bounce, 4 Spiral
 
 N_robots = 5
 
-for plots in range(5):
+for plots in range(1):
 	pos_x = range(N_robots)
 	pos_y = range(N_robots)
 	remainingDistance = range(N_robots)
