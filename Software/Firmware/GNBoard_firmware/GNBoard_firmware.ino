@@ -92,10 +92,10 @@ void setupIMU() {
     
     
     // Calibration offsets
-    mpu.setXGyroOffset(220);
-    mpu.setYGyroOffset(76);
-    mpu.setZGyroOffset(-85);
-    mpu.setZAccelOffset(1788);
+//    mpu.setXGyroOffset(220);
+//    mpu.setYGyroOffset(76);
+//    mpu.setZGyroOffset(-85);
+//    mpu.setZAccelOffset(1788);
     
     
     if (devStatus == 0) {
@@ -380,7 +380,9 @@ ZBRxResponse rx = ZBRxResponse();
 
 
 
-
+unsigned int imu_yaw_tushort;
+unsigned int imu_pitch_tushort;
+unsigned int imu_roll_tushort;
 
 
 void setup() {
@@ -418,11 +420,58 @@ void setup() {
 
   ledColor(0,0,128);
 
-  magnetometerToZero();
+  //magnetometerToZero();
 
   iniTime = millis();
   last_timestamp = iniTime;
   last_timestamp_DHT11 = iniTime;
+  
+  if(button_is_pressed()) {
+    int velocity = 0;
+    ledColor(128,0,0);
+    delay(3000);
+    while(1) {
+      if(dmpReady) {
+          mpuIntStatus = mpu.getIntStatus();
+          //fifoCount = mpu.getFIFOCount();
+          if (mpuIntStatus & 0x02) {
+              mpu.resetFIFO();
+              fifoCount = mpu.getFIFOCount();
+              // wait for correct available data length, should be a VERY short wait
+              while (fifoCount < packetSize) fifoCount = mpu.getFIFOCount();
+              
+              // read a packet from FIFO
+              mpu.getFIFOBytes(fifoBuffer, packetSize);
+              
+              // track FIFO count here in case there is > 1 packet available
+              // (this lets us immediately read more without waiting for an interrupt)
+              fifoCount -= packetSize;
+              
+              mpu.dmpGetQuaternion(&q, fifoBuffer);
+              mpu.dmpGetGravity(&gravity, &q);
+              mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
+          }
+      }
+      float yaw_normalized = ypr[0]/M_PI;
+      int error = round(max(min(yaw_normalized*80,20),-20));
+      int L = velocity-error;
+      int R = velocity+error;
+      if(L == 0) Servo1.detach();
+      else {
+        Servo1.attach(SERVO_1_PIN);
+        Servo1.write(90-L);
+      }
+      if(R == 0) Servo2.detach();
+      else {
+        Servo2.attach(SERVO_2_PIN);
+        Servo2.write(90+R);
+      }
+      if(button_is_pressed()) {
+        velocity += 2;
+        delay(200);
+      }
+    }
+  }
 }
 
 int sampleTime = 3000;
@@ -444,9 +493,7 @@ int irDistance_max = 0;
 int temperature = -1;
 int humidity = -1;
 
-unsigned int imu_yaw_tushort;
-unsigned int imu_pitch_tushort;
-unsigned int imu_roll_tushort;
+
 
 int dht11_count = 0;
 void loop() {
