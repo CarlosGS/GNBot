@@ -13,7 +13,7 @@ rc('text',usetex=True)
 # Change all fonts to 'Computer Modern'
 rc('font',**{'family':'serif','serif':['Computer Modern']})
 
-fileName = "yawLog5"
+fileName = "yawLog25"
 
 capture = cv2.VideoCapture(fileName+".mp4")
 
@@ -87,7 +87,7 @@ while True:
             pos_avg = best_cnt
         print pos_avg
         dataLog['videoTimestamp'].append(elapsedTime)
-        dataLog['pos'].append(elapsedTime)
+        dataLog['pos'].append(pos_avg)
 
 saveToFile(dataLog,"",fileName+"_withPos.p")
 
