@@ -91,10 +91,11 @@ def robot_log_IMU(address):
         except:
             print("Warning: Robot main loop had some trouble")
 
-
-even = True # Variable to ensure that the robot is commanded at half of the input data rate
+start_time = 0
+dataLog = {}
+recording = False
 def gnbot_received_callback(address, received_data):
-    global gb, gnbot_list, even
+    global gb, gnbot_list, do_exit, recording, dataLog, start_time
     received_data["time"] = datetime.datetime.now()
     if not address in gnbot_list.keys():
         print("NEW GNBOT ADDED! Address: " + repr(address))
@@ -103,7 +104,11 @@ def gnbot_received_callback(address, received_data):
 #        t.daemon = True
 #        t.start()
         initRobot(address)
-        robotSetMotors(address, 25,25) #5, 15, 25
+        robotSetMotors(address, 5,5) #5, 15, 25
+        start_time = time.time()
+        dataLog['yaw'] = []
+        dataLog['timestamp'] = []
+        recording = True
     #else: print("Received packet from: " + repr(address))
     if "record" in gnbot_list[address].keys():
         if gnbot_list[address]["record"] == True: # Append values if record=true. The values are kept if record=false
@@ -117,13 +122,17 @@ def gnbot_received_callback(address, received_data):
     yaw = mapVals(received_data['IMUyaw'], 0.,65535., -180.,180.)
     pitch = mapVals(received_data['IMUpitch'], 0.,65535., -180.,180.)
     roll = mapVals(received_data['IMUroll'], 0.,65535., -180.,180.)
-    print yaw,pitch,roll
+    #print yaw,pitch,roll
     #pprint(received_data)
     #print("")
-#    error = int(round(max(min(yaw/2.,5),-5)))
-#    if even:
-#        robotSetMotors(address, -error,error)
-#    even = not even
+    if recording:
+        dataLog['yaw'].append(yaw)
+        print(yaw)
+        ts = time.time()-start_time
+        dataLog['timestamp'].append(ts)
+        if ts > 4:
+            recording = False
+            do_exit = True
 
 
 
@@ -134,6 +143,10 @@ def initRobot(address):
     noteScale = 1
     values = gb.createValue("motorL", 0)
     values += gb.createValue("motorR", 0)
+    values += gb.createValue("ledR_PWM", 0)
+    #values += gb.createValue("ledG_PWM", 128)
+    values += gb.createValue("ledG_PWM", 0)
+    values += gb.createValue("ledB_PWM", 0)
     values += gb.createValue("tone", noteScale*musicNotes["DO"])
     values += gb.createValue("delay", noteDelay)
     values += gb.createValue("notone", 10)
@@ -144,10 +157,6 @@ def initRobot(address):
     values += gb.createValue("delay", noteDelay)
     values += gb.createValue("notone", 0)
     values += gb.createValue("sampletime", 200)
-    values += gb.createValue("ledR_PWM", 0)
-    #values += gb.createValue("ledG_PWM", 128)
-    values += gb.createValue("ledG_PWM", 0)
-    values += gb.createValue("ledB_PWM", 0)
     gb.sendPUTcommand(address, values)
 
 def endRobot(address):
@@ -181,7 +190,7 @@ random.seed() # Set random seed using system time
 # Register callback for powering off the GNBot system
 do_exit = False
 def exitCallback():
-    global gb, do_exit
+    global gb, do_exit, dataLog
     do_exit = True
     if gb != None:
         time.sleep(0.5)
@@ -189,6 +198,7 @@ def exitCallback():
             endRobot(address)
         gb.halt()
         gb = None
+    saveToFile(dataLog,"","yawLog.p")
 atexit.register(exitCallback)
 
 gb = GNBot(gnbot_received_callback, '/dev/ttyUSB0', 9600)
