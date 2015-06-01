@@ -3,7 +3,6 @@
 
 from helper import *
 import cv2
-from pylab import *
 import numpy as np
 
 
@@ -14,14 +13,11 @@ rc('text',usetex=True)
 # Change all fonts to 'Computer Modern'
 rc('font',**{'family':'serif','serif':['Computer Modern']})
 
+fileName = "yawLog5"
 
+capture = cv2.VideoCapture(fileName+".mp4")
 
-capture = cv2.VideoCapture("yawLog25.mp4")
-
-dataLog = loadFromFile("","yawLog25.p")
-
-
-f, ax = subplots(2, figsize=(10,8))
+dataLog = loadFromFile("",fileName+".p")
 
 #frame_hsv = 0
 
@@ -34,6 +30,12 @@ def my_mouse_callback(event,x,y,flags,param):
 cv2.namedWindow("image")
 cv2.setMouseCallback("image",my_mouse_callback)
 
+pos_avg = np.zeros(2)
+
+dataLog['videoTimestamp'] = []
+dataLog['pos'] = []
+
+first = True
 while True:
     key_pressed = cv2.waitKey(1)    #Escape to exit
     if key_pressed == 27:
@@ -44,6 +46,8 @@ while True:
 #            flag = capture.grab()
 #            if flag == False:
 #                exit()
+    
+    elapsedTime = capture.get(cv2.cv.CV_CAP_PROP_POS_MSEC)/1000.
     
     flag, frame = capture.read()
     if flag == False:
@@ -76,14 +80,14 @@ while True:
         best_cnt = np.mean(best_cnt,axis=0)
         while len(best_cnt.shape) > 1:
             best_cnt = best_cnt[0]
-        print best_cnt
-        ax[0].plot(best_cnt[0],best_cnt[1],'x')
-    
-    print capture.get(cv2.cv.CV_CAP_PROP_POS_MSEC)
+        best_cnt[1] *= -1
+        pos_avg = pos_avg*0.9 + best_cnt*0.1
+        if first:
+            first = False
+            pos_avg = best_cnt
+        print pos_avg
+        dataLog['videoTimestamp'].append(elapsedTime)
+        dataLog['pos'].append(elapsedTime)
 
-
-
-
-
-show()
+saveToFile(dataLog,"",fileName+"_withPos.p")
 
