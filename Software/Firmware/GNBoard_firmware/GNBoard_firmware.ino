@@ -54,6 +54,61 @@ float mapf(float x, float in_min, float in_max, float out_min, float out_max)
   return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 }
 
+// IMU
+#include "I2Cdev.h"
+#include "MPU6050_6Axis_MotionApps20.h"
+#if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
+    #include "Wire.h"
+#endif
+MPU6050 mpu;
+
+// MPU control/status vars
+bool dmpReady = false;  // set true if DMP init was successful
+uint8_t mpuIntStatus;   // holds actual interrupt status byte from MPU
+uint16_t packetSize;    // expected DMP packet size (default is 42 bytes)
+uint16_t fifoCount;     // count of all bytes currently in FIFO
+uint8_t fifoBuffer[64]; // FIFO storage buffer
+
+// orientation/motion vars
+Quaternion q;           // [w, x, y, z]         quaternion container
+VectorFloat gravity;    // [x, y, z]            gravity vector
+float ypr[3];           // [yaw, pitch, roll]   yaw/pitch/roll container and gravity vector
+
+void setupIMU() {
+    // join I2C bus (I2Cdev library doesn't do this automatically)
+    #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
+        Wire.begin();
+        TWBR = 24; // 400kHz I2C clock (200kHz if CPU is 8MHz)
+    #elif I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_FASTWIRE
+        Fastwire::setup(400, true);
+    #endif
+    
+    
+    mpu.initialize();
+    
+    delay(100);
+    
+    uint8_t devStatus = mpu.dmpInitialize(); //(0 = success, !0 = error)
+    
+    
+    // Calibration offsets
+    mpu.setXGyroOffset(220);
+    mpu.setYGyroOffset(76);
+    mpu.setZGyroOffset(-85);
+    mpu.setZAccelOffset(1788);
+    
+    
+    if (devStatus == 0) {
+        //mpu.setRate(4); // 1khz / (1 + 4) = 200 Hz
+        mpu.setDMPEnabled(true);
+        mpuIntStatus = mpu.getIntStatus();
+        // get expected DMP packet size for later comparison
+        packetSize = mpu.dmpGetFIFOPacketSize();
+        dmpReady = true;
+    }
+}
+
+
 // Magnetometer
 // Store our compass as a variable.
 HMC5883L compass;
@@ -334,7 +389,8 @@ void setup() {
   randomSeed(analogRead(A4));
   ledRandom(255/50);
 
-  setupMagnetometer();
+  //setupMagnetometer();
+  setupIMU();
 
   Servo1.attach(SERVO_1_PIN);
   Servo2.attach(SERVO_2_PIN);
@@ -387,6 +443,10 @@ int irDistance_max = 0;
 
 int temperature = -1;
 int humidity = -1;
+
+unsigned int imu_yaw_tushort;
+unsigned int imu_pitch_tushort;
+unsigned int imu_roll_tushort;
 
 int dht11_count = 0;
 void loop() {
@@ -511,7 +571,33 @@ void loop() {
   if(sampleTime > 0 && iniTime-sampleTime > last_timestamp) {
     last_timestamp = iniTime;
 
-    MagnetometerRaw magnetometer_raw = compass.ReadRawAxis();
+    //MagnetometerRaw magnetometer_raw = compass.ReadRawAxis();
+
+    if(dmpReady) {
+        mpuIntStatus = mpu.getIntStatus();
+        //fifoCount = mpu.getFIFOCount();
+        if (mpuIntStatus & 0x02) {
+            mpu.resetFIFO();
+            fifoCount = mpu.getFIFOCount();
+            // wait for correct available data length, should be a VERY short wait
+            while (fifoCount < packetSize) fifoCount = mpu.getFIFOCount();
+            
+            // read a packet from FIFO
+            mpu.getFIFOBytes(fifoBuffer, packetSize);
+            
+            // track FIFO count here in case there is > 1 packet available
+            // (this lets us immediately read more without waiting for an interrupt)
+            fifoCount -= packetSize;
+            
+            mpu.dmpGetQuaternion(&q, fifoBuffer);
+            mpu.dmpGetGravity(&gravity, &q);
+            mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
+            
+            imu_yaw_tushort = round(mapf(ypr[0],-M_PI,M_PI,0,65535));
+            imu_pitch_tushort = round(mapf(ypr[1],-M_PI,M_PI,0,65535));
+            imu_roll_tushort = round(mapf(ypr[2],-M_PI,M_PI,0,65535));
+        }
+    }
 
     char data[256] = "";
     int pos = 0;
@@ -559,24 +645,39 @@ void loop() {
     data[pos+2] = temperature & 0x00ff;
     pos += 3;
     
-    data[pos] = 19; // Type: magnetometerX
-    data[pos+1] = magnetometer_raw.XAxis >> 8;
-    data[pos+2] = magnetometer_raw.XAxis & 0x00ff;
-    pos += 3;
-    
-    data[pos] = 20; // Type: magnetometerY
-    data[pos+1] = magnetometer_raw.YAxis >> 8;
-    data[pos+2] = magnetometer_raw.YAxis & 0x00ff;
-    pos += 3;
-    
-    data[pos] = 21; // Type: magnetometerZ
-    data[pos+1] = magnetometer_raw.ZAxis >> 8;
-    data[pos+2] = magnetometer_raw.ZAxis & 0x00ff;
-    pos += 3;
+/*    data[pos] = 19; // Type: magnetometerX*/
+/*    data[pos+1] = magnetometer_raw.XAxis >> 8;*/
+/*    data[pos+2] = magnetometer_raw.XAxis & 0x00ff;*/
+/*    pos += 3;*/
+/*    */
+/*    data[pos] = 20; // Type: magnetometerY*/
+/*    data[pos+1] = magnetometer_raw.YAxis >> 8;*/
+/*    data[pos+2] = magnetometer_raw.YAxis & 0x00ff;*/
+/*    pos += 3;*/
+/*    */
+/*    data[pos] = 21; // Type: magnetometerZ*/
+/*    data[pos+1] = magnetometer_raw.ZAxis >> 8;*/
+/*    data[pos+2] = magnetometer_raw.ZAxis & 0x00ff;*/
+/*    pos += 3;*/
     
     data[pos] = 22; // Type: button
     data[pos+1] = buttonHasBeenPressed >> 8;
     data[pos+2] = buttonHasBeenPressed & 0x00ff;
+    pos += 3;
+    
+    data[pos] = 24; // Type: IMUyaw
+    data[pos+1] = imu_yaw_tushort >> 8;
+    data[pos+2] = imu_yaw_tushort & 0x00ff;
+    pos += 3;
+    
+    data[pos] = 25; // Type: IMUpitch
+    data[pos+1] = imu_pitch_tushort >> 8;
+    data[pos+2] = imu_pitch_tushort & 0x00ff;
+    pos += 3;
+    
+    data[pos] = 26; // Type: IMUroll
+    data[pos+1] = imu_roll_tushort >> 8;
+    data[pos+2] = imu_roll_tushort & 0x00ff;
     pos += 3;
     
     //sprintf(data,"%d %d %d %d %d %d %d", batt,noseV_min,noseV_max,irDistance_min,irDistance_max, temperature, humidity);

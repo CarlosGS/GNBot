@@ -35,7 +35,10 @@ class GNBot(object):
 					20	: "magnetometerY",# to be read
 					21	: "magnetometerZ",# to be read
 					22	: "button",# to be read
-					23	: "sampletime"}
+					23	: "sampletime",
+					24	: "IMUyaw",# to be read
+					25	: "IMUpitch",# to be read
+					26	: "IMUroll"}# to be read
 	
 	valueTypesLookup = {}
 	
@@ -97,7 +100,7 @@ class GNBot(object):
 				valType = ord(raw_values_string[istart])
 				#value = ord(raw_values_string[istart+1])*256+ord(raw_values_string[istart+2])
 				#value = int(ord(raw_values_string[istart+1])<<8|ord(raw_values_string[istart+2]),16)
-				value = struct.unpack('h', raw_values_string[istart+2]+raw_values_string[istart+1])[0]
+				value = struct.unpack('H', raw_values_string[istart+2]+raw_values_string[istart+1])[0]
 				if not valType in self.valueTypes.keys():
 					print("WARNING! Unknown value type received: " + str(valType))
 					continue
