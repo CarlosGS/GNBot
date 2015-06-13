@@ -36,7 +36,7 @@ containing samples as a continuous stream of 64 bit floats. Capture is stopped
 with a ctrl-c (or ctrl-break, if you use such systems).
 """
 DEFAULT_HOST = "129.31.217.168"  
-DEFAULT_PORT = 800
+DEFAULT_PORT = 801
   
 class ViconReader(object):
   """ViconReader instances provide access to the real-time data stream 
@@ -155,7 +155,7 @@ if __name__=="__main__":
     highbay = "192.168.129.65",
     grasp =  "10.66.68.1",
     dyson =  "129.31.217.168",
-    DEFAULT = "146.179.206.65" 
+    DEFAULT = "10.42.0.1" 
   )
   fn = None
   host = hosts['DEFAULT']
