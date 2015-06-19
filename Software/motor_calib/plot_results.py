@@ -17,102 +17,63 @@ rc('font',**{'family':'serif','serif':['Computer Modern']})
 
 f, ax = subplots(1)
 
-data = loadFromFile("","distanceLog.p")
+data = loadFromFile("","motorCalibLog_forwards.p")
 
 print(data)
 
+fw_avgSpeed = data['avgSpeed']
+fw_avgLmotorInput = data['avgLmotorInput']
+fw_avgRmotorInput = data['avgRmotorInput']
 
 
-distances = np.array(data['distances'])
-measurementMin = np.array(data['measurementMin'])
-measurementMax = np.array(data['measurementMax'])
+data = loadFromFile("","motorCalibLog_backwards.p")
+
+print(data)
+
+bw_avgSpeed = data['avgSpeed']
+bw_avgLmotorInput = data['avgLmotorInput']
+bw_avgRmotorInput = data['avgRmotorInput']
 
 
-#measurementMin = mapVals(measurementMin,0.,1023.,0.,5.)
-#measurementMax = mapVals(measurementMax,0.,1023.,0.,5.)
-measurementAvg = (measurementMin+measurementMax)/2
+avgSpeed = fw_avgSpeed
+avgSpeed.reverse()
+avgSpeed.extend(bw_avgSpeed)
 
-ax.plot(distances,measurementMax)
-ax.plot(distances,measurementAvg)
-ax.plot(distances,measurementMin)
+avgLmotorInput = fw_avgLmotorInput
+avgLmotorInput.reverse()
+avgLmotorInput.extend(bw_avgLmotorInput)
 
+avgRmotorInput = fw_avgRmotorInput
+avgRmotorInput.reverse()
+avgRmotorInput.extend(bw_avgRmotorInput)
 
-# Fitting to exponential curve
+ax.plot(avgSpeed,avgLmotorInput,'-xr')
+ax.plot(avgSpeed,avgRmotorInput,'-xb')
+ax.plot([avgSpeed[0],avgSpeed[-1]],[avgLmotorInput[0],avgLmotorInput[-1]],"g")
+ax.plot([avgSpeed[0],avgSpeed[-1]],[avgRmotorInput[0],avgRmotorInput[-1]],"g")
+ax.legend(["Left motor","Right motor","Ideal response"],loc="right")
 
-#x1 = 9.
-#y1 = float(measurementAvg[6])
+#ax.plot(fw_avgSpeed,fw_avgLmotorInput,'-x')
+#ax.plot(fw_avgSpeed,fw_avgRmotorInput,'-x')
 
-x1 = 12.
-y1 = float(measurementAvg[7])
+#ax.plot(bw_avgSpeed,bw_avgLmotorInput,'-x')
+#ax.plot(bw_avgSpeed,bw_avgRmotorInput,'-x')
 
-#x2 = 21.
-#y2 = float(measurementAvg[9])
-
-x2 = 37.
-y2 = float(measurementAvg[11])
-
-#x2 = 86.
-#y2 = float(measurementAvg[14])
-
-#x2 = 114.
-#y2 = float(measurementAvg[15])
-
-
-
-
-#D = x1
-#A = y1
-#B = np.e
-#C = 0.1
-
-print x1, y1, x2, y2
-
-K = x1*(y1-y2) / (1.-x1/x2)
-C = y2-K/x2
-fit = K*(1./distances)+C
-print("K="+str(K))
-print("C="+str(C))
-
-#K = 14.6358265503
-#C = -0.173084289376
-
-#a = (np.log(K)-np.log(C+y3))/np.log(x3)
-#K = (x1**a)*(y1-y2) / (1.-(x1**a)/(x2**a))
-#C = y2-K/(x2**a)
-#fit = K*(1./(distances**a))+C
-#print a, K, C
-
-#ax.plot(distances,fit)
-
-
-ax.plot(K/(measurementAvg-C),measurementAvg,"o")
+#ax.legend(["fw L","fw R","bw L", "bw R"])
 
 
 
+#ax.set_ylim([0,3.5])
+#ax.set_xlim([0,200])
 
+ax.set_ylabel('Motor input pulse width [ms]', fontsize=16)
+ax.set_xlabel('Measured speed towards wall [cm/s]', fontsize=16)
 
-ax.set_ylim([0,3.5])
-ax.set_xlim([0,200])
-
-ax.set_ylabel('Sensor output [V]', fontsize=16)
-ax.set_xlabel('Actual distance [cm]', fontsize=16)
-
-ax.set_title('IR range-finder response curve', fontsize=16)
-
-
-ax.legend(["max","avg","min","fit"])
+ax.set_title('Measured motor response curve', fontsize=16)
 
 tight_layout()
 
-
-
-
-f, ax = subplots(1)
-
-ax.plot(distances,K/(measurementAvg-C),"r")
-ax.plot(distances,distances,"b")
-
-#savefig("IR_sensor_response_curve.pdf")
+savefig("motors_speed_response_curve.pdf")
 show()
 
 
