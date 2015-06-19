@@ -92,9 +92,9 @@ void setupIMU() {
     
     
     // Calibration offsets
-//    mpu.setXGyroOffset(220);
-//    mpu.setYGyroOffset(76);
-//    mpu.setZGyroOffset(-85);
+    mpu.setXGyroOffset(34);
+    mpu.setYGyroOffset(-26);
+    mpu.setZGyroOffset(24);
 //    mpu.setZAccelOffset(1788);
     
     
@@ -277,6 +277,7 @@ int servo1pos = 90,servo1inc=1;
 int servo2pos = 90,servo2inc=-2;
 
 unsigned long iniTime;
+unsigned long currTime;
 unsigned long last_timestamp = 0;
 
 unsigned long last_timestamp_DHT11 = 0;
@@ -309,6 +310,13 @@ float analogReadAverage(int pin, int samples) {
     result += analogRead(pin);
   }
   return float(result)/float(samples);
+}
+
+float getDistanceCM() {
+  float measurement = analogReadAverage(IR4_PIN,4);
+  float ir_K = 4244.64;
+  float ir_C = 37.28;
+  return ir_K/(measurement-ir_C);
 }
 
 float getBatteryVoltage() {
@@ -430,45 +438,106 @@ void setup() {
     int velocity = 0;
     ledColor(128,0,0);
     delay(3000);
+    velocity = 0;
     while(1) {
-      if(dmpReady) {
-          mpuIntStatus = mpu.getIntStatus();
-          //fifoCount = mpu.getFIFOCount();
-          if (mpuIntStatus & 0x02) {
-              mpu.resetFIFO();
-              fifoCount = mpu.getFIFOCount();
-              // wait for correct available data length, should be a VERY short wait
-              while (fifoCount < packetSize) fifoCount = mpu.getFIFOCount();
-              
-              // read a packet from FIFO
-              mpu.getFIFOBytes(fifoBuffer, packetSize);
-              
-              // track FIFO count here in case there is > 1 packet available
-              // (this lets us immediately read more without waiting for an interrupt)
-              fifoCount -= packetSize;
-              
-              mpu.dmpGetQuaternion(&q, fifoBuffer);
-              mpu.dmpGetGravity(&gravity, &q);
-              mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
-          }
+      setupIMU();
+      float avgSpeed = 0;
+      iniTime = millis();
+      float oldDistance = getDistanceCM();
+      Servo1.attach(SERVO_1_PIN);
+      Servo2.attach(SERVO_2_PIN);
+      int avgL = 1467-velocity;
+      int avgR = 1467+velocity;
+      while(1) {
+        if(dmpReady) {
+          mpu.resetFIFO();
+          fifoCount = mpu.getFIFOCount();
+          // wait for correct available data length, should be a VERY short wait
+          while (fifoCount < packetSize) fifoCount = mpu.getFIFOCount();
+          
+          // read a packet from FIFO
+          mpu.getFIFOBytes(fifoBuffer, packetSize);
+          
+          mpu.dmpGetQuaternion(&q, fifoBuffer);
+          mpu.dmpGetGravity(&gravity, &q);
+          mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
+        }
+        
+        currTime = millis();
+        float distance = getDistanceCM();
+        if(distance < 8) break;
+        avgSpeed = avgSpeed*0.9+0.1*1000*(distance-oldDistance)/(currTime-iniTime);
+        iniTime = currTime;
+        oldDistance = distance;
+        
+        float yaw_normalized = ypr[0]/M_PI;
+        int error = round(max(min(yaw_normalized*800*2,800),-800));
+        int L = 1467-(velocity-error);
+        int R = 1467+(velocity+error);
+        Servo1.writeMicroseconds(L);
+        Servo2.writeMicroseconds(R);
+        avgL = avgL*0.95+L*0.05;
+        avgR = avgR*0.95+R*0.05;
+        
+        
+        
+      Serial.print(avgL);
+      Serial.print("\t");
+      Serial.print(avgR);
+      Serial.print("\t");
+      Serial.println(avgSpeed);
+        
+  //      if(L == 0) Servo1.detach();
+  //      else {
+  //        Servo1.attach(SERVO_1_PIN);
+  //        Servo1.write(90-L);
+  //      }
+  //      if(R == 0) Servo2.detach();
+  //      else {
+  //        Servo2.attach(SERVO_2_PIN);
+  //        Servo2.write(90+R);
+  //      }
+  //      if(button_is_pressed()) {
+  //        velocity += 2;
+  //        delay(200);
+  //      }
+        delay(100);
       }
-      float yaw_normalized = ypr[0]/M_PI;
-      int error = round(max(min(yaw_normalized*80,20),-20));
-      int L = velocity-error;
-      int R = velocity+error;
-      if(L == 0) Servo1.detach();
-      else {
-        Servo1.attach(SERVO_1_PIN);
-        Servo1.write(90-L);
-      }
-      if(R == 0) Servo2.detach();
-      else {
-        Servo2.attach(SERVO_2_PIN);
-        Servo2.write(90+R);
-      }
-      if(button_is_pressed()) {
-        velocity += 2;
-        delay(200);
+      Servo1.detach();
+      Servo2.detach();
+      
+      unsigned int avgSpeed_tushort = round(mapf(avgSpeed,-100,100,0,65535));
+      
+      while(1) {
+        char data[256] = "";
+        int pos = 0;
+        
+        data[pos] = 0; // PUT command
+        pos += 1;
+        
+        data[pos] = 27; // Type: average speed
+        data[pos+1] = avgSpeed_tushort >> 8;
+        data[pos+2] = avgSpeed_tushort & 0x00ff;
+        pos += 3;
+        
+        data[pos] = 28; // Type: average L motor input
+        data[pos+1] = avgL >> 8;
+        data[pos+2] = avgL & 0x00ff;
+        pos += 3;
+        
+        data[pos] = 29; // Type: average R motor input
+        data[pos+1] = avgR >> 8;
+        data[pos+2] = avgR & 0x00ff;
+        pos += 3;
+        
+        sendXbee(data, pos+1);
+        delay(500);
+        if(button_is_pressed()) {
+          velocity *= 1.5;
+          if(velocity==0) velocity = 50;
+          delay(2000);
+          break;
+        }
       }
     }
   }
@@ -621,9 +690,9 @@ void loop() {
     //MagnetometerRaw magnetometer_raw = compass.ReadRawAxis();
 
     if(dmpReady) {
-        mpuIntStatus = mpu.getIntStatus();
+        //mpuIntStatus = mpu.getIntStatus();
         //fifoCount = mpu.getFIFOCount();
-        if (mpuIntStatus & 0x02) {
+        //if (mpuIntStatus & 0x02) {
             mpu.resetFIFO();
             fifoCount = mpu.getFIFOCount();
             // wait for correct available data length, should be a VERY short wait
@@ -634,7 +703,7 @@ void loop() {
             
             // track FIFO count here in case there is > 1 packet available
             // (this lets us immediately read more without waiting for an interrupt)
-            fifoCount -= packetSize;
+            //fifoCount -= packetSize;
             
             mpu.dmpGetQuaternion(&q, fifoBuffer);
             mpu.dmpGetGravity(&gravity, &q);
@@ -643,7 +712,7 @@ void loop() {
             imu_yaw_tushort = round(mapf(ypr[0],-M_PI,M_PI,0,65535));
             imu_pitch_tushort = round(mapf(ypr[1],-M_PI,M_PI,0,65535));
             imu_roll_tushort = round(mapf(ypr[2],-M_PI,M_PI,0,65535));
-        }
+        //}
     }
 
     char data[256] = "";

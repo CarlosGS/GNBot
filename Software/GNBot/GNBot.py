@@ -38,7 +38,11 @@ class GNBot(object):
 					23	: "sampletime",
 					24	: "IMUyaw",# to be read
 					25	: "IMUpitch",# to be read
-					26	: "IMUroll"}# to be read
+					26	: "IMUroll",# to be read
+					27	: "avgSpeed",# to be read
+					28	: "avgLmotorInput",# to be read
+					29	: "avgRmotorInput"# to be read
+					}
 	
 	valueTypesLookup = {}
 	
