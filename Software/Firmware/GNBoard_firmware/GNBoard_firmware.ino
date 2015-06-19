@@ -465,7 +465,8 @@ void setup() {
         
         currTime = millis();
         float distance = getDistanceCM();
-        if(distance < 8) break;
+        //if(distance < 8) break;
+        if(distance > 38) break;
         avgSpeed = avgSpeed*0.9+0.1*1000*(distance-oldDistance)/(currTime-iniTime);
         iniTime = currTime;
         oldDistance = distance;
@@ -534,7 +535,7 @@ void setup() {
         delay(500);
         if(button_is_pressed()) {
           velocity *= 1.5;
-          if(velocity==0) velocity = 50;
+          if(velocity==0) velocity = -50;
           delay(2000);
           break;
         }

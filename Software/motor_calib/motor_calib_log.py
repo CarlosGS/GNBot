@@ -50,12 +50,11 @@ data['avgRmotorInput'] = []
 
 for i in range(4):
     print("Sample "+str(i)+". Press enter.")
-    raw_input()
-    global avgSpeed, avgLmotorInput, avgRmotorInput
+    while raw_input() != "ok":
+        print avgSpeed, avgLmotorInput, avgRmotorInput
     data['avgSpeed'].append(avgSpeed)
     data['avgLmotorInput'].append(avgLmotorInput)
     data['avgRmotorInput'].append(avgRmotorInput)
-    print avgSpeed, avgLmotorInput, avgRmotorInput
 
 print(data)
 saveToFile(data,"","motorCalibLog.p")
