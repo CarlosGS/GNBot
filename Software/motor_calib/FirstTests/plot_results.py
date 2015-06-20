@@ -99,38 +99,38 @@ ax.plot(avgSpeed,avgRmotorInput,'-xb')
 
 
 
-#data = loadFromFile("","motorCalibLog_forwards_asymetricR.p")
+data = loadFromFile("","motorCalibLog_forwards_asymetricR.p")
 
-#print(data)
+print(data)
 
-#fw_avgSpeed = data['avgSpeed']
-#fw_avgLmotorInput = data['avgLmotorInput']
-#fw_avgRmotorInput = data['avgRmotorInput']
-
-
-#data = loadFromFile("","motorCalibLog_backwards_asymetricR.p")
-
-#print(data)
-
-#bw_avgSpeed = data['avgSpeed']
-#bw_avgLmotorInput = data['avgLmotorInput']
-#bw_avgRmotorInput = data['avgRmotorInput']
+fw_avgSpeed = data['avgSpeed']
+fw_avgLmotorInput = data['avgLmotorInput']
+fw_avgRmotorInput = data['avgRmotorInput']
 
 
-#avgSpeed = fw_avgSpeed
-#avgSpeed.reverse()
-#avgSpeed.extend(bw_avgSpeed)
+data = loadFromFile("","motorCalibLog_backwards_asymetricR.p")
 
-#avgLmotorInput = fw_avgLmotorInput
-#avgLmotorInput.reverse()
-#avgLmotorInput.extend(bw_avgLmotorInput)
+print(data)
 
-#avgRmotorInput = fw_avgRmotorInput
-#avgRmotorInput.reverse()
-#avgRmotorInput.extend(bw_avgRmotorInput)
+bw_avgSpeed = data['avgSpeed']
+bw_avgLmotorInput = data['avgLmotorInput']
+bw_avgRmotorInput = data['avgRmotorInput']
 
-#ax.plot(avgSpeed,avgLmotorInput,'-xr')
-#ax.plot(avgSpeed,avgRmotorInput,'-xr')
+
+avgSpeed = fw_avgSpeed
+avgSpeed.reverse()
+avgSpeed.extend(bw_avgSpeed)
+
+avgLmotorInput = fw_avgLmotorInput
+avgLmotorInput.reverse()
+avgLmotorInput.extend(bw_avgLmotorInput)
+
+avgRmotorInput = fw_avgRmotorInput
+avgRmotorInput.reverse()
+avgRmotorInput.extend(bw_avgRmotorInput)
+
+ax.plot(avgSpeed,avgLmotorInput,'-xr')
+ax.plot(avgSpeed,avgRmotorInput,'-xr')
 
 
 
