@@ -161,7 +161,7 @@ ax.set_title('Measured motor response curve', fontsize=16)
 
 tight_layout()
 
-#savefig("motors_speed_response_curve.pdf")
+savefig("motors_speed_response_curve_asym_tires.pdf")
 show()
 
 
