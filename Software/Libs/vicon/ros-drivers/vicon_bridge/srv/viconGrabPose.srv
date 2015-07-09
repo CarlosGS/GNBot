@@ -1,6 +1,0 @@
-string subject_name
-string segment_name
-int32 n_measurements
----
-bool success
-geometry_msgs/PoseStamped pose
