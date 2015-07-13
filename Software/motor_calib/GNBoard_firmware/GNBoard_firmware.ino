@@ -503,9 +503,9 @@ void setup() {
     int error = round(max(min(yaw_normalized*300*2,300),-300));
     int L = 1467-(velocity-error-integral_error/10);
     int R = 1467+(velocity+error+integral_error/10);
-    //Servo1.writeMicroseconds(L);
-    //Servo2.writeMicroseconds(R);
-    Serial.println(ypr[0]);
+    Servo1.writeMicroseconds(L);
+    Servo2.writeMicroseconds(R);
+    //Serial.println(ypr[0]);
     
     //integral_error = integral_error + error;
     if(error == 0) integral_error = 0;
