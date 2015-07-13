@@ -65,9 +65,9 @@ MPU6050 mpu;
 // MPU control/status vars
 bool dmpReady = false;  // set true if DMP init was successful
 uint8_t mpuIntStatus;   // holds actual interrupt status byte from MPU
-uint16_t packetSize;    // expected DMP packet size (default is 42 bytes)
-uint16_t fifoCount;     // count of all bytes currently in FIFO
-uint8_t fifoBuffer[64]; // FIFO storage buffer
+//uint16_t packetSize;    // expected DMP packet size (default is 42 bytes)
+//uint16_t fifoCount;     // count of all bytes currently in FIFO
+//uint8_t fifoBuffer[64]; // FIFO storage buffer
 
 // orientation/motion vars
 Quaternion q;           // [w, x, y, z]         quaternion container
@@ -92,22 +92,19 @@ void setupIMU() {
     
     
     // Calibration offsets
-    //mpu.setXGyroOffset(34);
-    //mpu.setYGyroOffset(-26);
-    //mpu.setZGyroOffset(24*2);
+    mpu.setXGyroOffset(34);
+    mpu.setYGyroOffset(-26);
+    mpu.setZGyroOffset(24);
 //    mpu.setZAccelOffset(1788);
     
     
     if (devStatus == 0) {
-        //mpu.setRate(3); // 1khz / (1 + 4) = 200 Hz
-        //mpu.setMotionDetectionThreshold(0);
-        //mpu.setMotionDetectionDuration(0);
-        //mpu.setZeroMotionDetectionThreshold(0);
-        //mpu.writeProgDMPConfigurationSet(dmpConfig, MPU6050_DMP_CONFIG_SIZE);
+        mpu.setRate(4); // 1khz / (1 + 4) = 200 Hz
+        mpu.setFIFOEnabled(false);
         mpu.setDMPEnabled(true);
         mpuIntStatus = mpu.getIntStatus();
         // get expected DMP packet size for later comparison
-        packetSize = mpu.dmpGetFIFOPacketSize();
+        //packetSize = mpu.dmpGetFIFOPacketSize();
         dmpReady = true;
     }
 }
@@ -397,10 +394,6 @@ unsigned int imu_pitch_tushort;
 unsigned int imu_roll_tushort;
 
 
-int16_t ax, ay, az;
-int16_t gx, gy, gz;
-
-
 void setup() {
   delay(500);
 
@@ -408,7 +401,7 @@ void setup() {
   ledRandom(255/50);
 
   //setupMagnetometer();
-  //setupIMU();
+  setupIMU();
 
   Servo1.attach(SERVO_1_PIN);
   Servo2.attach(SERVO_2_PIN);
@@ -442,89 +435,12 @@ void setup() {
   last_timestamp = iniTime;
   last_timestamp_DHT11 = iniTime;
   
-  while(!button_is_pressed());
-  delay(1000);
-  setupIMU();
-  
-  
-  
-  /*while(1) {
-    mpu.resetFIFO();
-    fifoCount = mpu.getFIFOCount();
-    // wait for correct available data length, should be a VERY short wait
-    while (fifoCount < packetSize) fifoCount = mpu.getFIFOCount();
-    // read a packet from FIFO
-    mpu.getFIFOBytes(fifoBuffer, packetSize);
-
-    mpu.dmpGetQuaternion(&q, fifoBuffer);
-    mpu.dmpGetGravity(&gravity, &q);
-    mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
-
-    float yaw_normalized = ypr[0]/M_PI;
-    
-    mpu.setZGyroOffset(24*2);
-    
-    delay(10);
-  }*/
-  mpu.setZGyroOffset(0);
-  delay(500);
-  int gzf = 0;
-  for(int i=0; i<16; i++) {
-    mpu.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
-    gzf += (int)gz;
-    delay(200);
-  }
-  gzf = round(((float)gzf)/16.);
-  //mpu.setZGyroOffset(round(-((float)gzf)/4.));
-  mpu.setZGyroOffset(-gzf);
-  
-  Serial.print("Value: ");
-  Serial.println(gzf);
-  
-  
-  Servo1.attach(SERVO_1_PIN);
-  Servo2.attach(SERVO_2_PIN);
-  
-  int integral_error = 0;
-  int velocity = 0;
-  while(1) {
-    mpu.resetFIFO();
-    fifoCount = mpu.getFIFOCount();
-    // wait for correct available data length, should be a VERY short wait
-    while (fifoCount < packetSize) fifoCount = mpu.getFIFOCount();
-    // read a packet from FIFO
-    mpu.getFIFOBytes(fifoBuffer, packetSize);
-
-    mpu.dmpGetQuaternion(&q, fifoBuffer);
-    mpu.dmpGetGravity(&gravity, &q);
-    mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
-
-    float yaw_normalized = ypr[0]/M_PI;
-    int error = round(max(min(yaw_normalized*300*2,300),-300));
-    int L = 1467-(velocity-error-integral_error/10);
-    int R = 1467+(velocity+error+integral_error/10);
-    //Servo1.writeMicroseconds(L);
-    //Servo2.writeMicroseconds(R);
-    Serial.println(ypr[0]);
-    
-    //integral_error = integral_error + error;
-    if(error == 0) integral_error = 0;
-    
-    if(button_is_pressed()) {
-      velocity += 50;
-      delay(1000);
-    }
-    
-    delay(10);
-  }
-  
-  
   
   while(!button_is_pressed());
   
   //if(button_is_pressed()) {
     setupIMU();
-    
+    int velocity = 0;
     ledColor(128,0,0);
     delay(3000);
     
@@ -549,13 +465,13 @@ void setup() {
       int integral_error = 0;
       while(1) {
         if(dmpReady) {
-          mpu.resetFIFO();
-          fifoCount = mpu.getFIFOCount();
+          //mpu.resetFIFO();
+          //fifoCount = mpu.getFIFOCount();
           // wait for correct available data length, should be a VERY short wait
-          while (fifoCount < packetSize) fifoCount = mpu.getFIFOCount();
+          //while (fifoCount < packetSize) fifoCount = mpu.getFIFOCount();
           
           // read a packet from FIFO
-          mpu.getFIFOBytes(fifoBuffer, packetSize);
+          //mpu.getFIFOBytes(fifoBuffer, packetSize);
           
           mpu.dmpGetQuaternion(&q, fifoBuffer);
           mpu.dmpGetGravity(&gravity, &q);
@@ -803,13 +719,13 @@ void loop() {
         //mpuIntStatus = mpu.getIntStatus();
         //fifoCount = mpu.getFIFOCount();
         //if (mpuIntStatus & 0x02) {
-            mpu.resetFIFO();
-            fifoCount = mpu.getFIFOCount();
+            //mpu.resetFIFO();
+            //fifoCount = mpu.getFIFOCount();
             // wait for correct available data length, should be a VERY short wait
-            while (fifoCount < packetSize) fifoCount = mpu.getFIFOCount();
+            //while (fifoCount < packetSize) fifoCount = mpu.getFIFOCount();
             
             // read a packet from FIFO
-            mpu.getFIFOBytes(fifoBuffer, packetSize);
+            //mpu.getFIFOBytes(fifoBuffer, packetSize);
             
             // track FIFO count here in case there is > 1 packet available
             // (this lets us immediately read more without waiting for an interrupt)
