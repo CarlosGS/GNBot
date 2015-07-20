@@ -475,19 +475,19 @@ void setup() {
   int ret = setupIMU();
   if(ret == 0) {
     // OK --> Blink green LED + stabilization delay
-    for(int i=0; i<100; i++) {
+    /*for(int i=0; i<100; i++) {
       ledColor(0,i,0);
       delay(150);
       ledColor(0,0,100-i);
       delay(50);
-    }
+    }*/
     ledColor(0,128,0);
   } else {
     ledColor(128,0,0); // ERROR --> Red LED
     while(1);
   }
   
-  //while(!button_is_pressed());
+  while(!button_is_pressed());
 
   
 
@@ -510,7 +510,7 @@ void setup() {
     while(yaw_normalized > 1) yaw_normalized -= 2;
     while(yaw_normalized <= -1) yaw_normalized += 2;
     
-    int error = round(max(min(yaw_normalized*300*2,300),-300));
+    int error = round(yaw_normalized*15000);
     int L = 1467-(velocity-error-integral_error/10);
     int R = 1467+(velocity+error+integral_error/10);
     Servo1.writeMicroseconds(L);
@@ -524,8 +524,10 @@ void setup() {
     Serial.print(ypr[2] * 180/M_PI);
     Serial.println();*/
     
-    integral_error = integral_error + error/5;
-    if(error == 0) integral_error = 0;
+    //integral_error = integral_error + error;
+    if(integral_error > 5000) integral_error = 5000;
+    if(integral_error < -5000) integral_error = -5000;
+    //if(error == 0) integral_error = 0;
     
     if(button_is_pressed()) {
       velocity += 50;
