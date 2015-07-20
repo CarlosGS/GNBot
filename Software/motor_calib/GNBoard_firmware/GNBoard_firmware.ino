@@ -74,7 +74,7 @@ Quaternion q;           // [w, x, y, z]         quaternion container
 VectorFloat gravity;    // [x, y, z]            gravity vector
 float ypr[3];           // [yaw, pitch, roll]   yaw/pitch/roll container and gravity vector
 
-void setupIMU() {
+int setupIMU() {
     // join I2C bus (I2Cdev library doesn't do this automatically)
     #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
         Wire.begin();
@@ -86,7 +86,22 @@ void setupIMU() {
     
     mpu.initialize();
     
-    delay(100);
+    delay(1000);
+    
+    int16_t ax, ay, az;
+    int16_t gx, gy, gz;
+    
+    mpu.setZGyroOffset(0);
+    delay(500);
+    int gzf = 0;
+    for(int i=0; i<16; i++) {
+      mpu.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
+      gzf += (int)gz;
+      delay(100);
+    }
+    gzf = round(((float)gzf)/16.);
+    mpu.setZGyroOffset(-gzf);
+    
     
     uint8_t devStatus = mpu.dmpInitialize(); //(0 = success, !0 = error)
     
@@ -104,12 +119,31 @@ void setupIMU() {
         //mpu.setMotionDetectionDuration(0);
         //mpu.setZeroMotionDetectionThreshold(0);
         //mpu.writeProgDMPConfigurationSet(dmpConfig, MPU6050_DMP_CONFIG_SIZE);
+        
+        mpu.setZGyroOffset(-gzf); // Apply gyro newly-calibrated offset
+        
         mpu.setDMPEnabled(true);
         mpuIntStatus = mpu.getIntStatus();
         // get expected DMP packet size for later comparison
         packetSize = mpu.dmpGetFIFOPacketSize();
         dmpReady = true;
     }
+    return devStatus;
+}
+
+void readIMU_YawPitchRoll(float *data) {
+  mpu.resetFIFO();
+
+  // Wait for correct available data length
+  fifoCount = mpu.getFIFOCount();
+  while (fifoCount < packetSize) fifoCount = mpu.getFIFOCount();
+
+  // Read a packet from FIFO
+  mpu.getFIFOBytes(fifoBuffer, packetSize);
+
+  mpu.dmpGetQuaternion(&q, fifoBuffer);
+  mpu.dmpGetGravity(&gravity, &q);
+  mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
 }
 
 
@@ -397,15 +431,14 @@ unsigned int imu_pitch_tushort;
 unsigned int imu_roll_tushort;
 
 
-int16_t ax, ay, az;
-int16_t gx, gy, gz;
+
 
 
 void setup() {
   delay(500);
 
-  randomSeed(analogRead(A4));
-  ledRandom(255/50);
+  randomSeed(analogRead(BATTERY_PIN));
+  ledColor(0,0,128);
 
   //setupMagnetometer();
   //setupIMU();
@@ -419,8 +452,6 @@ void setup() {
 
   initRobot();
 
-  ledRandom(255/50);
-
   Servo1.detach();
   Servo2.detach();
 
@@ -430,11 +461,9 @@ void setup() {
 
   //while(!button_is_pressed()) delay(10);
 
-  ledRandom(255/10);
+  //ledRandom(255/10);
 
   //playMusicTone1(30);
-
-  ledColor(0,0,128);
 
   //magnetometerToZero();
 
@@ -442,44 +471,26 @@ void setup() {
   last_timestamp = iniTime;
   last_timestamp_DHT11 = iniTime;
   
-  while(!button_is_pressed());
-  delay(1000);
-  setupIMU();
-  
-  
-  
-  /*while(1) {
-    mpu.resetFIFO();
-    fifoCount = mpu.getFIFOCount();
-    // wait for correct available data length, should be a VERY short wait
-    while (fifoCount < packetSize) fifoCount = mpu.getFIFOCount();
-    // read a packet from FIFO
-    mpu.getFIFOBytes(fifoBuffer, packetSize);
-
-    mpu.dmpGetQuaternion(&q, fifoBuffer);
-    mpu.dmpGetGravity(&gravity, &q);
-    mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
-
-    float yaw_normalized = ypr[0]/M_PI;
-    
-    mpu.setZGyroOffset(24*2);
-    
-    delay(10);
-  }*/
-  mpu.setZGyroOffset(0);
-  delay(500);
-  int gzf = 0;
-  for(int i=0; i<16; i++) {
-    mpu.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
-    gzf += (int)gz;
-    delay(200);
+  //delay(1000);
+  int ret = setupIMU();
+  if(ret == 0) {
+    // OK --> Blink green LED + stabilization delay
+    for(int i=0; i<100; i++) {
+      ledColor(0,i,0);
+      delay(150);
+      ledColor(0,0,100-i);
+      delay(50);
+    }
+    ledColor(0,128,0);
+  } else {
+    ledColor(128,0,0); // ERROR --> Red LED
+    while(1);
   }
-  gzf = round(((float)gzf)/16.);
-  //mpu.setZGyroOffset(round(-((float)gzf)/4.));
-  mpu.setZGyroOffset(-gzf);
   
-  Serial.print("Value: ");
-  Serial.println(gzf);
+  //while(!button_is_pressed());
+
+  
+
   
   
   Servo1.attach(SERVO_1_PIN);
@@ -487,27 +498,33 @@ void setup() {
   
   int integral_error = 0;
   int velocity = 0;
+  
+  readIMU_YawPitchRoll(ypr);
+  float yawZero = ypr[0];
+  
   while(1) {
-    mpu.resetFIFO();
-    fifoCount = mpu.getFIFOCount();
-    // wait for correct available data length, should be a VERY short wait
-    while (fifoCount < packetSize) fifoCount = mpu.getFIFOCount();
-    // read a packet from FIFO
-    mpu.getFIFOBytes(fifoBuffer, packetSize);
+    readIMU_YawPitchRoll(ypr);
 
-    mpu.dmpGetQuaternion(&q, fifoBuffer);
-    mpu.dmpGetGravity(&gravity, &q);
-    mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
-
-    float yaw_normalized = ypr[0]/M_PI;
+    float yaw_normalized = (ypr[0]-yawZero)/M_PI;
+    
+    while(yaw_normalized > 1) yaw_normalized -= 2;
+    while(yaw_normalized <= -1) yaw_normalized += 2;
+    
     int error = round(max(min(yaw_normalized*300*2,300),-300));
     int L = 1467-(velocity-error-integral_error/10);
     int R = 1467+(velocity+error+integral_error/10);
     Servo1.writeMicroseconds(L);
     Servo2.writeMicroseconds(R);
-    //Serial.println(ypr[0]);
+    //Serial.println(yaw_normalized);
     
-    //integral_error = integral_error + error;
+    /*Serial.print(ypr[0] * 180/M_PI);
+    Serial.print("\t");
+    Serial.print(ypr[1] * 180/M_PI);
+    Serial.print("\t");
+    Serial.print(ypr[2] * 180/M_PI);
+    Serial.println();*/
+    
+    integral_error = integral_error + error/5;
     if(error == 0) integral_error = 0;
     
     if(button_is_pressed()) {
