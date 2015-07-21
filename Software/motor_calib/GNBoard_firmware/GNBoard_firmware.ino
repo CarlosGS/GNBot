@@ -58,7 +58,7 @@ float mapf(float x, float in_min, float in_max, float out_min, float out_max)
 #include "I2Cdev.h"
 #include "MPU6050_6Axis_MotionApps20.h"
 #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
-    #include "Wire.h"
+#include "Wire.h"
 #endif
 MPU6050 mpu;
 
@@ -75,60 +75,60 @@ VectorFloat gravity;    // [x, y, z]            gravity vector
 float ypr[3];           // [yaw, pitch, roll]   yaw/pitch/roll container and gravity vector
 
 int setupIMU() {
-    // join I2C bus (I2Cdev library doesn't do this automatically)
-    #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
-        Wire.begin();
-        TWBR = 24; // 400kHz I2C clock (200kHz if CPU is 8MHz)
-    #elif I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_FASTWIRE
-        Fastwire::setup(400, true);
-    #endif
-    
-    
-    mpu.initialize();
-    
-    delay(1000);
-    
-    int16_t ax, ay, az;
-    int16_t gx, gy, gz;
-    
-    mpu.setZGyroOffset(0);
-    delay(500);
-    int gzf = 0;
-    for(int i=0; i<16; i++) {
-      mpu.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
-      gzf += (int)gz;
-      delay(100);
-    }
-    gzf = round(((float)gzf)/16.);
-    mpu.setZGyroOffset(-gzf);
-    
-    
-    uint8_t devStatus = mpu.dmpInitialize(); //(0 = success, !0 = error)
-    
-    
-    // Calibration offsets
-    //mpu.setXGyroOffset(34);
-    //mpu.setYGyroOffset(-26);
-    //mpu.setZGyroOffset(24*2);
-//    mpu.setZAccelOffset(1788);
-    
-    
-    if (devStatus == 0) {
-        //mpu.setRate(3); // 1khz / (1 + 4) = 200 Hz
-        //mpu.setMotionDetectionThreshold(0);
-        //mpu.setMotionDetectionDuration(0);
-        //mpu.setZeroMotionDetectionThreshold(0);
-        //mpu.writeProgDMPConfigurationSet(dmpConfig, MPU6050_DMP_CONFIG_SIZE);
-        
-        mpu.setZGyroOffset(-gzf); // Apply gyro newly-calibrated offset
-        
-        mpu.setDMPEnabled(true);
-        mpuIntStatus = mpu.getIntStatus();
-        // get expected DMP packet size for later comparison
-        packetSize = mpu.dmpGetFIFOPacketSize();
-        dmpReady = true;
-    }
-    return devStatus;
+  // join I2C bus (I2Cdev library doesn't do this automatically)
+#if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
+  Wire.begin();
+  TWBR = 24; // 400kHz I2C clock (200kHz if CPU is 8MHz)
+#elif I2CDEV_IMPLEMENTATION == I2CDEV_BUILTIN_FASTWIRE
+  Fastwire::setup(400, true);
+#endif
+
+
+  mpu.initialize();
+
+  delay(1000);
+
+  int16_t ax, ay, az;
+  int16_t gx, gy, gz;
+
+  mpu.setZGyroOffset(0);
+  delay(500);
+  int gzf = 0;
+  for(int i=0; i<16; i++) {
+    mpu.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
+    gzf += (int)gz;
+    delay(100);
+  }
+  gzf = round(((float)gzf)/16.);
+  mpu.setZGyroOffset(-gzf);
+
+
+  uint8_t devStatus = mpu.dmpInitialize(); //(0 = success, !0 = error)
+
+
+  // Calibration offsets
+  //mpu.setXGyroOffset(34);
+  //mpu.setYGyroOffset(-26);
+  //mpu.setZGyroOffset(24*2);
+  //    mpu.setZAccelOffset(1788);
+
+
+  if (devStatus == 0) {
+    //mpu.setRate(3); // 1khz / (1 + 4) = 200 Hz
+    //mpu.setMotionDetectionThreshold(0);
+    //mpu.setMotionDetectionDuration(0);
+    //mpu.setZeroMotionDetectionThreshold(0);
+    //mpu.writeProgDMPConfigurationSet(dmpConfig, MPU6050_DMP_CONFIG_SIZE);
+
+    mpu.setZGyroOffset(-gzf); // Apply gyro newly-calibrated offset
+
+    mpu.setDMPEnabled(true);
+    mpuIntStatus = mpu.getIntStatus();
+    // get expected DMP packet size for later comparison
+    packetSize = mpu.dmpGetFIFOPacketSize();
+    dmpReady = true;
+  }
+  return devStatus;
 }
 
 void readIMU_YawPitchRoll(float *data) {
@@ -333,7 +333,7 @@ void initRobot() {
 
   loggerMode = 0;
 
-  playMusicScale(20);
+  //playMusicScale(20);
 }
 
 
@@ -470,205 +470,511 @@ void setup() {
   iniTime = millis();
   last_timestamp = iniTime;
   last_timestamp_DHT11 = iniTime;
-  
+
   //delay(1000);
   int ret = setupIMU();
   if(ret == 0) {
     // OK --> Blink green LED + stabilization delay
-    /*for(int i=0; i<100; i++) {
+    for(int i=0; i<100; i++) {
       ledColor(0,i,0);
       delay(150);
       ledColor(0,0,100-i);
       delay(50);
-    }*/
+    }
     ledColor(0,128,0);
-  } else {
+  } 
+  else {
     ledColor(128,0,0); // ERROR --> Red LED
     while(1);
   }
-  
-  while(!button_is_pressed());
 
+  /*while(!button_is_pressed());
+   
+   Servo2.attach(SERVO_2_PIN);
+   //Servo2.attach(SERVO_2_PIN);
+   Servo2.writeMicroseconds(1250);
+   //Servo2.writeMicroseconds(2500);
+   delay(1000);
+   while(!button_is_pressed());
+   
+   Servo1.writeMicroseconds(1000);
+   
+   float prevYaw_ = 0;
+   float prevRotSpeed_ = 0;
+   float rotSpeed_ = 0;
+   while(1) {
+   readIMU_YawPitchRoll(ypr);
+   prevRotSpeed_ = rotSpeed_;
+   rotSpeed_ = ypr[0]-prevYaw_;
+   while(rotSpeed_ > M_PI) rotSpeed_ -= 2*M_PI;
+   while(rotSpeed_ <= -M_PI) rotSpeed_ += 2*M_PI;
+   rotSpeed_ /= 0.05;
+   prevYaw_ = ypr[0];
+   Serial.println(rotSpeed_);
+   delay(50);
+   }*/
+
+  //while(!button_is_pressed());
+
+  //delay(1000);
+
+
+  readIMU_YawPitchRoll(ypr);
+  float initialHeading = ypr[0];
+
+
+  Serial.println("Motor calibration. Minimum speeds:");
+
+  Servo1.attach(SERVO_1_PIN);
+  readIMU_YawPitchRoll(ypr);
+  float prevYaw = ypr[0];
+  float rotSpeed = 0;
+  float Servo1_minPulseA = 1500;
+  while(abs(rotSpeed) < 0.1) {
+    readIMU_YawPitchRoll(ypr);
+    rotSpeed = (ypr[0]-prevYaw)/0.05;
+    prevYaw = ypr[0];
+    Servo1.writeMicroseconds(Servo1_minPulseA);
+    Servo1_minPulseA++;
+    delay(50);
+  }
+  float Servo1_minSpeedA = rotSpeed;
+  Servo1.detach();
+  playNote(DO, 100);
+  ledColor(0,0,128);
+  Serial.print("Servo1_A\t");
+  Serial.print(Servo1_minSpeedA,5);
+  Serial.print("\t--->\t");
+  Serial.println(Servo1_minPulseA);
+
+  delay(100);
+
+
+
+
+  Servo1.attach(SERVO_1_PIN);
+  readIMU_YawPitchRoll(ypr);
+  prevYaw = ypr[0];
+  rotSpeed = 0;
+  float Servo1_minPulseB = 1500;
+  while(abs(rotSpeed) < 0.1) {
+    readIMU_YawPitchRoll(ypr);
+    rotSpeed = (ypr[0]-prevYaw)/0.05;
+    prevYaw = ypr[0];
+    Servo1.writeMicroseconds(Servo1_minPulseB);
+    Servo1_minPulseB--;
+    delay(50);
+  }
+  float Servo1_minSpeedB = rotSpeed;
+  Servo1.detach();
+  playNote(MI, 100);
+  ledColor(0,0,128);
+  Serial.print("Servo1_B\t");
+  Serial.print(Servo1_minSpeedB,5);
+  Serial.print("\t--->\t");
+  Serial.println(Servo1_minPulseB);
+
+  delay(100);
+
+
+
+
+
+  Servo2.attach(SERVO_2_PIN);
+  readIMU_YawPitchRoll(ypr);
+  prevYaw = ypr[0];
+  rotSpeed = 0;
+  float Servo2_minPulseA = 1500;
+  while(abs(rotSpeed) < 0.1) {
+    readIMU_YawPitchRoll(ypr);
+    rotSpeed = (ypr[0]-prevYaw)/0.05;
+    prevYaw = ypr[0];
+    Servo2.writeMicroseconds(Servo2_minPulseA);
+    Servo2_minPulseA++;
+    delay(50);
+  }
+  float Servo2_minSpeedA = rotSpeed;
+  Servo2.detach();
+  playNote(SOL, 100);
+  ledColor(0,0,128);
+  Serial.print("Servo2_A\t");
+  Serial.print(Servo2_minSpeedA,5);
+  Serial.print("\t--->\t");
+  Serial.println(Servo2_minPulseA);
+
+  delay(100);
+
+
+
+
+
+  Servo2.attach(SERVO_2_PIN);
+  readIMU_YawPitchRoll(ypr);
+  prevYaw = ypr[0];
+  rotSpeed = 0;
+  float Servo2_minPulseB = 1500;
+  while(abs(rotSpeed) < 0.1) {
+    readIMU_YawPitchRoll(ypr);
+    rotSpeed = (ypr[0]-prevYaw)/0.05;
+    prevYaw = ypr[0];
+    Servo2.writeMicroseconds(Servo2_minPulseB);
+    Servo2_minPulseB--;
+    delay(50);
+  }
+  float Servo2_minSpeedB = rotSpeed;
+  Servo2.detach();
+  playNote(DO*2, 100);
+  ledColor(0,0,128);
+  Serial.print("Servo2_B\t");
+  Serial.print(Servo2_minSpeedB,5);
+  Serial.print("\t--->\t");
+  Serial.println(Servo2_minPulseB);
+
+  delay(100);
+  
   
 
+
+
+
+  Serial.println("Motor calibration. Maximum speeds:");
+
+  Servo1.attach(SERVO_1_PIN);
+  float Servo1_maxPulseA = Servo1_minPulseA+100;
+  Servo1.writeMicroseconds(Servo1_maxPulseA);
+  delay(500);
+
+  readIMU_YawPitchRoll(ypr);
+  prevYaw = ypr[0];
+  delay(500);
+  readIMU_YawPitchRoll(ypr);
+  Servo1.detach();
+
+  rotSpeed = ypr[0]-prevYaw;
+  while(rotSpeed > M_PI) rotSpeed -= 2*M_PI;
+  while(rotSpeed <= -M_PI) rotSpeed += 2*M_PI;
+  rotSpeed /= 0.5;
+
+  float Servo1_maxSpeedA = rotSpeed;
+  playNote(RE, 100);
+  ledColor(0,0,128);
+  Serial.print("Servo1_A\t");
+  Serial.print(Servo1_maxSpeedA,5);
+  Serial.print("\t--->\t");
+  Serial.println(Servo1_maxPulseA);
+
+  delay(100);
+
+
+
+  Servo1.attach(SERVO_1_PIN);
+  float Servo1_maxPulseB = Servo1_minPulseB-100;
+  Servo1.writeMicroseconds(Servo1_maxPulseB);
+  delay(500);
+
+  readIMU_YawPitchRoll(ypr);
+  prevYaw = ypr[0];
+  delay(500);
+  readIMU_YawPitchRoll(ypr);
+  Servo1.detach();
+
+  rotSpeed = ypr[0]-prevYaw;
+  while(rotSpeed > M_PI) rotSpeed -= 2*M_PI;
+  while(rotSpeed <= -M_PI) rotSpeed += 2*M_PI;
+  rotSpeed /= 0.5;
+
+  float Servo1_maxSpeedB = rotSpeed;
+  playNote(FA, 100);
+  ledColor(0,0,128);
+  Serial.print("Servo1_B\t");
+  Serial.print(Servo1_maxSpeedB,5);
+  Serial.print("\t--->\t");
+  Serial.println(Servo1_maxPulseB);
+
+  delay(100);
+
+
+
+
+
+
+  Servo2.attach(SERVO_2_PIN);
+  float Servo2_maxPulseA = Servo2_minPulseA+100;
+  Servo2.writeMicroseconds(Servo2_maxPulseA);
+  delay(500);
+
+  readIMU_YawPitchRoll(ypr);
+  prevYaw = ypr[0];
+  delay(500);
+  readIMU_YawPitchRoll(ypr);
+  Servo2.detach();
+
+  rotSpeed = ypr[0]-prevYaw;
+  while(rotSpeed > M_PI) rotSpeed -= 2*M_PI;
+  while(rotSpeed <= -M_PI) rotSpeed += 2*M_PI;
+  rotSpeed /= 0.5;
+
+  float Servo2_maxSpeedA = rotSpeed;
+  playNote(LA, 100);
+  ledColor(0,0,128);
+  Serial.print("Servo2_A\t");
+  Serial.print(Servo2_maxSpeedA,5);
+  Serial.print("\t--->\t");
+  Serial.println(Servo2_maxPulseA);
+
+  delay(100);
+
+
+
+  Servo2.attach(SERVO_2_PIN);
+  float Servo2_maxPulseB = Servo2_minPulseB-100;
+  Servo2.writeMicroseconds(Servo2_maxPulseB);
+  delay(500);
+
+  readIMU_YawPitchRoll(ypr);
+  prevYaw = ypr[0];
+  delay(500);
+  readIMU_YawPitchRoll(ypr);
+  Servo2.detach();
+
+  rotSpeed = ypr[0]-prevYaw;
+  while(rotSpeed > M_PI) rotSpeed -= 2*M_PI;
+  while(rotSpeed <= -M_PI) rotSpeed += 2*M_PI;
+  rotSpeed /= 0.5;
+
+  float Servo2_maxSpeedB = rotSpeed;
+  playNote(RE*2, 100);
+  ledColor(0,0,128);
+  Serial.print("Servo2_B\t");
+  Serial.print(Servo2_maxSpeedB,5);
+  Serial.print("\t--->\t");
+  Serial.println(Servo2_maxPulseB);
+
+  delay(100);
+
+
+
+  ledColor(0,128,0);
   
+  Serial.println(Servo1_minSpeedA);
+  Serial.println(Servo1_maxSpeedA);
+  Serial.println(Servo1_minSpeedB);
+  Serial.println(Servo1_maxSpeedB);
+  Serial.println();
+  Serial.println(Servo1_minPulseA);
+  Serial.println(Servo1_maxPulseA);
+  Serial.println(Servo1_minPulseB);
+  Serial.println(Servo1_maxPulseB);
+  Serial.println();
+  Serial.println(Servo2_minSpeedA);
+  Serial.println(Servo2_maxSpeedA);
+  Serial.println(Servo2_minSpeedB);
+  Serial.println(Servo2_maxSpeedB);
+  Serial.println();
+  Serial.println(Servo2_minPulseA);
+  Serial.println(Servo2_maxPulseA);
+  Serial.println(Servo2_minPulseB);
+  Serial.println(Servo2_maxPulseB);
+  Serial.println();
   
   Servo1.attach(SERVO_1_PIN);
   Servo2.attach(SERVO_2_PIN);
   
+  while(1) {
+  for(int i=1; i<=4; i++) {
+    float desiredSpeed = Servo1_maxSpeedB*2./(float)i;
+    Servo1.writeMicroseconds(round(mapf(desiredSpeed,Servo1_minSpeedB,Servo1_maxSpeedB,Servo1_minPulseB,Servo1_maxPulseB)));
+    Servo2.writeMicroseconds(round(mapf(-desiredSpeed,Servo2_minSpeedA,Servo2_maxSpeedA,Servo2_minPulseA,Servo2_maxPulseA)));
+    delay(4000);
+  }
+  for(int i=1; i<=4; i++) {
+    float desiredSpeed = Servo1_maxSpeedA*2./(float)i;
+    Servo1.writeMicroseconds(round(mapf(desiredSpeed,Servo1_minSpeedA,Servo1_maxSpeedA,Servo1_minPulseA,Servo1_maxPulseA)));
+    Servo2.writeMicroseconds(round(mapf(-desiredSpeed,Servo2_minSpeedB,Servo2_maxSpeedB,Servo2_minPulseB,Servo2_maxPulseB)));
+    delay(4000);
+  }
+  }
+  
+  while(1);
+  
+  Servo1.attach(SERVO_1_PIN);
+  Servo2.attach(SERVO_2_PIN);
+
   int integral_error = 0;
   int velocity = 0;
-  
-  readIMU_YawPitchRoll(ypr);
-  float yawZero = ypr[0];
-  
+
+  //readIMU_YawPitchRoll(ypr);
+  float yawZero = initialHeading;
+
   while(1) {
     readIMU_YawPitchRoll(ypr);
 
     float yaw_normalized = (ypr[0]-yawZero)/M_PI;
-    
+
     while(yaw_normalized > 1) yaw_normalized -= 2;
     while(yaw_normalized <= -1) yaw_normalized += 2;
-    
-    int error = round(yaw_normalized*15000);
+
+    int error = round(yaw_normalized*300);
     int L = 1467-(velocity-error-integral_error/10);
     int R = 1467+(velocity+error+integral_error/10);
     Servo1.writeMicroseconds(L);
     Servo2.writeMicroseconds(R);
     //Serial.println(yaw_normalized);
-    
+
     /*Serial.print(ypr[0] * 180/M_PI);
-    Serial.print("\t");
-    Serial.print(ypr[1] * 180/M_PI);
-    Serial.print("\t");
-    Serial.print(ypr[2] * 180/M_PI);
-    Serial.println();*/
-    
-    //integral_error = integral_error + error;
+     Serial.print("\t");
+     Serial.print(ypr[1] * 180/M_PI);
+     Serial.print("\t");
+     Serial.print(ypr[2] * 180/M_PI);
+     Serial.println();*/
+
+    integral_error = integral_error + error;
     if(integral_error > 5000) integral_error = 5000;
     if(integral_error < -5000) integral_error = -5000;
     //if(error == 0) integral_error = 0;
-    
+
     if(button_is_pressed()) {
       velocity += 50;
       delay(1000);
     }
-    
+
     delay(10);
   }
-  
-  
-  
+
+
+
   while(!button_is_pressed());
-  
+
   //if(button_is_pressed()) {
-    setupIMU();
-    
-    ledColor(128,0,0);
-    delay(3000);
-    
-    int avgL_log[4];
-    int avgR_log[4];
-    float avgSpeed_log[4];
-    
-    //while(1) {
-    for(int i=0;i<4;i++) {
-      if(i == 0) velocity = 50;//50
-      if(i == 1) velocity = -50;
-      if(i == 2) velocity = 168;//168
-      if(i == 3) velocity = -168;
-      
-      float avgSpeed = 0;
-      iniTime = millis();
-      float oldDistance = getDistanceCM();
-      Servo1.attach(SERVO_1_PIN);
-      Servo2.attach(SERVO_2_PIN);
-      int avgL = 1467-velocity;
-      int avgR = 1467+velocity;
-      int integral_error = 0;
-      while(1) {
-        if(dmpReady) {
-          mpu.resetFIFO();
-          fifoCount = mpu.getFIFOCount();
-          // wait for correct available data length, should be a VERY short wait
-          while (fifoCount < packetSize) fifoCount = mpu.getFIFOCount();
-          
-          // read a packet from FIFO
-          mpu.getFIFOBytes(fifoBuffer, packetSize);
-          
-          mpu.dmpGetQuaternion(&q, fifoBuffer);
-          mpu.dmpGetGravity(&gravity, &q);
-          mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
-        }
-        
-        currTime = millis();
-        float distance = getDistanceCM();
-        if((velocity > 0) && (distance < 8)) break;
-        if((velocity < 0) && (distance > 38)) break;
-        if((currTime-iniTime) > 90) {
+  setupIMU();
+
+  ledColor(128,0,0);
+  delay(3000);
+
+  int avgL_log[4];
+  int avgR_log[4];
+  float avgSpeed_log[4];
+
+  //while(1) {
+  for(int i=0;i<4;i++) {
+    if(i == 0) velocity = 50;//50
+    if(i == 1) velocity = -50;
+    if(i == 2) velocity = 168;//168
+    if(i == 3) velocity = -168;
+
+    float avgSpeed = 0;
+    iniTime = millis();
+    float oldDistance = getDistanceCM();
+    Servo1.attach(SERVO_1_PIN);
+    Servo2.attach(SERVO_2_PIN);
+    int avgL = 1467-velocity;
+    int avgR = 1467+velocity;
+    int integral_error = 0;
+    while(1) {
+      if(dmpReady) {
+        mpu.resetFIFO();
+        fifoCount = mpu.getFIFOCount();
+        // wait for correct available data length, should be a VERY short wait
+        while (fifoCount < packetSize) fifoCount = mpu.getFIFOCount();
+
+        // read a packet from FIFO
+        mpu.getFIFOBytes(fifoBuffer, packetSize);
+
+        mpu.dmpGetQuaternion(&q, fifoBuffer);
+        mpu.dmpGetGravity(&gravity, &q);
+        mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
+      }
+
+      currTime = millis();
+      float distance = getDistanceCM();
+      if((velocity > 0) && (distance < 8)) break;
+      if((velocity < 0) && (distance > 38)) break;
+      if((currTime-iniTime) > 90) {
         avgSpeed = avgSpeed*0.8+0.2*1000*(distance-oldDistance)/(currTime-iniTime);
         iniTime = currTime;
         oldDistance = distance;
+      }
+
+      float yaw_normalized = ypr[0]/M_PI;
+      int error = round(max(min(yaw_normalized*800*2,800),-800));
+      int L = 1467-(velocity-error-integral_error/10);
+      int R = 1467+(velocity+error+integral_error/10);
+      Servo1.writeMicroseconds(L);
+      Servo2.writeMicroseconds(R);
+      avgL = avgL*0.9+L*0.1;
+      avgR = avgR*0.9+R*0.1;
+
+      integral_error = integral_error + error;
+
+      //        Serial.print(avgL);
+      //        Serial.print("\t");
+      //        Serial.print(avgR);
+      //        Serial.print("\t");
+      //        Serial.println(avgSpeed);
+
+      delay(100);
+    }
+    Servo1.detach();
+    Servo2.detach();
+    delay(500);
+
+    avgL_log[i] = avgL;
+    avgR_log[i] = avgR;
+    avgSpeed_log[i] = avgSpeed;
+
+  }
+
+  ledColor(0,128,0);
+
+  float speed_list[] = {
+    10,-10, 4,-4, 7,-7, 11,-11, 2,-2  };
+
+  float desiredSpeed = 0;
+  int Lval = 0;
+  int Rval = 0;
+
+  int curr = 0;
+  while(1) {
+    if(button_is_pressed()) {
+      delay(500);
+
+      Servo1.attach(SERVO_1_PIN);
+      Servo2.attach(SERVO_2_PIN);
+
+      for(int i=-16;i<=16;i=i+2) {
+        if((i>=-4) && (i<=4)) {
+          ledColor(0,0,128);
+          continue;
         }
-        
-        float yaw_normalized = ypr[0]/M_PI;
-        int error = round(max(min(yaw_normalized*800*2,800),-800));
-        int L = 1467-(velocity-error-integral_error/10);
-        int R = 1467+(velocity+error+integral_error/10);
-        Servo1.writeMicroseconds(L);
-        Servo2.writeMicroseconds(R);
-        avgL = avgL*0.9+L*0.1;
-        avgR = avgR*0.9+R*0.1;
-        
-        integral_error = integral_error + error;
-        
-//        Serial.print(avgL);
-//        Serial.print("\t");
-//        Serial.print(avgR);
-//        Serial.print("\t");
-//        Serial.println(avgSpeed);
-        
-        delay(100);
+
+
+        float desiredSpeed = i;//speed_list[curr];
+
+        if(desiredSpeed > 0) {
+          Lval = round(mapf(desiredSpeed, avgSpeed_log[0],avgSpeed_log[2], avgL_log[0],avgL_log[2]));
+          Rval = round(mapf(desiredSpeed, avgSpeed_log[0],avgSpeed_log[2], avgR_log[0],avgR_log[2]));
+        } 
+        else {
+          Lval = round(mapf(desiredSpeed, avgSpeed_log[3],avgSpeed_log[1], avgL_log[3],avgL_log[1]));
+          Rval = round(mapf(desiredSpeed, avgSpeed_log[3],avgSpeed_log[1], avgR_log[3],avgR_log[1]));
+        }
+
+        Servo1.writeMicroseconds(Lval);
+        Servo2.writeMicroseconds(Rval);
+
+        delay(2000);
+
+        /*curr++;
+         if(curr >= sizeof(speed_list)/sizeof(speed_list[0])) {
+         curr = 0;
+         ledColor(0,0,128);
+         }*/
       }
       Servo1.detach();
       Servo2.detach();
-      delay(500);
-      
-      avgL_log[i] = avgL;
-      avgR_log[i] = avgR;
-      avgSpeed_log[i] = avgSpeed;
-      
     }
-    
-    ledColor(0,128,0);
-    
-    float speed_list[] = {10,-10, 4,-4, 7,-7, 11,-11, 2,-2};
-    
-    float desiredSpeed = 0;
-    int Lval = 0;
-    int Rval = 0;
-    
-    int curr = 0;
-    while(1) {
-      if(button_is_pressed()) {
-        delay(500);
-        
-        Servo1.attach(SERVO_1_PIN);
-        Servo2.attach(SERVO_2_PIN);
-        
-        for(int i=-16;i<=16;i=i+2) {
-          if((i>=-4) && (i<=4)) {
-            ledColor(0,0,128);
-            continue;
-          }
+  }
 
-        
-        float desiredSpeed = i;//speed_list[curr];
-        
-        if(desiredSpeed > 0) {
-            Lval = round(mapf(desiredSpeed, avgSpeed_log[0],avgSpeed_log[2], avgL_log[0],avgL_log[2]));
-            Rval = round(mapf(desiredSpeed, avgSpeed_log[0],avgSpeed_log[2], avgR_log[0],avgR_log[2]));
-        } else {
-            Lval = round(mapf(desiredSpeed, avgSpeed_log[3],avgSpeed_log[1], avgL_log[3],avgL_log[1]));
-            Rval = round(mapf(desiredSpeed, avgSpeed_log[3],avgSpeed_log[1], avgR_log[3],avgR_log[1]));
-        }
-        
-        Servo1.writeMicroseconds(Lval);
-        Servo2.writeMicroseconds(Rval);
-        
-        delay(2000);
-        
-        /*curr++;
-        if(curr >= sizeof(speed_list)/sizeof(speed_list[0])) {
-            curr = 0;
-            ledColor(0,0,128);
-        }*/
-        }
-        Servo1.detach();
-        Servo2.detach();
-      }
-    }
-    
   //}
 }
 
@@ -703,98 +1009,98 @@ void loop() {
       //ledColor(0,0,0);
       xbee.getResponse().getZBRxResponse(rx);
       int datalen = rx.getDataLength();
-      
+
       if(datalen > 1) {
-      char command = rx.getData(0);
-      if(command == 0) { // PUT command
-        int N_values = (datalen-1)/3;
-        for(int i=0; i<N_values; i++) {
-          int istart = i*3+1;
-          char valType = rx.getData(istart);
-          int value = (short)(rx.getData(istart+1)<<8|rx.getData(istart+2));
-          if(valType==6) Serial.println(value);
-          int L, R, freq;
-          switch ( valType ) {
-          case 1: // ledR_PWM
-            analogWrite(LED_R_PIN, value);
-            break;
-          case 2: // ledG_PWM
-            analogWrite(LED_G_PIN, value);
-            break;
-          case 3: // ledB_PWM
-            analogWrite(LED_B_PIN, value);
-            break;
-          case 4: // motorL
-            L = value;
-            if(L == 0) Servo1.detach();
-            else {
-              Servo1.attach(SERVO_1_PIN);
-              Servo1.write(90-L);
+        char command = rx.getData(0);
+        if(command == 0) { // PUT command
+          int N_values = (datalen-1)/3;
+          for(int i=0; i<N_values; i++) {
+            int istart = i*3+1;
+            char valType = rx.getData(istart);
+            int value = (short)(rx.getData(istart+1)<<8|rx.getData(istart+2));
+            if(valType==6) Serial.println(value);
+            int L, R, freq;
+            switch ( valType ) {
+            case 1: // ledR_PWM
+              analogWrite(LED_R_PIN, value);
+              break;
+            case 2: // ledG_PWM
+              analogWrite(LED_G_PIN, value);
+              break;
+            case 3: // ledB_PWM
+              analogWrite(LED_B_PIN, value);
+              break;
+            case 4: // motorL
+              L = value;
+              if(L == 0) Servo1.detach();
+              else {
+                Servo1.attach(SERVO_1_PIN);
+                Servo1.write(90-L);
+              }
+              break;
+            case 5: // motorR
+              R = value;
+              if(R == 0) Servo2.detach();
+              else {
+                Servo2.attach(SERVO_2_PIN);
+                Servo2.write(90+R);
+              }
+              break;
+            case 6: // tone
+              freq = value;
+              tone(BUZZER_PIN,freq);
+              break;
+            case 7: // noseHeater_PWM
+              analogWrite(NOSE_HEAT_PIN, value);
+              break;
+            case 14: // notone
+              noTone(BUZZER_PIN);
+              delay(value);
+              break;
+            case 15: // delay
+              delay(value);
+              break;
+            case 16: // toneMs
+              // Not implemented
+              break;
+            case 23: // sampletime
+              sampleTime = value;
+              break;
+            default:
+              break;
             }
-            break;
-          case 5: // motorR
-            R = value;
-            if(R == 0) Servo2.detach();
-            else {
-              Servo2.attach(SERVO_2_PIN);
-              Servo2.write(90+R);
-            }
-            break;
-          case 6: // tone
-            freq = value;
-            tone(BUZZER_PIN,freq);
-            break;
-          case 7: // noseHeater_PWM
-            analogWrite(NOSE_HEAT_PIN, value);
-            break;
-          case 14: // notone
-            noTone(BUZZER_PIN);
-            delay(value);
-            break;
-          case 15: // delay
-            delay(value);
-            break;
-          case 16: // toneMs
-            // Not implemented
-            break;
-          case 23: // sampletime
-            sampleTime = value;
-            break;
-          default:
-            break;
           }
         }
       }
-      }
-      
-/*      if(len == 2) { // set motors*/
-/*        char L = rx.getData(0);*/
-/*        char R = rx.getData(1);*/
-/*        if(L == 0) Servo1.detach();*/
-/*        else {*/
-/*          Servo1.attach(SERVO_1_PIN);*/
-/*          Servo1.write(90-L);*/
-/*        }*/
-/*        if(R == 0) Servo2.detach();*/
-/*        else {*/
-/*          Servo2.attach(SERVO_2_PIN);*/
-/*          Servo2.write(90+R);*/
-/*        }*/
-/*      } else if(len >= 4) {*/
-/*        unsigned int value = rx.getData(2);*/
-/*        if(value != 0) { // play note (1-> DO, 1-> RE... etc)*/
-/*          int note = value;*/
-/*          int freq = frequencies[(note-1)%7]*(1+(note-1)/7);*/
-/*          int len = 10*(int)rx.getData(3);*/
-/*          //playNote(freq, len);*/
-/*          tone(BUZZER_PIN,freq);*/
-/*          delay(len);*/
-/*          noTone(BUZZER_PIN);*/
-/*        } */
-/*        else if(len == 5) { // set LED color*/
-/*          ledColor(rx.getData(2), rx.getData(3), rx.getData(4));*/
-/*        }*/
-/*      }*/
+
+      /*      if(len == 2) { // set motors*/
+      /*        char L = rx.getData(0);*/
+      /*        char R = rx.getData(1);*/
+      /*        if(L == 0) Servo1.detach();*/
+      /*        else {*/
+      /*          Servo1.attach(SERVO_1_PIN);*/
+      /*          Servo1.write(90-L);*/
+      /*        }*/
+      /*        if(R == 0) Servo2.detach();*/
+      /*        else {*/
+      /*          Servo2.attach(SERVO_2_PIN);*/
+      /*          Servo2.write(90+R);*/
+      /*        }*/
+      /*      } else if(len >= 4) {*/
+      /*        unsigned int value = rx.getData(2);*/
+      /*        if(value != 0) { // play note (1-> DO, 1-> RE... etc)*/
+      /*          int note = value;*/
+      /*          int freq = frequencies[(note-1)%7]*(1+(note-1)/7);*/
+      /*          int len = 10*(int)rx.getData(3);*/
+      /*          //playNote(freq, len);*/
+      /*          tone(BUZZER_PIN,freq);*/
+      /*          delay(len);*/
+      /*          noTone(BUZZER_PIN);*/
+      /*        } */
+      /*        else if(len == 5) { // set LED color*/
+      /*          ledColor(rx.getData(2), rx.getData(3), rx.getData(4));*/
+      /*        }*/
+      /*      }*/
     }
   }
 
@@ -819,112 +1125,112 @@ void loop() {
     //MagnetometerRaw magnetometer_raw = compass.ReadRawAxis();
 
     if(dmpReady) {
-        //mpuIntStatus = mpu.getIntStatus();
-        //fifoCount = mpu.getFIFOCount();
-        //if (mpuIntStatus & 0x02) {
-            mpu.resetFIFO();
-            fifoCount = mpu.getFIFOCount();
-            // wait for correct available data length, should be a VERY short wait
-            while (fifoCount < packetSize) fifoCount = mpu.getFIFOCount();
-            
-            // read a packet from FIFO
-            mpu.getFIFOBytes(fifoBuffer, packetSize);
-            
-            // track FIFO count here in case there is > 1 packet available
-            // (this lets us immediately read more without waiting for an interrupt)
-            //fifoCount -= packetSize;
-            
-            mpu.dmpGetQuaternion(&q, fifoBuffer);
-            mpu.dmpGetGravity(&gravity, &q);
-            mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
-            
-            imu_yaw_tushort = round(mapf(ypr[0],-M_PI,M_PI,0,65535));
-            imu_pitch_tushort = round(mapf(ypr[1],-M_PI,M_PI,0,65535));
-            imu_roll_tushort = round(mapf(ypr[2],-M_PI,M_PI,0,65535));
-        //}
+      //mpuIntStatus = mpu.getIntStatus();
+      //fifoCount = mpu.getFIFOCount();
+      //if (mpuIntStatus & 0x02) {
+      mpu.resetFIFO();
+      fifoCount = mpu.getFIFOCount();
+      // wait for correct available data length, should be a VERY short wait
+      while (fifoCount < packetSize) fifoCount = mpu.getFIFOCount();
+
+      // read a packet from FIFO
+      mpu.getFIFOBytes(fifoBuffer, packetSize);
+
+      // track FIFO count here in case there is > 1 packet available
+      // (this lets us immediately read more without waiting for an interrupt)
+      //fifoCount -= packetSize;
+
+      mpu.dmpGetQuaternion(&q, fifoBuffer);
+      mpu.dmpGetGravity(&gravity, &q);
+      mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
+
+      imu_yaw_tushort = round(mapf(ypr[0],-M_PI,M_PI,0,65535));
+      imu_pitch_tushort = round(mapf(ypr[1],-M_PI,M_PI,0,65535));
+      imu_roll_tushort = round(mapf(ypr[2],-M_PI,M_PI,0,65535));
+      //}
     }
 
     char data[256] = "";
     int pos = 0;
-    
+
     data[pos] = 0; // PUT command
     pos += 1;
-    
+
     data[pos] = 8; // Type: noseMax
     data[pos+1] = noseV_max >> 8;
     data[pos+2] = noseV_max & 0x00ff;
     pos += 3;
-    
+
     data[pos] = 9; // Type: noseMin
     data[pos+1] = noseV_min >> 8;
     data[pos+2] = noseV_min & 0x00ff;
     pos += 3;
-    
+
     data[pos] = 10; // Type: distMax
     data[pos+1] = irDistance_max >> 8;
     data[pos+2] = irDistance_max & 0x00ff;
     pos += 3;
-    
+
     data[pos] = 11; // Type: distMin
     data[pos+1] = irDistance_min >> 8;
     data[pos+2] = irDistance_min & 0x00ff;
     pos += 3;
-    
+
     data[pos] = 12; // Type: batteryMax
     data[pos+1] = battV_max >> 8;
     data[pos+2] = battV_max & 0x00ff;
     pos += 3;
-    
+
     data[pos] = 13; // Type: batteryMin
     data[pos+1] = battV_min >> 8;
     data[pos+2] = battV_min & 0x00ff;
     pos += 3;
-    
+
     data[pos] = 17; // Type: humidity
     data[pos+1] = humidity >> 8;
     data[pos+2] = humidity & 0x00ff;
     pos += 3;
-    
+
     data[pos] = 18; // Type: temperature
     data[pos+1] = temperature >> 8;
     data[pos+2] = temperature & 0x00ff;
     pos += 3;
-    
-/*    data[pos] = 19; // Type: magnetometerX*/
-/*    data[pos+1] = magnetometer_raw.XAxis >> 8;*/
-/*    data[pos+2] = magnetometer_raw.XAxis & 0x00ff;*/
-/*    pos += 3;*/
-/*    */
-/*    data[pos] = 20; // Type: magnetometerY*/
-/*    data[pos+1] = magnetometer_raw.YAxis >> 8;*/
-/*    data[pos+2] = magnetometer_raw.YAxis & 0x00ff;*/
-/*    pos += 3;*/
-/*    */
-/*    data[pos] = 21; // Type: magnetometerZ*/
-/*    data[pos+1] = magnetometer_raw.ZAxis >> 8;*/
-/*    data[pos+2] = magnetometer_raw.ZAxis & 0x00ff;*/
-/*    pos += 3;*/
-    
+
+    /*    data[pos] = 19; // Type: magnetometerX*/
+    /*    data[pos+1] = magnetometer_raw.XAxis >> 8;*/
+    /*    data[pos+2] = magnetometer_raw.XAxis & 0x00ff;*/
+    /*    pos += 3;*/
+    /*    */
+    /*    data[pos] = 20; // Type: magnetometerY*/
+    /*    data[pos+1] = magnetometer_raw.YAxis >> 8;*/
+    /*    data[pos+2] = magnetometer_raw.YAxis & 0x00ff;*/
+    /*    pos += 3;*/
+    /*    */
+    /*    data[pos] = 21; // Type: magnetometerZ*/
+    /*    data[pos+1] = magnetometer_raw.ZAxis >> 8;*/
+    /*    data[pos+2] = magnetometer_raw.ZAxis & 0x00ff;*/
+    /*    pos += 3;*/
+
     data[pos] = 22; // Type: button
     data[pos+1] = buttonHasBeenPressed >> 8;
     data[pos+2] = buttonHasBeenPressed & 0x00ff;
     pos += 3;
-    
+
     data[pos] = 24; // Type: IMUyaw
     data[pos+1] = imu_yaw_tushort >> 8;
     data[pos+2] = imu_yaw_tushort & 0x00ff;
     pos += 3;
-    
+
     data[pos] = 25; // Type: IMUpitch
     data[pos+1] = imu_pitch_tushort >> 8;
     data[pos+2] = imu_pitch_tushort & 0x00ff;
     pos += 3;
-    
+
     data[pos] = 26; // Type: IMUroll
     data[pos+1] = imu_roll_tushort >> 8;
     data[pos+2] = imu_roll_tushort & 0x00ff;
     pos += 3;
-    
+
     //sprintf(data,"%d %d %d %d %d %d %d", batt,noseV_min,noseV_max,irDistance_min,irDistance_max, temperature, humidity);
     sendXbee(data, pos+1);
 
@@ -947,15 +1253,16 @@ void loop() {
   }
 
   /**if(button_is_pressed()) {
-    int spinVel = 5;
-    delay(500);
-    if(button_is_pressed()) spinVel = 10;
-    Servo1.attach(SERVO_1_PIN);
-    Servo2.attach(SERVO_2_PIN);
-    Servo1.write(90-spinVel);
-    Servo2.write(90-spinVel);
-    delay(500);
-  }**/
+   * int spinVel = 5;
+   * delay(500);
+   * if(button_is_pressed()) spinVel = 10;
+   * Servo1.attach(SERVO_1_PIN);
+   * Servo2.attach(SERVO_2_PIN);
+   * Servo1.write(90-spinVel);
+   * Servo2.write(90-spinVel);
+   * delay(500);
+   }**/
 }
+
 
 
