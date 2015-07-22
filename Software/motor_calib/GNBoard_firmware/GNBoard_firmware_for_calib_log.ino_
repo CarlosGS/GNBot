@@ -533,8 +533,6 @@ void setup() {
   readIMU_YawPitchRoll(ypr);
   float initialHeading = ypr[0];
   
-  /*
-  
   //for(int i=0; i<100; i++) {
   while(1) {
     char data[256] = "";
@@ -666,24 +664,19 @@ void setup() {
   
   
   
-  while(1);*/
+  while(1);
 
 
   Serial.println("Motor calibration. Minimum speeds:");
 
   Servo1.attach(SERVO_1_PIN);
   readIMU_YawPitchRoll(ypr);
-  float prevYaw = ypr[0];
-  float rotSpeed = 0;
+  prevYaw = ypr[0];
+  rotSpeed = 0;
   float Servo1_minPulseA = 1500;
-  unsigned long prev_ts = millis();
-  unsigned long ts;
-  while(abs(rotSpeed) < 0.15) {
+  while(abs(rotSpeed) < 0.1) {
     readIMU_YawPitchRoll(ypr);
-    rotSpeed = (ypr[0]-prevYaw);
-    ts = millis();
-    rotSpeed /= ((float)(ts-prev_ts))/1000.;
-    prev_ts = ts;
+    rotSpeed = (ypr[0]-prevYaw)/0.05;
     prevYaw = ypr[0];
     Servo1.writeMicroseconds(Servo1_minPulseA);
     Servo1_minPulseA++;
@@ -708,13 +701,9 @@ void setup() {
   prevYaw = ypr[0];
   rotSpeed = 0;
   float Servo1_minPulseB = 1500;
-  prev_ts = millis();
-  while(abs(rotSpeed) < 0.15) {
+  while(abs(rotSpeed) < 0.1) {
     readIMU_YawPitchRoll(ypr);
-    rotSpeed = (ypr[0]-prevYaw);
-    ts = millis();
-    rotSpeed /= ((float)(ts-prev_ts))/1000.;
-    prev_ts = ts;
+    rotSpeed = (ypr[0]-prevYaw)/0.05;
     prevYaw = ypr[0];
     Servo1.writeMicroseconds(Servo1_minPulseB);
     Servo1_minPulseB--;
@@ -740,13 +729,9 @@ void setup() {
   prevYaw = ypr[0];
   rotSpeed = 0;
   float Servo2_minPulseA = 1500;
-  prev_ts = millis();
-  while(abs(rotSpeed) < 0.15) {
+  while(abs(rotSpeed) < 0.1) {
     readIMU_YawPitchRoll(ypr);
-    rotSpeed = (ypr[0]-prevYaw);
-    ts = millis();
-    rotSpeed /= ((float)(ts-prev_ts))/1000.;
-    prev_ts = ts;
+    rotSpeed = (ypr[0]-prevYaw)/0.05;
     prevYaw = ypr[0];
     Servo2.writeMicroseconds(Servo2_minPulseA);
     Servo2_minPulseA++;
@@ -772,13 +757,9 @@ void setup() {
   prevYaw = ypr[0];
   rotSpeed = 0;
   float Servo2_minPulseB = 1500;
-  prev_ts = millis();
-  while(abs(rotSpeed) < 0.15) {
+  while(abs(rotSpeed) < 0.1) {
     readIMU_YawPitchRoll(ypr);
-    rotSpeed = (ypr[0]-prevYaw);
-    ts = millis();
-    rotSpeed /= ((float)(ts-prev_ts))/1000.;
-    prev_ts = ts;
+    rotSpeed = (ypr[0]-prevYaw)/0.05;
     prevYaw = ypr[0];
     Servo2.writeMicroseconds(Servo2_minPulseB);
     Servo2_minPulseB--;
@@ -803,23 +784,20 @@ void setup() {
   Serial.println("Motor calibration. Maximum speeds:");
 
   Servo1.attach(SERVO_1_PIN);
-  float Servo1_maxPulseA = 1650;
+  float Servo1_maxPulseA = Servo1_minPulseA+100;
   Servo1.writeMicroseconds(Servo1_maxPulseA);
   delay(500);
 
   readIMU_YawPitchRoll(ypr);
-  prev_ts = millis();
   prevYaw = ypr[0];
   delay(500);
   readIMU_YawPitchRoll(ypr);
-  ts = millis();
-  
   Servo1.detach();
 
   rotSpeed = ypr[0]-prevYaw;
   while(rotSpeed > M_PI) rotSpeed -= 2*M_PI;
   while(rotSpeed <= -M_PI) rotSpeed += 2*M_PI;
-  rotSpeed /= ((float)(ts-prev_ts))/1000.;
+  rotSpeed /= 0.5;
 
   float Servo1_maxSpeedA = rotSpeed;
   playNote(RE, 100);
@@ -834,22 +812,20 @@ void setup() {
 
 
   Servo1.attach(SERVO_1_PIN);
-  float Servo1_maxPulseB = 1300;
+  float Servo1_maxPulseB = Servo1_minPulseB-100;
   Servo1.writeMicroseconds(Servo1_maxPulseB);
   delay(500);
 
   readIMU_YawPitchRoll(ypr);
-  prev_ts = millis();
   prevYaw = ypr[0];
   delay(500);
   readIMU_YawPitchRoll(ypr);
-  ts = millis();
   Servo1.detach();
 
   rotSpeed = ypr[0]-prevYaw;
   while(rotSpeed > M_PI) rotSpeed -= 2*M_PI;
   while(rotSpeed <= -M_PI) rotSpeed += 2*M_PI;
-  rotSpeed /= ((float)(ts-prev_ts))/1000.;
+  rotSpeed /= 0.5;
 
   float Servo1_maxSpeedB = rotSpeed;
   playNote(FA, 100);
@@ -867,22 +843,20 @@ void setup() {
 
 
   Servo2.attach(SERVO_2_PIN);
-  float Servo2_maxPulseA = 1650;
+  float Servo2_maxPulseA = Servo2_minPulseA+100;
   Servo2.writeMicroseconds(Servo2_maxPulseA);
   delay(500);
 
   readIMU_YawPitchRoll(ypr);
-  prev_ts = millis();
   prevYaw = ypr[0];
   delay(500);
   readIMU_YawPitchRoll(ypr);
-  ts = millis();
   Servo2.detach();
 
   rotSpeed = ypr[0]-prevYaw;
   while(rotSpeed > M_PI) rotSpeed -= 2*M_PI;
   while(rotSpeed <= -M_PI) rotSpeed += 2*M_PI;
-  rotSpeed /= ((float)(ts-prev_ts))/1000.;
+  rotSpeed /= 0.5;
 
   float Servo2_maxSpeedA = rotSpeed;
   playNote(LA, 100);
@@ -897,22 +871,20 @@ void setup() {
 
 
   Servo2.attach(SERVO_2_PIN);
-  float Servo2_maxPulseB = 1300;
+  float Servo2_maxPulseB = Servo2_minPulseB-100;
   Servo2.writeMicroseconds(Servo2_maxPulseB);
   delay(500);
 
   readIMU_YawPitchRoll(ypr);
-  prev_ts = millis();
   prevYaw = ypr[0];
   delay(500);
   readIMU_YawPitchRoll(ypr);
-  ts = millis();
   Servo2.detach();
 
   rotSpeed = ypr[0]-prevYaw;
   while(rotSpeed > M_PI) rotSpeed -= 2*M_PI;
   while(rotSpeed <= -M_PI) rotSpeed += 2*M_PI;
-  rotSpeed /= ((float)(ts-prev_ts))/1000.;
+  rotSpeed /= 0.5;
 
   float Servo2_maxSpeedB = rotSpeed;
   playNote(RE*2, 100);
@@ -949,38 +921,22 @@ void setup() {
   Serial.println(Servo2_maxPulseB);
   Serial.println();
   
-  
-  while(!button_is_pressed());
-  
-  
   Servo1.attach(SERVO_1_PIN);
   Servo2.attach(SERVO_2_PIN);
   
   while(1) {
-      for(int i=1; i<=4; i++) {
-        float desiredSpeed = 1.1*((float)i)/4.;
-        Servo1.writeMicroseconds(round(mapf(desiredSpeed,Servo1_minSpeedB,Servo1_maxSpeedB,Servo1_minPulseB,Servo1_maxPulseB)));
-        Servo2.writeMicroseconds(round(mapf(-desiredSpeed,Servo2_minSpeedA,Servo2_maxSpeedA,Servo2_minPulseA,Servo2_maxPulseA)));
-        delay(500);
-      }
-      for(int i=4; i>=1; i--) {
-        float desiredSpeed = 1.1*((float)i)/4.;
-        Servo1.writeMicroseconds(round(mapf(desiredSpeed,Servo1_minSpeedB,Servo1_maxSpeedB,Servo1_minPulseB,Servo1_maxPulseB)));
-        Servo2.writeMicroseconds(round(mapf(-desiredSpeed,Servo2_minSpeedA,Servo2_maxSpeedA,Servo2_minPulseA,Servo2_maxPulseA)));
-        delay(500);
-      }
-      for(int i=1; i<=4; i++) {
-        float desiredSpeed = -1.1*((float)i)/4.;
-        Servo1.writeMicroseconds(round(mapf(desiredSpeed,Servo1_minSpeedA,Servo1_maxSpeedA,Servo1_minPulseA,Servo1_maxPulseA)));
-        Servo2.writeMicroseconds(round(mapf(-desiredSpeed,Servo2_minSpeedB,Servo2_maxSpeedB,Servo2_minPulseB,Servo2_maxPulseB)));
-        delay(500);
-      }
-      for(int i=4; i>=1; i--) {
-        float desiredSpeed = -1.1*((float)i)/4.;
-        Servo1.writeMicroseconds(round(mapf(desiredSpeed,Servo1_minSpeedA,Servo1_maxSpeedA,Servo1_minPulseA,Servo1_maxPulseA)));
-        Servo2.writeMicroseconds(round(mapf(-desiredSpeed,Servo2_minSpeedB,Servo2_maxSpeedB,Servo2_minPulseB,Servo2_maxPulseB)));
-        delay(500);
-      }
+  for(int i=1; i<=4; i++) {
+    float desiredSpeed = Servo1_maxSpeedB*2./(float)i;
+    Servo1.writeMicroseconds(round(mapf(desiredSpeed,Servo1_minSpeedB,Servo1_maxSpeedB,Servo1_minPulseB,Servo1_maxPulseB)));
+    Servo2.writeMicroseconds(round(mapf(-desiredSpeed,Servo2_minSpeedA,Servo2_maxSpeedA,Servo2_minPulseA,Servo2_maxPulseA)));
+    delay(4000);
+  }
+  for(int i=1; i<=4; i++) {
+    float desiredSpeed = Servo1_maxSpeedA*2./(float)i;
+    Servo1.writeMicroseconds(round(mapf(desiredSpeed,Servo1_minSpeedA,Servo1_maxSpeedA,Servo1_minPulseA,Servo1_maxPulseA)));
+    Servo2.writeMicroseconds(round(mapf(-desiredSpeed,Servo2_minSpeedB,Servo2_maxSpeedB,Servo2_minPulseB,Servo2_maxPulseB)));
+    delay(4000);
+  }
   }
   
   while(1);
