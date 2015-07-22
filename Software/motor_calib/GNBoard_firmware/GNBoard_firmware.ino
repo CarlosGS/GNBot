@@ -440,17 +440,6 @@ void setup() {
   randomSeed(analogRead(BATTERY_PIN));
   ledColor(0,0,128);
 
-  if(getBatteryVoltage() < 16.5) {
-    ledColor(128,0,0);
-    playNote(DO, 3000);
-    while(1) {
-        ledColor(128,0,0);
-        delay(1000);
-        ledColor(0,0,0);
-        delay(1000);
-    }
-  }
-
   //setupMagnetometer();
   //setupIMU();
 
@@ -469,6 +458,17 @@ void setup() {
   pinMode(NOSE_HEAT_PIN, OUTPUT);
   digitalWrite(NOSE_HEAT_PIN, HIGH);
 
+  // Low battery notification (program will stop here if 16.5V are not available)
+  if(getBatteryVoltage() < 16.5) {
+    ledColor(128,0,0);
+    playNote(DO, 3000);
+    while(1) {
+        ledColor(128,0,0);
+        delay(1000);
+        ledColor(0,0,0);
+        delay(1000);
+    }
+  }
 
   //while(!button_is_pressed()) delay(10);
 
@@ -481,6 +481,8 @@ void setup() {
   iniTime = millis();
   last_timestamp = iniTime;
   last_timestamp_DHT11 = iniTime;
+
+
 
   //delay(1000);
   int ret = setupIMU();
@@ -951,6 +953,8 @@ void setup() {
   
   
   while(!button_is_pressed());
+  
+  delay(1000);
   
   
   Servo1.attach(SERVO_1_PIN);
