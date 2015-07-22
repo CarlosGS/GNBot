@@ -13,26 +13,24 @@ gb = None
 
 gnbot_addresses = []
 
-avgSpeed = -1
-avgLmotorInput = -1
-avgRmotorInput = -1
+data = {}
+data['avgSpeed'] = []
+data['avgRmotorInput'] = []
 
 def gnbot_received_callback(address, received_data):
-    global gb, gnbot_addresses, avgSpeed, avgLmotorInput, avgRmotorInput
+    global gb, gnbot_addresses, data
     if not address in gnbot_addresses:
         print("NEW GNBOT ADDED! Address: " + repr(address))
         gnbot_addresses.append(address)
-        #values = gb.createValue("sampletime", 300)
-        #gb.sendPUTcommand(address, values)
-    #else:
-    #    print("Received packet from: " + repr(address))
-    #print(received_data)
     try:
-        avgSpeed = mapVals(received_data['avgSpeed'], 0.,65535., -100.,100.)
-        avgLmotorInput = received_data['avgLmotorInput']
-        avgRmotorInput = received_data['avgRmotorInput']
+        print received_data
+        if len(received_data.keys()) > 0:
+            avgSpeed = mapVals(received_data['avgSpeed'], 0.,65535., -50.,50.)
+            avgRmotorInput = received_data['avgRmotorInput']
+            data['avgSpeed'].append(avgSpeed)
+            data['avgRmotorInput'].append(avgRmotorInput)
     except:
-        print("error! :D")
+        print("Error while processing incoming packet")
 
 
 
@@ -42,22 +40,14 @@ gb = GNBot(gnbot_received_callback, '/dev/ttyUSB0', 9600)
 while len(gnbot_addresses) == 0:
     time.sleep(0.5)
 
-
-data = {}
-data['avgSpeed'] = []
-data['avgLmotorInput'] = []
-data['avgRmotorInput'] = []
-
-for i in range(4):
-    print("Sample "+str(i)+". Press enter.")
-    while raw_input() != "ok":
-        print avgSpeed, avgLmotorInput, avgRmotorInput
-    data['avgSpeed'].append(avgSpeed)
-    data['avgLmotorInput'].append(avgLmotorInput)
-    data['avgRmotorInput'].append(avgRmotorInput)
+while True:
+    if raw_input() == "ok":
+        break
+    print("Current data:")
+    print(data)
 
 print(data)
-saveToFile(data,"","motorCalibLog.p")
+saveToFile(data,"","motorCalibLog_R_.p")
 
 os._exit(0)
 

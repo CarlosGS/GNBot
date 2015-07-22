@@ -440,6 +440,17 @@ void setup() {
   randomSeed(analogRead(BATTERY_PIN));
   ledColor(0,0,128);
 
+  if(getBatteryVoltage() < 16.5) {
+    ledColor(128,0,0);
+    playNote(DO, 3000);
+    while(1) {
+        ledColor(128,0,0);
+        delay(1000);
+        ledColor(0,0,0);
+        delay(1000);
+    }
+  }
+
   //setupMagnetometer();
   //setupIMU();
 
@@ -488,9 +499,9 @@ void setup() {
     while(1);
   }
 
-  /*while(!button_is_pressed());
+  //while(!button_is_pressed());
    
-   Servo2.attach(SERVO_2_PIN);
+   /*Servo2.attach(SERVO_2_PIN);
    //Servo2.attach(SERVO_2_PIN);
    Servo2.writeMicroseconds(1250);
    //Servo2.writeMicroseconds(2500);
@@ -521,14 +532,82 @@ void setup() {
 
   readIMU_YawPitchRoll(ypr);
   float initialHeading = ypr[0];
+  
+  //for(int i=0; i<100; i++) {
+  while(1) {
+    char data[256] = "";
+    int pos = 0;
+    data[pos] = 0; // PUT command
+    pos += 1;
+    sendXbee(data, pos+1);
+    delay(200);
+    if(button_is_pressed()) break;
+  }
+  playNote(DO, 100);
+  delay(1000);
+  
+  Servo2.attach(SERVO_2_PIN);
+  Servo2.writeMicroseconds(1000);
+  delay(500);
+  readIMU_YawPitchRoll(ypr);
+  float rotSpeed = 0;
+  float prevYaw = ypr[0];
+  int motorPulse;
+  unsigned long prev_ts = millis();
+  unsigned long ts = prev_ts;
+  for(int i=0; i<1000; i++) {
+    delay(10);
+    readIMU_YawPitchRoll(ypr);
+    
+    rotSpeed = ypr[0]-prevYaw;
+    while(rotSpeed > M_PI) rotSpeed -= 2*M_PI;
+    while(rotSpeed <= -M_PI) rotSpeed += 2*M_PI;
+    ts = millis();
+    rotSpeed /= ((float)(ts-prev_ts))/1000.;
+    prev_ts = ts;
+    prevYaw = ypr[0];
+    
+    motorPulse = 1000+i;
+    Servo2.writeMicroseconds(motorPulse);
+    
+    if( (i%10) == 0 ) {
+        unsigned int avgSpeed_tushort = round(mapf(rotSpeed,-50,50,0,65535));
+        
+        char data[256] = "";
+        int pos = 0;
+        
+        data[pos] = 0; // PUT command
+        pos += 1;
+        
+        data[pos] = 27; // Type: average speed
+        data[pos+1] = avgSpeed_tushort >> 8;
+        data[pos+2] = avgSpeed_tushort & 0x00ff;
+        pos += 3;
+        
+        //data[pos] = 28; // Type: average L motor input
+        //data[pos+1] = motorPulse >> 8;
+        //data[pos+2] = motorPulse & 0x00ff;
+        //pos += 3;
+        
+        data[pos] = 29; // Type: average R motor input
+        data[pos+1] = motorPulse >> 8;
+        data[pos+2] = motorPulse & 0x00ff;
+        pos += 3;
+        
+        sendXbee(data, pos+1);
+    }
+  }
+  Servo2.detach();
+  
+  while(1);
 
 
   Serial.println("Motor calibration. Minimum speeds:");
 
   Servo1.attach(SERVO_1_PIN);
   readIMU_YawPitchRoll(ypr);
-  float prevYaw = ypr[0];
-  float rotSpeed = 0;
+  prevYaw = ypr[0];
+  rotSpeed = 0;
   float Servo1_minPulseA = 1500;
   while(abs(rotSpeed) < 0.1) {
     readIMU_YawPitchRoll(ypr);
@@ -1263,6 +1342,4 @@ void loop() {
    * delay(500);
    }**/
 }
-
-
 
