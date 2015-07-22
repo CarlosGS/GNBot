@@ -551,12 +551,12 @@ void setup() {
   delay(500);
   readIMU_YawPitchRoll(ypr);
   float rotSpeed = 0;
+  //float rotSpeedFilt = 0;
   float prevYaw = ypr[0];
-  int motorPulse;
   unsigned long prev_ts = millis();
   unsigned long ts = prev_ts;
   for(int i=0; i<1000; i++) {
-    delay(10);
+    delay(2*2*10);
     readIMU_YawPitchRoll(ypr);
     
     rotSpeed = ypr[0]-prevYaw;
@@ -567,11 +567,13 @@ void setup() {
     prev_ts = ts;
     prevYaw = ypr[0];
     
-    motorPulse = 1000+i;
+    //rotSpeedFilt = rotSpeed*0.8 + rotSpeed*0.2;
+    
+    int motorPulse = 1000+i;
     Servo2.writeMicroseconds(motorPulse);
     
-    if( (i%10) == 0 ) {
-        unsigned int avgSpeed_tushort = round(mapf(rotSpeed,-50,50,0,65535));
+    if( (i%3) == 0 ) {
+        unsigned int avgSpeed_tushort = round(mapf(rotSpeed,-10,10,0,65535));
         
         char data[256] = "";
         int pos = 0;
@@ -598,6 +600,69 @@ void setup() {
     }
   }
   Servo2.detach();
+  
+  
+  delay(1000);
+  
+  
+  Servo1.attach(SERVO_1_PIN);
+  Servo1.writeMicroseconds(1000);
+  delay(1000);
+  readIMU_YawPitchRoll(ypr);
+  rotSpeed = 0;
+  prevYaw = ypr[0];
+  prev_ts = millis();
+  ts = prev_ts;
+  for(int i=0; i<1000; i++) {
+    delay(2*2*10);
+    readIMU_YawPitchRoll(ypr);
+    
+    rotSpeed = ypr[0]-prevYaw;
+    while(rotSpeed > M_PI) rotSpeed -= 2*M_PI;
+    while(rotSpeed <= -M_PI) rotSpeed += 2*M_PI;
+    ts = millis();
+    rotSpeed /= ((float)(ts-prev_ts))/1000.;
+    prev_ts = ts;
+    prevYaw = ypr[0];
+    
+    //rotSpeedFilt = rotSpeed*0.8 + rotSpeed*0.2;
+    
+    int motorPulse = 1000+i;
+    Servo1.writeMicroseconds(motorPulse);
+    
+    if( (i%3) == 0 ) {
+        unsigned int avgSpeed_tushort = round(mapf(rotSpeed,-10,10,0,65535));
+        
+        char data[256] = "";
+        int pos = 0;
+        
+        data[pos] = 0; // PUT command
+        pos += 1;
+        
+        data[pos] = 27; // Type: average speed
+        data[pos+1] = avgSpeed_tushort >> 8;
+        data[pos+2] = avgSpeed_tushort & 0x00ff;
+        pos += 3;
+        
+        data[pos] = 28; // Type: average L motor input
+        data[pos+1] = motorPulse >> 8;
+        data[pos+2] = motorPulse & 0x00ff;
+        pos += 3;
+        
+        //data[pos] = 29; // Type: average R motor input
+        //data[pos+1] = motorPulse >> 8;
+        //data[pos+2] = motorPulse & 0x00ff;
+        //pos += 3;
+        
+        sendXbee(data, pos+1);
+    }
+  }
+  Servo1.detach();
+  
+  
+  
+  
+  
   
   while(1);
 
