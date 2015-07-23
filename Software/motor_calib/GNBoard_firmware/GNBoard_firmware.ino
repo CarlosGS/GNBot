@@ -457,7 +457,9 @@ void setup() {
 
   pinMode(NOSE_HEAT_PIN, OUTPUT);
   digitalWrite(NOSE_HEAT_PIN, HIGH);
-
+  
+  delay(100);
+  
   // Low battery notification (program will stop here if 16.5V are not available)
   if(getBatteryVoltage() < 16.5) {
     ledColor(128,0,0);
@@ -481,11 +483,34 @@ void setup() {
   iniTime = millis();
   last_timestamp = iniTime;
   last_timestamp_DHT11 = iniTime;
-
+  
+  // For testing raw PWM values
+  /*Servo1.attach(SERVO_1_PIN);
+  Servo2.attach(SERVO_2_PIN);
+  Servo1.writeMicroseconds(1377); // LEFT
+  Servo2.writeMicroseconds(1568); // RIGHT
+  delay(1000);
+  Servo1.detach();
+  Servo2.detach();*/
 
 
   //delay(1000);
   int ret = setupIMU();
+  
+  
+  // For evaluating gyro drift
+  while(1) {
+    readIMU_YawPitchRoll(ypr);
+    Serial.print("[");
+    Serial.print(millis());
+    Serial.print(",");
+    Serial.print(ypr[0],5);
+    Serial.println("],");
+    delay(100);
+  }
+  
+  
+  
   if(ret == 0) {
     // OK --> Blink green LED + stabilization delay
     for(int i=0; i<100; i++) {
@@ -500,14 +525,8 @@ void setup() {
     ledColor(128,0,0); // ERROR --> Red LED
     while(1);
   }
-
-  //while(!button_is_pressed());
    
-   /*Servo2.attach(SERVO_2_PIN);
-   //Servo2.attach(SERVO_2_PIN);
-   Servo2.writeMicroseconds(1250);
-   //Servo2.writeMicroseconds(2500);
-   delay(1000);
+   /*
    while(!button_is_pressed());
    
    Servo1.writeMicroseconds(1000);
@@ -663,13 +682,7 @@ void setup() {
   }
   Servo1.detach();
   
-  
-  
-  
-  
-  
   while(1);*/
-
 
   Serial.println("Motor calibration. Minimum speeds:");
 
@@ -961,29 +974,29 @@ void setup() {
   Servo2.attach(SERVO_2_PIN);
   
   while(1) {
-      for(int i=1; i<=4; i++) {
-        float desiredSpeed = 1.1*((float)i)/4.;
+      for(int i=1; i<=40; i++) {
+        float desiredSpeed = 1.1*((float)i)/40.;
         Servo1.writeMicroseconds(round(mapf(desiredSpeed,Servo1_minSpeedB,Servo1_maxSpeedB,Servo1_minPulseB,Servo1_maxPulseB)));
         Servo2.writeMicroseconds(round(mapf(-desiredSpeed,Servo2_minSpeedA,Servo2_maxSpeedA,Servo2_minPulseA,Servo2_maxPulseA)));
-        delay(500);
+        delay(500/10);
       }
-      for(int i=4; i>=1; i--) {
-        float desiredSpeed = 1.1*((float)i)/4.;
+      for(int i=40; i>=1; i--) {
+        float desiredSpeed = 1.1*((float)i)/40.;
         Servo1.writeMicroseconds(round(mapf(desiredSpeed,Servo1_minSpeedB,Servo1_maxSpeedB,Servo1_minPulseB,Servo1_maxPulseB)));
         Servo2.writeMicroseconds(round(mapf(-desiredSpeed,Servo2_minSpeedA,Servo2_maxSpeedA,Servo2_minPulseA,Servo2_maxPulseA)));
-        delay(500);
+        delay(500/10);
       }
-      for(int i=1; i<=4; i++) {
-        float desiredSpeed = -1.1*((float)i)/4.;
+      for(int i=1; i<=40; i++) {
+        float desiredSpeed = -1.1*((float)i)/40.;
         Servo1.writeMicroseconds(round(mapf(desiredSpeed,Servo1_minSpeedA,Servo1_maxSpeedA,Servo1_minPulseA,Servo1_maxPulseA)));
         Servo2.writeMicroseconds(round(mapf(-desiredSpeed,Servo2_minSpeedB,Servo2_maxSpeedB,Servo2_minPulseB,Servo2_maxPulseB)));
-        delay(500);
+        delay(500/10);
       }
-      for(int i=4; i>=1; i--) {
-        float desiredSpeed = -1.1*((float)i)/4.;
+      for(int i=40; i>=1; i--) {
+        float desiredSpeed = -1.1*((float)i)/40.;
         Servo1.writeMicroseconds(round(mapf(desiredSpeed,Servo1_minSpeedA,Servo1_maxSpeedA,Servo1_minPulseA,Servo1_maxPulseA)));
         Servo2.writeMicroseconds(round(mapf(-desiredSpeed,Servo2_minSpeedB,Servo2_maxSpeedB,Servo2_minPulseB,Servo2_maxPulseB)));
-        delay(500);
+        delay(500/10);
       }
   }
   
