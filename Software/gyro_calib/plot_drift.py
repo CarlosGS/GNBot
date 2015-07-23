@@ -54,21 +54,21 @@ for i in xrange(len(new_radians_diff)):
             new_radians_diff[i] = new_radians_diff[i-1]*(1-alpha) + new_radians_diff[i]*alpha
 
 
-new_radians_diff *= 60
+new_radians_diff *= 60.*180./np.pi
 
 
 ax.plot(new_time[1:]/1000.,new_radians_diff)
 
 
 value = "%.3f" % new_radians_diff[-1]
-ax.annotate(value+" rad/min", xy=(99, new_radians_diff[-1]-0.05), xytext=(70, -0.3),arrowprops=dict(arrowstyle="->"))
+ax.annotate(value+" deg/min", xy=(99, new_radians_diff[-1]-5), xytext=(70, -15),arrowprops=dict(arrowstyle="->"))
 
 ax.set_xlim([0,100])
 
 
 ax.set_title('Analysis of gyroscope drift (with static robot)', fontsize=18,y=1.01)
 ax.set_xlabel('Elapsed time since gyroscope initialisation [seconds]', fontsize=16)
-ax.set_ylabel('Yaw drift rate [rad/min]', fontsize=16)
+ax.set_ylabel('Yaw drift rate [deg/min]', fontsize=16)
 
 tight_layout()
 
