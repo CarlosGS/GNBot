@@ -35,7 +35,7 @@ ax.set_title('Motor response curve', fontsize=18)
 
 tight_layout()
 
-savefig("motors_speed_response_curve.pdf")
+#savefig("motors_speed_response_curve.pdf")
 
 
 
@@ -80,7 +80,7 @@ ax.set_title('Motor input values that correspond to a linear trajectory', fontsi
 
 tight_layout()
 
-savefig("linear_trajectory_PWM_mapping.pdf")
+#savefig("linear_trajectory_PWM_mapping.pdf")
 
 
 

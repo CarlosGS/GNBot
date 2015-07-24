@@ -434,6 +434,79 @@ unsigned int imu_roll_tushort;
 
 
 
+
+boolean Servo1_active = false;
+float Servo1_CW_maxSpeed; // CW is >0
+int Servo1_CW_maxSpeed_PWM;
+int Servo1_CW_zeroSpeed_PWM;
+
+float Servo1_CCW_maxSpeed; // CW is <0
+int Servo1_CCW_maxSpeed_PWM;
+int Servo1_CCW_zeroSpeed_PWM;
+
+
+boolean Servo2_active = false;
+float Servo2_CW_maxSpeed; // CW is >0
+int Servo2_CW_maxSpeed_PWM;
+int Servo2_CW_zeroSpeed_PWM;
+
+float Servo2_CCW_maxSpeed; // CW is <0
+int Servo2_CCW_maxSpeed_PWM;
+int Servo2_CCW_zeroSpeed_PWM;
+
+
+
+
+void set_servo1_rot_speed(float omega) {
+  if(abs(omega) < 0.001) {
+    if(Servo1_active) {
+      Servo1.detach();
+      Servo1_active = false;
+    }
+  } else {
+    if(!Servo1_active) {
+      Servo1.attach(SERVO_1_PIN);
+      Servo1_active = true;
+    }
+    if(omega > 0) {
+      Servo1.writeMicroseconds(round(mapf(omega,0,Servo1_CW_maxSpeed,Servo1_CW_zeroSpeed_PWM,Servo1_CW_maxSpeed_PWM)));
+    } else {
+      Servo1.writeMicroseconds(round(mapf(omega,0,Servo1_CCW_maxSpeed,Servo1_CCW_zeroSpeed_PWM,Servo1_CCW_maxSpeed_PWM)));
+    }
+  }
+}
+
+void set_servo2_rot_speed(float omega) {
+  if(abs(omega) < 0.001) {
+    if(Servo2_active) {
+      Servo2.detach();
+      Servo2_active = false;
+    }
+  } else {
+    if(!Servo2_active) {
+      Servo2.attach(SERVO_2_PIN);
+      Servo2_active = true;
+    }
+    if(omega > 0) {
+      Servo2.writeMicroseconds(round(mapf(omega,0,Servo2_CW_maxSpeed,Servo2_CW_zeroSpeed_PWM,Servo2_CW_maxSpeed_PWM)));
+    } else {
+      Servo2.writeMicroseconds(round(mapf(omega,0,Servo2_CCW_maxSpeed,Servo2_CCW_zeroSpeed_PWM,Servo2_CCW_maxSpeed_PWM)));
+    }
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 void setup() {
   delay(500);
 
@@ -499,7 +572,7 @@ void setup() {
   
   
   // For evaluating gyro drift
-  while(1) {
+  /*while(1) {
     readIMU_YawPitchRoll(ypr);
     Serial.print("[");
     Serial.print(millis());
@@ -507,7 +580,7 @@ void setup() {
     Serial.print(ypr[0],5);
     Serial.println("],");
     delay(100);
-  }
+  }*/
   
   
   
@@ -554,10 +627,10 @@ void setup() {
   readIMU_YawPitchRoll(ypr);
   float initialHeading = ypr[0];
   
-  /*
   
-  //for(int i=0; i<100; i++) {
-  while(1) {
+  
+  // Motor PWM sweep logging
+  /*while(1) {
     char data[256] = "";
     int pos = 0;
     data[pos] = 0; // PUT command
@@ -684,13 +757,17 @@ void setup() {
   
   while(1);*/
 
+
+
+
+
   Serial.println("Motor calibration. Minimum speeds:");
 
   Servo1.attach(SERVO_1_PIN);
   readIMU_YawPitchRoll(ypr);
   float prevYaw = ypr[0];
   float rotSpeed = 0;
-  float Servo1_minPulseA = 1500;
+  int Servo1_minPulseA = 1500;
   unsigned long prev_ts = millis();
   unsigned long ts;
   while(abs(rotSpeed) < 0.15) {
@@ -710,7 +787,7 @@ void setup() {
   ledColor(0,0,128);
   Serial.print("Servo1_A\t");
   Serial.print(Servo1_minSpeedA,5);
-  Serial.print("\t--->\t");
+  Serial.print(" \t--->\t");
   Serial.println(Servo1_minPulseA);
 
   delay(100);
@@ -722,7 +799,7 @@ void setup() {
   readIMU_YawPitchRoll(ypr);
   prevYaw = ypr[0];
   rotSpeed = 0;
-  float Servo1_minPulseB = 1500;
+  int Servo1_minPulseB = 1500;
   prev_ts = millis();
   while(abs(rotSpeed) < 0.15) {
     readIMU_YawPitchRoll(ypr);
@@ -741,7 +818,7 @@ void setup() {
   ledColor(0,0,128);
   Serial.print("Servo1_B\t");
   Serial.print(Servo1_minSpeedB,5);
-  Serial.print("\t--->\t");
+  Serial.print(" \t--->\t");
   Serial.println(Servo1_minPulseB);
 
   delay(100);
@@ -754,7 +831,7 @@ void setup() {
   readIMU_YawPitchRoll(ypr);
   prevYaw = ypr[0];
   rotSpeed = 0;
-  float Servo2_minPulseA = 1500;
+  int Servo2_minPulseA = 1500;
   prev_ts = millis();
   while(abs(rotSpeed) < 0.15) {
     readIMU_YawPitchRoll(ypr);
@@ -773,7 +850,7 @@ void setup() {
   ledColor(0,0,128);
   Serial.print("Servo2_A\t");
   Serial.print(Servo2_minSpeedA,5);
-  Serial.print("\t--->\t");
+  Serial.print(" \t--->\t");
   Serial.println(Servo2_minPulseA);
 
   delay(100);
@@ -786,7 +863,7 @@ void setup() {
   readIMU_YawPitchRoll(ypr);
   prevYaw = ypr[0];
   rotSpeed = 0;
-  float Servo2_minPulseB = 1500;
+  int Servo2_minPulseB = 1500;
   prev_ts = millis();
   while(abs(rotSpeed) < 0.15) {
     readIMU_YawPitchRoll(ypr);
@@ -805,7 +882,7 @@ void setup() {
   ledColor(0,0,128);
   Serial.print("Servo2_B\t");
   Serial.print(Servo2_minSpeedB,5);
-  Serial.print("\t--->\t");
+  Serial.print(" \t--->\t");
   Serial.println(Servo2_minPulseB);
 
   delay(100);
@@ -818,7 +895,7 @@ void setup() {
   Serial.println("Motor calibration. Maximum speeds:");
 
   Servo1.attach(SERVO_1_PIN);
-  float Servo1_maxPulseA = 1650;
+  int Servo1_maxPulseA = 1650;
   Servo1.writeMicroseconds(Servo1_maxPulseA);
   delay(500);
 
@@ -841,7 +918,7 @@ void setup() {
   ledColor(0,0,128);
   Serial.print("Servo1_A\t");
   Serial.print(Servo1_maxSpeedA,5);
-  Serial.print("\t--->\t");
+  Serial.print(" \t--->\t");
   Serial.println(Servo1_maxPulseA);
 
   delay(100);
@@ -849,7 +926,7 @@ void setup() {
 
 
   Servo1.attach(SERVO_1_PIN);
-  float Servo1_maxPulseB = 1300;
+  int Servo1_maxPulseB = 1300;
   Servo1.writeMicroseconds(Servo1_maxPulseB);
   delay(500);
 
@@ -871,7 +948,7 @@ void setup() {
   ledColor(0,0,128);
   Serial.print("Servo1_B\t");
   Serial.print(Servo1_maxSpeedB,5);
-  Serial.print("\t--->\t");
+  Serial.print(" \t--->\t");
   Serial.println(Servo1_maxPulseB);
 
   delay(100);
@@ -882,7 +959,7 @@ void setup() {
 
 
   Servo2.attach(SERVO_2_PIN);
-  float Servo2_maxPulseA = 1650;
+  int Servo2_maxPulseA = 1650;
   Servo2.writeMicroseconds(Servo2_maxPulseA);
   delay(500);
 
@@ -904,7 +981,7 @@ void setup() {
   ledColor(0,0,128);
   Serial.print("Servo2_A\t");
   Serial.print(Servo2_maxSpeedA,5);
-  Serial.print("\t--->\t");
+  Serial.print(" \t--->\t");
   Serial.println(Servo2_maxPulseA);
 
   delay(100);
@@ -912,7 +989,7 @@ void setup() {
 
 
   Servo2.attach(SERVO_2_PIN);
-  float Servo2_maxPulseB = 1300;
+  int Servo2_maxPulseB = 1300;
   Servo2.writeMicroseconds(Servo2_maxPulseB);
   delay(500);
 
@@ -934,7 +1011,7 @@ void setup() {
   ledColor(0,0,128);
   Serial.print("Servo2_B\t");
   Serial.print(Servo2_maxSpeedB,5);
-  Serial.print("\t--->\t");
+  Serial.print(" \t--->\t");
   Serial.println(Servo2_maxPulseB);
 
   delay(100);
@@ -965,12 +1042,8 @@ void setup() {
   Serial.println();
   
   
-  while(!button_is_pressed());
-  
-  delay(1000);
-  
-  
-  Servo1.attach(SERVO_1_PIN);
+  // Test linear motion
+  /*Servo1.attach(SERVO_1_PIN);
   Servo2.attach(SERVO_2_PIN);
   
   while(1) {
@@ -998,6 +1071,93 @@ void setup() {
         Servo2.writeMicroseconds(round(mapf(-desiredSpeed,Servo2_minSpeedB,Servo2_maxSpeedB,Servo2_minPulseB,Servo2_maxPulseB)));
         delay(500/10);
       }
+  }*/
+  
+  
+  
+  
+  // Get fitting parameters from the measurements we just took
+  
+  if(Servo1_maxSpeedA > Servo1_maxSpeedB) {
+    Servo1_CW_maxSpeed = Servo1_maxSpeedA;
+    Servo1_CW_maxSpeed_PWM = Servo1_maxPulseA;
+    Servo1_CW_zeroSpeed_PWM = round(mapf(0,Servo1_minSpeedA,Servo1_maxSpeedA, Servo1_minPulseA,Servo1_maxPulseA)); // Find crossing point with X axis
+    
+    Servo1_CCW_maxSpeed = Servo1_maxSpeedB;
+    Servo1_CCW_maxSpeed_PWM = Servo1_maxPulseB;
+    Servo1_CCW_zeroSpeed_PWM = round(mapf(0,Servo1_minSpeedB,Servo1_maxSpeedB, Servo1_minPulseB,Servo1_maxPulseB)); // Find crossing point with X axis
+  
+  } else { // Invert CW/CCW
+    Servo1_CCW_maxSpeed = Servo1_maxSpeedA;
+    Servo1_CCW_maxSpeed_PWM = Servo1_maxPulseA;
+    Servo1_CCW_zeroSpeed_PWM = round(mapf(0,Servo1_minSpeedA,Servo1_maxSpeedA, Servo1_minPulseA,Servo1_maxPulseA)); // Find crossing point with X axis
+    
+    Servo1_CW_maxSpeed = Servo1_maxSpeedB;
+    Servo1_CW_maxSpeed_PWM = Servo1_maxPulseB;
+    Servo1_CW_zeroSpeed_PWM = round(mapf(0,Servo1_minSpeedB,Servo1_maxSpeedB, Servo1_minPulseB,Servo1_maxPulseB)); // Find crossing point with X axis
+  }
+  
+  
+  
+  if(Servo2_maxSpeedA > Servo2_maxSpeedB) {
+    Servo2_CW_maxSpeed = Servo2_maxSpeedA;
+    Servo2_CW_maxSpeed_PWM = Servo2_maxPulseA;
+    Servo2_CW_zeroSpeed_PWM = round(mapf(0,Servo2_minSpeedA,Servo2_maxSpeedA, Servo2_minPulseA,Servo2_maxPulseA)); // Find crossing point with X axis
+    
+    Servo2_CCW_maxSpeed = Servo2_maxSpeedB;
+    Servo2_CCW_maxSpeed_PWM = Servo2_maxPulseB;
+    Servo2_CCW_zeroSpeed_PWM = round(mapf(0,Servo2_minSpeedB,Servo2_maxSpeedB, Servo2_minPulseB,Servo2_maxPulseB)); // Find crossing point with X axis
+  
+  } else { // Invert CW/CCW
+    Servo2_CCW_maxSpeed = Servo2_maxSpeedA;
+    Servo2_CCW_maxSpeed_PWM = Servo2_maxPulseA;
+    Servo2_CCW_zeroSpeed_PWM = round(mapf(0,Servo2_minSpeedA,Servo2_maxSpeedA, Servo2_minPulseA,Servo2_maxPulseA)); // Find crossing point with X axis
+    
+    Servo2_CW_maxSpeed = Servo2_maxSpeedB;
+    Servo2_CW_maxSpeed_PWM = Servo2_maxPulseB;
+    Servo2_CW_zeroSpeed_PWM = round(mapf(0,Servo2_minSpeedB,Servo2_maxSpeedB, Servo2_minPulseB,Servo2_maxPulseB)); // Find crossing point with X axis
+  }
+  
+  Serial.print("Servo1_CW_maxSpeed=\t");
+  Serial.println(Servo1_CW_maxSpeed);
+  Serial.print("Servo1_CW_maxSpeed_PWM=\t");
+  Serial.println(Servo1_CW_maxSpeed_PWM);
+  Serial.print("Servo1_CW_zeroSpeed_PWM=\t");
+  Serial.println(Servo1_CW_zeroSpeed_PWM);
+  Serial.print("Servo1_CCW_maxSpeed=\t");
+  Serial.println(Servo1_CCW_maxSpeed);
+  Serial.print("Servo1_CCW_maxSpeed_PWM=\t");
+  Serial.println(Servo1_CCW_maxSpeed_PWM);
+  Serial.print("Servo1_CCW_zeroSpeed_PWM=\t");
+  Serial.println(Servo1_CCW_zeroSpeed_PWM);
+  
+  Serial.println();
+  
+  Serial.print("Servo2_CW_maxSpeed=\t");
+  Serial.println(Servo2_CW_maxSpeed);
+  Serial.print("Servo2_CW_maxSpeed_PWM=\t");
+  Serial.println(Servo2_CW_maxSpeed_PWM);
+  Serial.print("Servo2_CW_zeroSpeed_PWM=\t");
+  Serial.println(Servo2_CW_zeroSpeed_PWM);
+  Serial.print("Servo2_CCW_maxSpeed=\t");
+  Serial.println(Servo2_CCW_maxSpeed);
+  Serial.print("Servo2_CCW_maxSpeed_PWM=\t");
+  Serial.println(Servo2_CCW_maxSpeed_PWM);
+  Serial.print("Servo2_CCW_zeroSpeed_PWM=\t");
+  Serial.println(Servo2_CCW_zeroSpeed_PWM);
+  
+  
+  while(!button_is_pressed());
+  
+  delay(1000);
+  
+  int t = 0;
+  while(1) {
+    float v = sin((float)t/10.);
+    set_servo1_rot_speed(v);
+    set_servo2_rot_speed(-v);
+    t++;
+    delay(100);
   }
   
   while(1);

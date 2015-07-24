@@ -43,7 +43,7 @@ def gnbot_received_callback(address, received_data):
 
 
 
-gb = GNBot(gnbot_received_callback, '/dev/ttyUSB1', 9600)
+gb = GNBot(gnbot_received_callback, '/dev/ttyUSB0', 9600)
 
 while len(gnbot_addresses) == 0:
     time.sleep(0.5)
