@@ -35,7 +35,7 @@ ax.set_title('Motor response curve', fontsize=18)
 
 tight_layout()
 
-#savefig("motors_speed_response_curve.pdf")
+savefig("motors_speed_response_curve.pdf")
 
 
 
