@@ -497,12 +497,47 @@ void set_servo2_rot_speed(float omega) {
 
 
 
+void audio_from_string(char *str, int ms, int led) {
+  ledColor(0,0,0);
+  while(*str) {
+    if(*str >= 33 && *str <= 126) { // Only visible ASCII characters
+        int note = round(mapf(*str,33,126,DO/2,DO*4));
+        digitalWrite(led, HIGH);
+        tone(BUZZER_PIN,note);
+        delay(ms);
+        noTone(BUZZER_PIN);
+        digitalWrite(led, LOW);
+        delay(ms/10);
+    }
+    if(*str == 32) {
+      ledColor(0,0,0);
+      delay(ms*2); // Space
+    }
+    str++;
+  }
+}
 
 
 
+void unrecoverable_error(char *msg) {
+  Serial.print("ERROR: ");
+  Serial.println(msg);
+  
+  playNote(DO, 1000);
+  audio_from_string(msg,50,LED_R_PIN);
+  while(1) {
+    ledColor(0,0,0);
+    delay(500);
+    ledColor(128,0,0);
+    delay(500);
+  }
+}
 
-
-
+void message(char *msg) {
+  Serial.print("MESSAGE: ");
+  Serial.println(msg);
+  audio_from_string(msg,50,LED_B_PIN);
+}
 
 
 
@@ -534,16 +569,8 @@ void setup() {
   delay(100);
   
   // Low battery notification (program will stop here if 16.5V are not available)
-  if(getBatteryVoltage() < 16.5) {
-    ledColor(128,0,0);
-    playNote(DO, 3000);
-    while(1) {
-        ledColor(128,0,0);
-        delay(1000);
-        ledColor(0,0,0);
-        delay(1000);
-    }
-  }
+  if(getBatteryVoltage() < 16.5)
+    unrecoverable_error("Battery voltage is too low");
 
   //while(!button_is_pressed()) delay(10);
 
@@ -569,7 +596,8 @@ void setup() {
 
   //delay(1000);
   int ret = setupIMU();
-  
+  unsigned long prev_ts = millis();
+  unsigned long ts;
   
   // For evaluating gyro drift
   /*while(1) {
@@ -586,18 +614,37 @@ void setup() {
   
   if(ret == 0) {
     // OK --> Blink green LED + stabilization delay
-    for(int i=0; i<100; i++) {
-      ledColor(0,i,0);
+    message("Gyroscope calibration");
+    readIMU_YawPitchRoll(ypr);
+    float prevYaw = ypr[0];
+    float rotSpeed_avg = 10;
+    prev_ts = millis();
+    while(rotSpeed_avg > 0.5) {
+      readIMU_YawPitchRoll(ypr);
+      ts = millis();
+      float rotSpeed = (ypr[0]-prevYaw);
+      while(rotSpeed > M_PI) rotSpeed -= 2*M_PI;
+      while(rotSpeed <= -M_PI) rotSpeed += 2*M_PI;
+      rotSpeed /= ((float)(ts-prev_ts))/1000.;
+      rotSpeed_avg = 0.6*rotSpeed_avg + 0.4*abs(rotSpeed*60.*180./M_PI);
+      prev_ts = ts;
+      prevYaw = ypr[0];
+      ledColor(0,64,0);
       delay(150);
-      ledColor(0,0,100-i);
+      ledColor(0,0,64);
       delay(50);
+      Serial.println(rotSpeed_avg);
     }
+    /*while((millis()-prev_ts) < 20000) {
+      ledColor(0,64,0);
+      delay(150);
+      ledColor(0,0,64);
+      delay(50);
+    }*/
     ledColor(0,128,0);
   } 
-  else {
-    ledColor(128,0,0); // ERROR --> Red LED
-    while(1);
-  }
+  else
+    unrecoverable_error("Could not initialize IMU");
    
    /*
    while(!button_is_pressed());
@@ -768,8 +815,7 @@ void setup() {
   float prevYaw = ypr[0];
   float rotSpeed = 0;
   int Servo1_minPulseA = 1500;
-  unsigned long prev_ts = millis();
-  unsigned long ts;
+  prev_ts = millis();
   while(abs(rotSpeed) < 0.15) {
     readIMU_YawPitchRoll(ypr);
     rotSpeed = (ypr[0]-prevYaw);
@@ -1078,6 +1124,10 @@ void setup() {
   
   // Get fitting parameters from the measurements we just took
   
+  // Check that the measurements have been taken correctly
+  if((Servo1_minSpeedA * Servo1_minSpeedB >= 0) || (Servo2_minSpeedA * Servo2_minSpeedB >= 0))
+    unrecoverable_error("Initial calibration lead to incorrect values");
+  
   if(Servo1_maxSpeedA > Servo1_maxSpeedB) {
     Servo1_CW_maxSpeed = Servo1_maxSpeedA;
     Servo1_CW_maxSpeed_PWM = Servo1_maxPulseA;
@@ -1147,9 +1197,79 @@ void setup() {
   Serial.println(Servo2_CCW_zeroSpeed_PWM);
   
   
-  while(!button_is_pressed());
+  //while(!button_is_pressed());
   
-  delay(1000);
+  //delay(1000);
+  float yawZero = initialHeading;
+  float kp = 45./2.2; // Tyreus-Luyben Tuning http://www.chem.mtu.edu/~tbco/cm416/zn.html
+  float Ti = 2.2*0.24;
+  float Td = 0.24/6.3;
+  float ki = kp/Ti;
+  float kd = kp*Td;
+  float error_integral = 0;
+  float error_derivative = 0;
+  boolean first_iteration = true;
+  float prev_error = 0;
+  unsigned long last_zero_cross_ts = millis();
+  float Tu = 0;
+  float Ku = 0;
+  float ct_vel = 0;
+  boolean saturated = false;
+  unsigned long start = millis();
+  while(1) {
+    if(millis()-start > 5000) {
+      //ct_vel = 0;
+      //yawZero += M_PI/2;
+      start = millis();
+    } else if(millis()-start > 1000) {
+      //ct_vel = 0.5;
+    }
+    if(button_is_pressed()) {
+      ct_vel += 0.1;
+      delay(100);
+    }
+    /*if(Serial.available()) {
+      kp = (float)Serial.parseInt();
+    }*/
+    readIMU_YawPitchRoll(ypr);
+    ts = millis();
+    float dt = (float)(ts-prev_ts)/1000.;
+    float yaw_normalized = (ypr[0]-yawZero)/M_PI;
+    while(yaw_normalized > 1) yaw_normalized -= 2;
+    while(yaw_normalized <= -1) yaw_normalized += 2;
+    float error = -yaw_normalized;
+    if(!first_iteration) {
+      if(!saturated) error_integral += prev_error*dt;
+      error_derivative = (error-prev_error)/dt;
+    } else first_iteration = false;
+    float v = kp*error + ki*error_integral + kd*error_derivative;
+    if(prev_error*error < 0) { // Zero-cross
+      Tu = 0.1*2*(float)(ts-last_zero_cross_ts)/1000. + 0.9*Tu;
+      Ku = kp;
+      Serial.print("Tu="); //Tu=0.24	Ku=45.
+      Serial.print(Tu);
+      Serial.print("\tKu=");
+      Serial.println(Ku);
+      last_zero_cross_ts = ts;
+      Ku = 0;
+    }
+    
+    if(abs(v)>1) {
+      saturated = true;
+    } else {
+      if(saturated) error_integral = 0;
+      saturated = false;
+    }
+    
+    if(v > 1) v = 1;
+    if(v < -1) v = -1;
+
+    set_servo1_rot_speed(v+ct_vel);
+    set_servo2_rot_speed(v-ct_vel);
+    delay(10);
+    prev_error = error;
+    prev_ts = ts;
+  }
   
   int t = 0;
   while(1) {
@@ -1169,7 +1289,7 @@ void setup() {
   int velocity = 0;
 
   //readIMU_YawPitchRoll(ypr);
-  float yawZero = initialHeading;
+  yawZero = initialHeading;
 
   while(1) {
     readIMU_YawPitchRoll(ypr);
