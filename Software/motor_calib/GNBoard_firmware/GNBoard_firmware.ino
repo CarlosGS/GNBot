@@ -339,7 +339,10 @@ float getDistanceCM() {
   float measurement = analogReadAverage(IR4_PIN,4);
   float ir_K = 4244.64;
   float ir_C = 37.28;
-  return ir_K/(measurement-ir_C);
+  if(measurement <= ir_C) return 150;
+  float res = ir_K/(measurement-ir_C);
+  if(res < 0 || res > 150) res = 150;
+  return res;
 }
 
 float getBatteryVoltage() {
@@ -554,114 +557,16 @@ void setup() {
   
   delay(100);
   
-  /*ledColor(0,0,0);
-  float ambientLight = analogRead(LDR1_PIN);
-  while(1) {
-    ambientLight = 0.8*ambientLight + 0.2*((float)(analogRead(LDR1_PIN)+analogRead(LDR2_PIN)+analogRead(LDR3_PIN)+analogRead(LDR4_PIN))/4.);
-    int chk = DHT11.read(DHT_PIN);
-    if(chk == DHTLIB_OK) {
-      Serial.print(ambientLight);
-      Serial.print(" ");
-      Serial.print(DHT11.humidity);
-      Serial.print(" ");
-      Serial.println(DHT11.temperature);
+  
+ /*while(1) {
+    float dist = 0;
+    for(int i=0; i<100; i++) {
+      dist += getDistanceCM();
+      delay(1);
     }
-    delay(100);
+    dist /= 100;
+    Serial.println(dist);
   }*/
-  
-  
-  
-  
-  while(!button_is_pressed());
-  delay(10000);
-  int modulator_freq = 4637;
-  int low_freq_half_period_us = 4425;
-  float time;
-  float randVal = 0;
-  float ts_start = 0;
-  float high_duration = 0;
-  float period = 0.5;
-  boolean makeSound = false;
-  while(1) {
-    time = (float)millis()/1000.;
-    if(makeSound) {
-      tone(BUZZER_PIN,modulator_freq);
-      delayMicroseconds(low_freq_half_period_us);
-      noTone(BUZZER_PIN);
-      delayMicroseconds(low_freq_half_period_us);
-    }
-    
-    if(time-ts_start > high_duration) {
-      makeSound = false;
-      if(time-ts_start > high_duration+0.05) {
-        randVal = (float)random(0,30000)/30000.;
-        if(randVal < 0.01) period = 0.5;
-        period = period*0.8+ 0.1*0.2;
-        high_duration = pow(randVal,-1./(6.*1.5)) * period;
-        ts_start = time;
-        makeSound = true;
-      }
-    }
-  }
-  while(1);
-  //delay(1000);
-  /*pinMode(BUZZER_PIN, OUTPUT);
-  
-  float time;
-  float output;
-  boolean is_output = true;
-  float randVal = 0;
-  float ts_start = 0;
-  float high_duration = 0;
-  float period = 0.5;
-  float level = 0;
-  float level_goal = 0;
-  boolean slow = false;
-  while(1) {
-    time = (double)micros()/1000000.;
-    output = sin(113*2.*M_PI*time)*sin(4637.*2.*M_PI*time);//*sin(3.*2.*M_PI*time);
-    
-    //lowFreq = 0.1*mapf(min(period,1),1,0.1,0,114*2)+0.9*lowFreq;
-    
-    level = 0.9*level + 0.1*level_goal;
-    output *= //level;
-    
-    if(time-ts_start > high_duration) {
-      level_goal = 0;
-      if(time-ts_start > high_duration+0.1) {
-        randVal = (float)random(0,30000)/30000.;
-        if(randVal < 0.01) period = 0.5;
-        period = period*0.8+ 0.1*0.2;
-        high_duration = pow(randVal,-1./(6.*1.5)) * period;
-        ts_start = time;
-        level_goal = 1;
-      }
-    }
-    
-    //digitalWrite(BUZZER_PIN, output>0.5);
-    if(output > 0.7) {
-      if(!is_output) {
-        pinMode(BUZZER_PIN, OUTPUT);
-        is_output = true;
-      }
-      digitalWrite(BUZZER_PIN, HIGH);
-    } else if(output < -0.7) {
-      if(!is_output) {
-        pinMode(BUZZER_PIN, OUTPUT);
-        is_output = true;
-      }
-      digitalWrite(BUZZER_PIN, LOW);
-    } else if(is_output) {
-        pinMode(BUZZER_PIN, INPUT);
-        is_output = false;
-    }
-    //if(button_is_pressed()) break;
-  }*/
-  
-  
-  
-  
-  
   
   
   // Low battery notification (program will stop here if 16.5V are not available)
@@ -770,7 +675,7 @@ void setup() {
   readIMU_YawPitchRoll(ypr);
   float initialHeading = ypr[0];
   
-  
+  float initialDistance = 8;//getDistanceCM();
   
   // Motor PWM sweep logging
   /*while(1) {
@@ -1296,6 +1201,9 @@ void setup() {
   //while(!button_is_pressed());
   
   //delay(1000);
+  
+  float distance_avg = getDistanceCM();
+  
   float yawZero = initialHeading;
   float kp = 45./2.2; // Tyreus-Luyben Tuning http://www.chem.mtu.edu/~tbco/cm416/zn.html
   float Ti = 2.2*0.24;
@@ -1320,14 +1228,18 @@ void setup() {
     } else if(millis()-start > 1000) {
       //ct_vel = 0.5;
     }
-    if(button_is_pressed()) {
+    /*if(button_is_pressed()) {
       ct_vel += 0.1;
       delay(100);
-    }
+    }*/
     /*if(Serial.available()) {
       kp = (float)Serial.parseInt();
     }*/
     readIMU_YawPitchRoll(ypr);
+    if(button_is_pressed()) {
+      yawZero = ypr[0];
+      initialDistance = getDistanceCM();
+    }
     ts = millis();
     float dt = (float)(ts-prev_ts)/1000.;
     float yaw_normalized = (ypr[0]-yawZero)/M_PI;
@@ -1359,6 +1271,16 @@ void setup() {
     
     if(v > 1) v = 1;
     if(v < -1) v = -1;
+    
+    distance_avg = 0.8*distance_avg + 0.2*getDistanceCM();
+    ct_vel = -(initialDistance-distance_avg)/5.;
+    
+    if(ct_vel > 0.5) ct_vel = 0.5;
+    if(ct_vel < -0.5) ct_vel = -0.5;
+    
+    if(abs(initialDistance-distance_avg) < 0.5) {
+      break;
+    }
 
     set_servo1_rot_speed(v+ct_vel);
     set_servo2_rot_speed(v-ct_vel);
@@ -1366,6 +1288,91 @@ void setup() {
     prev_error = error;
     prev_ts = ts;
   }
+  
+  set_servo1_rot_speed(0);
+  set_servo2_rot_speed(0);
+  
+  playNote(RE*2, 100);
+  ledColor(0,0,128);
+  delay(100);
+  
+  float vel = -1;// Move backwards
+  set_servo1_rot_speed(vel);
+  set_servo2_rot_speed(-vel);
+  
+  delay(300);
+  float dist1 = getDistanceCM();
+  delay(300);
+  float dist2 = getDistanceCM();
+  
+  float speed_K = 0.3/(dist1-dist2);
+  speed_K *= vel;
+  
+  
+  
+  set_servo1_rot_speed(0);
+  set_servo2_rot_speed(0);
+  playNote(RE*2, 100);
+  ledColor(0,0,128);
+  delay(100);
+  
+  ct_vel = 0;
+  first_iteration = true;
+  while(1) {
+    readIMU_YawPitchRoll(ypr);
+    if(button_is_pressed()) ct_vel = 10.*speed_K;
+    ts = millis();
+    float dt = (float)(ts-prev_ts)/1000.;
+    float yaw_normalized = (ypr[0]-yawZero)/M_PI;
+    while(yaw_normalized > 1) yaw_normalized -= 2;
+    while(yaw_normalized <= -1) yaw_normalized += 2;
+    float error = -yaw_normalized;
+    if(!first_iteration) {
+      if(!saturated) error_integral += prev_error*dt;
+      error_derivative = (error-prev_error)/dt;
+    } else first_iteration = false;
+    float v = kp*error + ki*error_integral + kd*error_derivative;
+    if(prev_error*error < 0) { // Zero-cross
+      Tu = 0.1*2*(float)(ts-last_zero_cross_ts)/1000. + 0.9*Tu;
+      Ku = kp;
+      Serial.print("Tu="); //Tu=0.24	Ku=45.
+      Serial.print(Tu);
+      Serial.print("\tKu=");
+      Serial.println(Ku);
+      last_zero_cross_ts = ts;
+      Ku = 0;
+    }
+    
+    if(abs(v)>1) {
+      saturated = true;
+    } else {
+      if(saturated) error_integral = 0;
+      saturated = false;
+    }
+    
+    if(v > 1) v = 1;
+    if(v < -1) v = -1;
+    
+    distance_avg = 0.8*distance_avg + 0.2*getDistanceCM();
+
+    set_servo1_rot_speed(v+ct_vel);
+    set_servo2_rot_speed(v-ct_vel);
+    delay(10);
+    prev_error = error;
+    prev_ts = ts;
+  }
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   
   int t = 0;
   while(1) {
