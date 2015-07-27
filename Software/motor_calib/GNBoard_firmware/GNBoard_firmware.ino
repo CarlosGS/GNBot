@@ -322,21 +322,6 @@ unsigned long last_timestamp_DHT11 = 0;
 
 int loggerMode = 0;
 
-void initRobot() {
-
-  init_button_pin();
-
-  Servo1.write(90);
-  Servo2.write(90);
-
-  magnetometerToZero();
-
-  loggerMode = 0;
-
-  //playMusicScale(20);
-}
-
-
 
 
 
@@ -551,22 +536,133 @@ void setup() {
   //setupMagnetometer();
   //setupIMU();
 
-  Servo1.attach(SERVO_1_PIN);
-  Servo2.attach(SERVO_2_PIN);
-  Serial.begin(115200);
-
+  //Servo1.attach(SERVO_1_PIN);
+  //Servo2.attach(SERVO_2_PIN);
+  //Serial.begin(115200);
+  Serial.begin(9600);
+  
   XbeeSerial.begin(9600);
   xbee.setSerial(XbeeSerial);
 
-  initRobot();
+  init_button_pin();
 
-  Servo1.detach();
-  Servo2.detach();
+  //Servo1.detach();
+  //Servo2.detach();
 
   pinMode(NOSE_HEAT_PIN, OUTPUT);
   digitalWrite(NOSE_HEAT_PIN, HIGH);
   
   delay(100);
+  
+  /*ledColor(0,0,0);
+  float ambientLight = analogRead(LDR1_PIN);
+  while(1) {
+    ambientLight = 0.8*ambientLight + 0.2*((float)(analogRead(LDR1_PIN)+analogRead(LDR2_PIN)+analogRead(LDR3_PIN)+analogRead(LDR4_PIN))/4.);
+    int chk = DHT11.read(DHT_PIN);
+    if(chk == DHTLIB_OK) {
+      Serial.print(ambientLight);
+      Serial.print(" ");
+      Serial.print(DHT11.humidity);
+      Serial.print(" ");
+      Serial.println(DHT11.temperature);
+    }
+    delay(100);
+  }*/
+  
+  
+  
+  
+  while(!button_is_pressed());
+  delay(10000);
+  int modulator_freq = 4637;
+  int low_freq_half_period_us = 4425;
+  float time;
+  float randVal = 0;
+  float ts_start = 0;
+  float high_duration = 0;
+  float period = 0.5;
+  boolean makeSound = false;
+  while(1) {
+    time = (float)millis()/1000.;
+    if(makeSound) {
+      tone(BUZZER_PIN,modulator_freq);
+      delayMicroseconds(low_freq_half_period_us);
+      noTone(BUZZER_PIN);
+      delayMicroseconds(low_freq_half_period_us);
+    }
+    
+    if(time-ts_start > high_duration) {
+      makeSound = false;
+      if(time-ts_start > high_duration+0.05) {
+        randVal = (float)random(0,30000)/30000.;
+        if(randVal < 0.01) period = 0.5;
+        period = period*0.8+ 0.1*0.2;
+        high_duration = pow(randVal,-1./(6.*1.5)) * period;
+        ts_start = time;
+        makeSound = true;
+      }
+    }
+  }
+  while(1);
+  //delay(1000);
+  /*pinMode(BUZZER_PIN, OUTPUT);
+  
+  float time;
+  float output;
+  boolean is_output = true;
+  float randVal = 0;
+  float ts_start = 0;
+  float high_duration = 0;
+  float period = 0.5;
+  float level = 0;
+  float level_goal = 0;
+  boolean slow = false;
+  while(1) {
+    time = (double)micros()/1000000.;
+    output = sin(113*2.*M_PI*time)*sin(4637.*2.*M_PI*time);//*sin(3.*2.*M_PI*time);
+    
+    //lowFreq = 0.1*mapf(min(period,1),1,0.1,0,114*2)+0.9*lowFreq;
+    
+    level = 0.9*level + 0.1*level_goal;
+    output *= //level;
+    
+    if(time-ts_start > high_duration) {
+      level_goal = 0;
+      if(time-ts_start > high_duration+0.1) {
+        randVal = (float)random(0,30000)/30000.;
+        if(randVal < 0.01) period = 0.5;
+        period = period*0.8+ 0.1*0.2;
+        high_duration = pow(randVal,-1./(6.*1.5)) * period;
+        ts_start = time;
+        level_goal = 1;
+      }
+    }
+    
+    //digitalWrite(BUZZER_PIN, output>0.5);
+    if(output > 0.7) {
+      if(!is_output) {
+        pinMode(BUZZER_PIN, OUTPUT);
+        is_output = true;
+      }
+      digitalWrite(BUZZER_PIN, HIGH);
+    } else if(output < -0.7) {
+      if(!is_output) {
+        pinMode(BUZZER_PIN, OUTPUT);
+        is_output = true;
+      }
+      digitalWrite(BUZZER_PIN, LOW);
+    } else if(is_output) {
+        pinMode(BUZZER_PIN, INPUT);
+        is_output = false;
+    }
+    //if(button_is_pressed()) break;
+  }*/
+  
+  
+  
+  
+  
+  
   
   // Low battery notification (program will stop here if 16.5V are not available)
   if(getBatteryVoltage() < 16.5)
