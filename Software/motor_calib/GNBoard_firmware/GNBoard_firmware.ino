@@ -49,10 +49,12 @@ dht11 DHT11;
 Servo Servo1;
 Servo Servo2;
 
-#define CALIB_EEPROM_ADDR 20
+
 
 
 // Structures that store the calibration parameters
+#define CALIB_EEPROM_ADDR 20
+#define CALIB_OK_VAL 77 // Must be different from 0
 struct MotorParamsOneDir {
     float maxSpeed;
     int maxSpeed_PWM;
@@ -63,9 +65,14 @@ struct MotorParams {
     MotorParamsOneDir ccw;
 };
 struct CalibrationParameters {
-    char ok; // Stores 77 if the parameters are correct
+    char ok; // Stores CALIB_OK_VAL if the parameters are correct
     MotorParams servo1;
     MotorParams servo2;
+    float maxSpeed;
+    float speed_k;
+    float kp;
+    float ki;
+    float kd;
 };
 CalibrationParameters calib;
 
@@ -425,7 +432,6 @@ void set_servo2_rot_speed(float omega) {
 }
 
 
-
 void audio_from_string(char *str, int ms, int led) {
     ledColor(0,0,0);
     while(*str) {
@@ -472,18 +478,20 @@ void message(char *msg) {
 
 
 void setup() {
-    delay(500);
+    delay(100);
 
-    randomSeed(analogRead(BATTERY_PIN));
     ledColor(0,0,128);
+
+    int ret = setupIMU();
+    unsigned long prev_ts = millis();
+    unsigned long ts;
 
     //setupMagnetometer();
     //setupIMU();
 
     //Servo1.attach(SERVO_1_PIN);
     //Servo2.attach(SERVO_2_PIN);
-    //Serial.begin(115200);
-    Serial.begin(9600);
+    Serial.begin(115200);
     
     XbeeSerial.begin(9600);
     xbee.setSerial(XbeeSerial);
@@ -495,6 +503,9 @@ void setup() {
 
     pinMode(NOSE_HEAT_PIN, OUTPUT);
     digitalWrite(NOSE_HEAT_PIN, HIGH);
+
+
+    randomSeed(analogRead(BATTERY_PIN));
     
     delay(100);
     
@@ -537,9 +548,9 @@ void setup() {
 
 
     //delay(1000);
-    int ret = setupIMU();
-    unsigned long prev_ts = millis();
-    unsigned long ts;
+    //int ret = setupIMU();
+    //unsigned long prev_ts = millis();
+    //unsigned long ts;
     
     // For evaluating gyro drift
     /*while(1) {
@@ -558,11 +569,11 @@ void setup() {
     // Read calibration parameters from EEPROM
     EEPROM.get(CALIB_EEPROM_ADDR, calib);
     // Check whether the parameters are valid or not
-    if(calib.ok != 77) do_calibration = true;
+    if(calib.ok != CALIB_OK_VAL) do_calibration = true;
     
     if(ret == 0) {
       // OK --> Blink green LED + stabilization delay
-      message("Gyroscope calibration");
+      Serial.println("Gyroscope calibration");
       readIMU_YawPitchRoll(ypr);
       float prevYaw = ypr[0];
       float rotSpeed_avg = 10;
@@ -581,6 +592,7 @@ void setup() {
         delay(150);
         if(button_is_pressed()) do_calibration = true;
         if(do_calibration) ledColor(0,0,64);
+        else ledColor(0,16,0);
         delay(50);
         Serial.println(rotSpeed_avg);
       }
@@ -672,11 +684,6 @@ void setup() {
           data[pos+2] = avgSpeed_tushort & 0x00ff;
           pos += 3;
           
-          //data[pos] = 28; // Type: average L motor input
-          //data[pos+1] = motorPulse >> 8;
-          //data[pos+2] = motorPulse & 0x00ff;
-          //pos += 3;
-          
           data[pos] = 29; // Type: average R motor input
           data[pos+1] = motorPulse >> 8;
           data[pos+2] = motorPulse & 0x00ff;
@@ -735,11 +742,6 @@ void setup() {
           data[pos+2] = motorPulse & 0x00ff;
           pos += 3;
           
-          //data[pos] = 29; // Type: average R motor input
-          //data[pos+1] = motorPulse >> 8;
-          //data[pos+2] = motorPulse & 0x00ff;
-          //pos += 3;
-          
           sendXbee(data, pos+1);
       }
     }
@@ -754,10 +756,11 @@ void setup() {
         Serial.println("Motor calibration. Minimum speeds:");
 
         Servo1.attach(SERVO_1_PIN);
+        int Servo1_minPulseA = 1472;
+        Servo1.writeMicroseconds(Servo1_minPulseA);
         readIMU_YawPitchRoll(ypr);
         float prevYaw = ypr[0];
         float rotSpeed = 0;
-        int Servo1_minPulseA = 1500;
         prev_ts = millis();
         while(abs(rotSpeed) < 0.15) {
           readIMU_YawPitchRoll(ypr);
@@ -785,10 +788,11 @@ void setup() {
 
 
         Servo1.attach(SERVO_1_PIN);
+        int Servo1_minPulseB = 1472;
+        Servo1.writeMicroseconds(Servo1_minPulseB);
         readIMU_YawPitchRoll(ypr);
         prevYaw = ypr[0];
         rotSpeed = 0;
-        int Servo1_minPulseB = 1500;
         prev_ts = millis();
         while(abs(rotSpeed) < 0.15) {
           readIMU_YawPitchRoll(ypr);
@@ -817,10 +821,11 @@ void setup() {
 
 
         Servo2.attach(SERVO_2_PIN);
+        int Servo2_minPulseA = 1472;
+        Servo2.writeMicroseconds(Servo2_minPulseA);
         readIMU_YawPitchRoll(ypr);
         prevYaw = ypr[0];
         rotSpeed = 0;
-        int Servo2_minPulseA = 1500;
         prev_ts = millis();
         while(abs(rotSpeed) < 0.15) {
           readIMU_YawPitchRoll(ypr);
@@ -849,10 +854,11 @@ void setup() {
 
 
         Servo2.attach(SERVO_2_PIN);
+        int Servo2_minPulseB = 1472;
+        Servo2.writeMicroseconds(Servo2_minPulseB);
         readIMU_YawPitchRoll(ypr);
         prevYaw = ypr[0];
         rotSpeed = 0;
-        int Servo2_minPulseB = 1500;
         prev_ts = millis();
         while(abs(rotSpeed) < 0.15) {
           readIMU_YawPitchRoll(ypr);
@@ -1007,88 +1013,60 @@ void setup() {
 
 
 
-        ledColor(0,128,0);
+        
         
         
         // Get fitting parameters from the measurements we just took
         
         // Check that the measurements have been taken correctly
         if((Servo1_minSpeedA * Servo1_minSpeedB >= 0) || (Servo2_minSpeedA * Servo2_minSpeedB >= 0)) {
-          calib.ok = 0;
-          EEPROM.put(CALIB_EEPROM_ADDR, calib);
-          unrecoverable_error("Initial calibration lead to incorrect values");
+            calib.ok = 0;
+            EEPROM.put(CALIB_EEPROM_ADDR, calib);
+            unrecoverable_error("Initial calibration lead to incorrect values");
         }
         
         if(Servo1_maxSpeedA > Servo1_maxSpeedB) {
-          calib.servo1.cw.maxSpeed = Servo1_maxSpeedA;
-          calib.servo1.cw.maxSpeed_PWM = Servo1_maxPulseA;
-          calib.servo1.cw.zeroSpeed_PWM = round(mapf(0,Servo1_minSpeedA,Servo1_maxSpeedA, Servo1_minPulseA,Servo1_maxPulseA)); // Find crossing point with X axis
+            calib.servo1.cw.maxSpeed = Servo1_maxSpeedA;
+            calib.servo1.cw.maxSpeed_PWM = Servo1_maxPulseA;
+            calib.servo1.cw.zeroSpeed_PWM = round(mapf(0,Servo1_minSpeedA,Servo1_maxSpeedA, Servo1_minPulseA,Servo1_maxPulseA)); // Find crossing point with X axis
+            
+            calib.servo1.ccw.maxSpeed = Servo1_maxSpeedB;
+            calib.servo1.ccw.maxSpeed_PWM = Servo1_maxPulseB;
+            calib.servo1.ccw.zeroSpeed_PWM = round(mapf(0,Servo1_minSpeedB,Servo1_maxSpeedB, Servo1_minPulseB,Servo1_maxPulseB)); // Find crossing point with X axis
           
-          calib.servo1.ccw.maxSpeed = Servo1_maxSpeedB;
-          calib.servo1.ccw.maxSpeed_PWM = Servo1_maxPulseB;
-          calib.servo1.ccw.zeroSpeed_PWM = round(mapf(0,Servo1_minSpeedB,Servo1_maxSpeedB, Servo1_minPulseB,Servo1_maxPulseB)); // Find crossing point with X axis
-        
         } else { // Invert CW/CCW
-          calib.servo1.ccw.maxSpeed = Servo1_maxSpeedA;
-          calib.servo1.ccw.maxSpeed_PWM = Servo1_maxPulseA;
-          calib.servo1.ccw.zeroSpeed_PWM = round(mapf(0,Servo1_minSpeedA,Servo1_maxSpeedA, Servo1_minPulseA,Servo1_maxPulseA)); // Find crossing point with X axis
-          
-          calib.servo1.cw.maxSpeed = Servo1_maxSpeedB;
-          calib.servo1.cw.maxSpeed_PWM = Servo1_maxPulseB;
-          calib.servo1.cw.zeroSpeed_PWM = round(mapf(0,Servo1_minSpeedB,Servo1_maxSpeedB, Servo1_minPulseB,Servo1_maxPulseB)); // Find crossing point with X axis
+            calib.servo1.ccw.maxSpeed = Servo1_maxSpeedA;
+            calib.servo1.ccw.maxSpeed_PWM = Servo1_maxPulseA;
+            calib.servo1.ccw.zeroSpeed_PWM = round(mapf(0,Servo1_minSpeedA,Servo1_maxSpeedA, Servo1_minPulseA,Servo1_maxPulseA)); // Find crossing point with X axis
+            
+            calib.servo1.cw.maxSpeed = Servo1_maxSpeedB;
+            calib.servo1.cw.maxSpeed_PWM = Servo1_maxPulseB;
+            calib.servo1.cw.zeroSpeed_PWM = round(mapf(0,Servo1_minSpeedB,Servo1_maxSpeedB, Servo1_minPulseB,Servo1_maxPulseB)); // Find crossing point with X axis
         }
         
         
         
         if(Servo2_maxSpeedA > Servo2_maxSpeedB) {
-          calib.servo2.cw.maxSpeed = Servo2_maxSpeedA;
-          calib.servo2.cw.maxSpeed_PWM = Servo2_maxPulseA;
-          calib.servo2.cw.zeroSpeed_PWM = round(mapf(0,Servo2_minSpeedA,Servo2_maxSpeedA, Servo2_minPulseA,Servo2_maxPulseA)); // Find crossing point with X axis
+            calib.servo2.cw.maxSpeed = Servo2_maxSpeedA;
+            calib.servo2.cw.maxSpeed_PWM = Servo2_maxPulseA;
+            calib.servo2.cw.zeroSpeed_PWM = round(mapf(0,Servo2_minSpeedA,Servo2_maxSpeedA, Servo2_minPulseA,Servo2_maxPulseA)); // Find crossing point with X axis
+            
+            calib.servo2.ccw.maxSpeed = Servo2_maxSpeedB;
+            calib.servo2.ccw.maxSpeed_PWM = Servo2_maxPulseB;
+            calib.servo2.ccw.zeroSpeed_PWM = round(mapf(0,Servo2_minSpeedB,Servo2_maxSpeedB, Servo2_minPulseB,Servo2_maxPulseB)); // Find crossing point with X axis
           
-          calib.servo2.ccw.maxSpeed = Servo2_maxSpeedB;
-          calib.servo2.ccw.maxSpeed_PWM = Servo2_maxPulseB;
-          calib.servo2.ccw.zeroSpeed_PWM = round(mapf(0,Servo2_minSpeedB,Servo2_maxSpeedB, Servo2_minPulseB,Servo2_maxPulseB)); // Find crossing point with X axis
-        
         } else { // Invert CW/CCW
-          calib.servo2.ccw.maxSpeed = Servo2_maxSpeedA;
-          calib.servo2.ccw.maxSpeed_PWM = Servo2_maxPulseA;
-          calib.servo2.ccw.zeroSpeed_PWM = round(mapf(0,Servo2_minSpeedA,Servo2_maxSpeedA, Servo2_minPulseA,Servo2_maxPulseA)); // Find crossing point with X axis
-          
-          calib.servo2.cw.maxSpeed = Servo2_maxSpeedB;
-          calib.servo2.cw.maxSpeed_PWM = Servo2_maxPulseB;
-          calib.servo2.cw.zeroSpeed_PWM = round(mapf(0,Servo2_minSpeedB,Servo2_maxSpeedB, Servo2_minPulseB,Servo2_maxPulseB)); // Find crossing point with X axis
+            calib.servo2.ccw.maxSpeed = Servo2_maxSpeedA;
+            calib.servo2.ccw.maxSpeed_PWM = Servo2_maxPulseA;
+            calib.servo2.ccw.zeroSpeed_PWM = round(mapf(0,Servo2_minSpeedA,Servo2_maxSpeedA, Servo2_minPulseA,Servo2_maxPulseA)); // Find crossing point with X axis
+            
+            calib.servo2.cw.maxSpeed = Servo2_maxSpeedB;
+            calib.servo2.cw.maxSpeed_PWM = Servo2_maxPulseB;
+            calib.servo2.cw.zeroSpeed_PWM = round(mapf(0,Servo2_minSpeedB,Servo2_maxSpeedB, Servo2_minPulseB,Servo2_maxPulseB)); // Find crossing point with X axis
         }
-        
-        Serial.println("Calibration parameters:");
-        
-        Serial.print("calib.servo1.cw.maxSpeed=\t");
-        Serial.println(calib.servo1.cw.maxSpeed);
-        Serial.print("calib.servo1.cw.maxSpeed_PWM=\t");
-        Serial.println(calib.servo1.cw.maxSpeed_PWM);
-        Serial.print("calib.servo1.cw.zeroSpeed_PWM=\t");
-        Serial.println(calib.servo1.cw.zeroSpeed_PWM);
-        Serial.print("calib.servo1.ccw.maxSpeed=\t");
-        Serial.println(calib.servo1.ccw.maxSpeed);
-        Serial.print("calib.servo1.ccw.maxSpeed_PWM=\t");
-        Serial.println(calib.servo1.ccw.maxSpeed_PWM);
-        Serial.print("calib.servo1.ccw.zeroSpeed_PWM=\t");
-        Serial.println(calib.servo1.ccw.zeroSpeed_PWM);
-        
-        Serial.println();
-        
-        Serial.print("calib.servo2.cw.maxSpeed=\t");
-        Serial.println(calib.servo2.cw.maxSpeed);
-        Serial.print("calib.servo2.cw.maxSpeed_PWM=\t");
-        Serial.println(calib.servo2.cw.maxSpeed_PWM);
-        Serial.print("calib.servo2.cw.zeroSpeed_PWM=\t");
-        Serial.println(calib.servo2.cw.zeroSpeed_PWM);
-        Serial.print("calib.servo2.ccw.maxSpeed=\t");
-        Serial.println(calib.servo2.ccw.maxSpeed);
-        Serial.print("calib.servo2.ccw.maxSpeed_PWM=\t");
-        Serial.println(calib.servo2.ccw.maxSpeed_PWM);
-        Serial.print("calib.servo2.ccw.zeroSpeed_PWM=\t");
-        Serial.println(calib.servo2.ccw.zeroSpeed_PWM);
-        
+
+        calib.maxSpeed = min(min(abs(calib.servo1.cw.maxSpeed),abs(calib.servo1.ccw.maxSpeed)),min(abs(calib.servo2.cw.maxSpeed),abs(calib.servo2.ccw.maxSpeed)));
+
         
         // Test linear motion
         /*int t = 0;
@@ -1099,14 +1077,155 @@ void setup() {
             t++;
             delay(100);
         }*/
+
+
+        readIMU_YawPitchRoll(ypr);
+        float yawGoal = ypr[0]+M_PI/4.;
+        boolean nextTurnLeft = true;
+        unsigned long last_zero_cross_ts = millis();
+        float Tu = 0; // Store the limit response for PID auto-tuning
+        float Ku = calib.maxSpeed/(M_PI/180.);// Calculated so full speed is applied at 1deg error
+        float Tu_ok = 0;
+        float Ku_ok = 0;
+        float prev_error = 0;
+        float trialStartTS = millis();
+        float oscillation_peak = 0;
+        float oscillation_peak_last = 0;
+        while(1) {
+          if(millis()-trialStartTS > 2000) {
+            set_servo1_rot_speed(0);
+            set_servo2_rot_speed(0);
+            delay(200);
+
+            if(oscillation_peak_last < 0.01) break;
+            
+            readIMU_YawPitchRoll(ypr);
+            if(nextTurnLeft) yawGoal = ypr[0]-M_PI/4.;
+            else yawGoal = ypr[0]+M_PI/4.;
+            nextTurnLeft = !nextTurnLeft;
+            Ku /= 1.5;
+
+            Tu_ok = Tu;
+            Ku_ok = Ku;
+            
+            last_zero_cross_ts = millis();
+            trialStartTS = millis();
+          }
+          
+          readIMU_YawPitchRoll(ypr);
+          ts = millis();
+          float dt = (float)(ts-prev_ts)/1000.;
+          float yaw = (ypr[0]-yawGoal);
+          while(yaw > M_PI) yaw -= 2.*M_PI;
+          while(yaw <= -M_PI) yaw += 2.*M_PI;
+          float error = -yaw;
+
+          oscillation_peak = max(oscillation_peak,abs(error));
+          
+          float v = Ku*error;
+          if(prev_error*error < 0) { // Zero-cross
+            oscillation_peak_last = oscillation_peak;
+            oscillation_peak = 0;
+            
+            Tu = 0.4*2*(float)(ts-last_zero_cross_ts)/1000. + 0.6*Tu;
+            Serial.print("Tu="); //Tu=0.24  Ku=45.
+            Serial.print(Tu);
+            Serial.print("\tKu=");
+            Serial.print(Ku);
+            Serial.print("\tPeak=");
+            Serial.println(oscillation_peak_last);
+            
+            last_zero_cross_ts = ts;
+          }
+          if(v > calib.maxSpeed) v = calib.maxSpeed;
+          if(v < -calib.maxSpeed) v = -calib.maxSpeed;
+          set_servo1_rot_speed(v);
+          set_servo2_rot_speed(v);
+          //delay(10);
+          prev_error = error;
+          prev_ts = ts;
+
+          delay(10);
+
+          // PID auto-tune data logging
+          /*Serial.print("[");
+          Serial.print(millis());
+          Serial.print(",");
+          Serial.print(Ku);
+          Serial.print(",");
+          Serial.print(Tu);
+          Serial.print(",");
+          Serial.print(oscillation_peak_last,3);
+          Serial.print(",");
+          Serial.print(error,3);
+          Serial.println("],");*/
+        }
+
+        Tu = Tu_ok;
+        Ku = Ku_ok;
+
+        calib.kp = Ku/2.2; // Tyreus-Luyben Tuning http://www.chem.mtu.edu/~tbco/cm416/zn.html
+        float Ti = 2.2*Tu;
+        float Td = Tu/6.3;
+        calib.ki = calib.kp/Ti;
+        calib.kd = calib.kp*Td;
+
+        playNote(RE*2, 100);
+        ledColor(0,16,0);
+
+
+        // Store calibration parameters into non-volatile memory
+        calib.ok = CALIB_OK_VAL;
+        EEPROM.put(CALIB_EEPROM_ADDR, calib);
+
+        ledColor(0,128,0);
+        delay(1000);
+    }
+
+
+    Serial.println("Calibration parameters:");
+    
+    Serial.print("calib.servo1.cw.maxSpeed=\t");
+    Serial.println(calib.servo1.cw.maxSpeed);
+    Serial.print("calib.servo1.cw.maxSpeed_PWM=\t");
+    Serial.println(calib.servo1.cw.maxSpeed_PWM);
+    Serial.print("calib.servo1.cw.zeroSpeed_PWM=\t");
+    Serial.println(calib.servo1.cw.zeroSpeed_PWM);
+    Serial.print("calib.servo1.ccw.maxSpeed=\t");
+    Serial.println(calib.servo1.ccw.maxSpeed);
+    Serial.print("calib.servo1.ccw.maxSpeed_PWM=\t");
+    Serial.println(calib.servo1.ccw.maxSpeed_PWM);
+    Serial.print("calib.servo1.ccw.zeroSpeed_PWM=\t");
+    Serial.println(calib.servo1.ccw.zeroSpeed_PWM);
+    
+    Serial.println();
+    
+    Serial.print("calib.servo2.cw.maxSpeed=\t");
+    Serial.println(calib.servo2.cw.maxSpeed);
+    Serial.print("calib.servo2.cw.maxSpeed_PWM=\t");
+    Serial.println(calib.servo2.cw.maxSpeed_PWM);
+    Serial.print("calib.servo2.cw.zeroSpeed_PWM=\t");
+    Serial.println(calib.servo2.cw.zeroSpeed_PWM);
+    Serial.print("calib.servo2.ccw.maxSpeed=\t");
+    Serial.println(calib.servo2.ccw.maxSpeed);
+    Serial.print("calib.servo2.ccw.maxSpeed_PWM=\t");
+    Serial.println(calib.servo2.ccw.maxSpeed_PWM);
+    Serial.print("calib.servo2.ccw.zeroSpeed_PWM=\t");
+    Serial.println(calib.servo2.ccw.zeroSpeed_PWM);
+
+    Serial.println();
+    Serial.print("calib.maxSpeed=\t");
+    Serial.println(calib.maxSpeed);
+
+    Serial.println();
+    Serial.print("calib.kp=\t");
+    Serial.println(calib.kp);
+    Serial.print("calib.ki=\t");
+    Serial.println(calib.ki);
+    Serial.print("calib.kd=\t");
+    Serial.println(calib.kd);
         
-        
-        
-        //while(!button_is_pressed());
-        
-        //delay(1000);
-        
-        float distance_avg = getDistanceCM();
+        /*
         
         float yawZero = initialHeading;
         float kp = 45./2.2; // Tyreus-Luyben Tuning http://www.chem.mtu.edu/~tbco/cm416/zn.html
@@ -1132,13 +1251,6 @@ void setup() {
           } else if(millis()-start > 1000) {
             //ct_vel = 0.5;
           }
-          /*if(button_is_pressed()) {
-            ct_vel += 0.1;
-            delay(100);
-          }*/
-          /*if(Serial.available()) {
-            kp = (float)Serial.parseInt();
-          }*/
           readIMU_YawPitchRoll(ypr);
           if(button_is_pressed()) {
             yawZero = ypr[0];
@@ -1191,9 +1303,12 @@ void setup() {
           delay(10);
           prev_error = error;
           prev_ts = ts;
-        }
+        }*/
+
+        float yawZero = initialHeading;
+        float distance_avg = getDistanceCM();
         
-        set_servo1_rot_speed(0);
+        /*set_servo1_rot_speed(0);
         set_servo2_rot_speed(0);
         
         playNote(RE*2, 100);
@@ -1210,8 +1325,10 @@ void setup() {
         float dist2 = getDistanceCM();
         
         float speed_K = 0.3/(dist1-dist2);
-        speed_K *= vel;
-        
+        speed_K *= vel;*/
+
+
+        float speed_K = 0.1;
         
         
         set_servo1_rot_speed(0);
@@ -1220,32 +1337,29 @@ void setup() {
         ledColor(0,0,128);
         delay(100);
         
-        ct_vel = 0;
-        first_iteration = true;
+        
+        float yawGoal = initialHeading;
+        float prev_error = 0;
+        float ct_vel = 0;
+        boolean saturated = false;
+        boolean first_iteration = true;
+        float error_integral = 0;
+        float error_derivative = 0;
         while(1) {
           readIMU_YawPitchRoll(ypr);
           if(button_is_pressed()) ct_vel = 10.*speed_K;
           ts = millis();
           float dt = (float)(ts-prev_ts)/1000.;
-          float yaw_normalized = (ypr[0]-yawZero)/M_PI;
-          while(yaw_normalized > 1) yaw_normalized -= 2;
-          while(yaw_normalized <= -1) yaw_normalized += 2;
-          float error = -yaw_normalized;
+          float yaw = (ypr[0]-yawGoal);
+          while(yaw > M_PI) yaw -= 2.*M_PI;
+          while(yaw <= -M_PI) yaw += 2.*M_PI;
+          float error = -yaw;
+          
           if(!first_iteration) {
             if(!saturated) error_integral += prev_error*dt;
             error_derivative = (error-prev_error)/dt;
           } else first_iteration = false;
-          float v = kp*error + ki*error_integral + kd*error_derivative;
-          if(prev_error*error < 0) { // Zero-cross
-            Tu = 0.1*2*(float)(ts-last_zero_cross_ts)/1000. + 0.9*Tu;
-            Ku = kp;
-            Serial.print("Tu="); //Tu=0.24	Ku=45.
-            Serial.print(Tu);
-            Serial.print("\tKu=");
-            Serial.println(Ku);
-            last_zero_cross_ts = ts;
-            Ku = 0;
-          }
+          float v = calib.kp*error + calib.ki*error_integral + calib.kd*error_derivative;
           
           if(abs(v)>1) {
             saturated = true;
@@ -1267,7 +1381,7 @@ void setup() {
         }
         
         
-    } // End of calibration
+    //} // End of calibration
     
 }
 
