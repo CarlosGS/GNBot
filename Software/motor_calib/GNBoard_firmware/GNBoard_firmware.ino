@@ -1088,9 +1088,9 @@ void setup() {
         float Tu_ok = 0;
         float Ku_ok = 0;
         float prev_error = 0;
-        float trialStartTS = millis();
         float oscillation_peak = 0;
         float oscillation_peak_last = 0;
+        float trialStartTS = millis();
         while(1) {
           if(millis()-trialStartTS > 2000) {
             set_servo1_rot_speed(0);
@@ -1225,85 +1225,7 @@ void setup() {
     Serial.print("calib.kd=\t");
     Serial.println(calib.kd);
         
-        /*
         
-        float yawZero = initialHeading;
-        float kp = 45./2.2; // Tyreus-Luyben Tuning http://www.chem.mtu.edu/~tbco/cm416/zn.html
-        float Ti = 2.2*0.24;
-        float Td = 0.24/6.3;
-        float ki = kp/Ti;
-        float kd = kp*Td;
-        float error_integral = 0;
-        float error_derivative = 0;
-        boolean first_iteration = true;
-        float prev_error = 0;
-        unsigned long last_zero_cross_ts = millis();
-        float Tu = 0;
-        float Ku = 0;
-        float ct_vel = 0;
-        boolean saturated = false;
-        unsigned long start = millis();
-        while(1) {
-          if(millis()-start > 5000) {
-            //ct_vel = 0;
-            //yawZero += M_PI/2;
-            start = millis();
-          } else if(millis()-start > 1000) {
-            //ct_vel = 0.5;
-          }
-          readIMU_YawPitchRoll(ypr);
-          if(button_is_pressed()) {
-            yawZero = ypr[0];
-            initialDistance = getDistanceCM();
-          }
-          ts = millis();
-          float dt = (float)(ts-prev_ts)/1000.;
-          float yaw_normalized = (ypr[0]-yawZero)/M_PI;
-          while(yaw_normalized > 1) yaw_normalized -= 2;
-          while(yaw_normalized <= -1) yaw_normalized += 2;
-          float error = -yaw_normalized;
-          if(!first_iteration) {
-            if(!saturated) error_integral += prev_error*dt;
-            error_derivative = (error-prev_error)/dt;
-          } else first_iteration = false;
-          float v = kp*error + ki*error_integral + kd*error_derivative;
-          if(prev_error*error < 0) { // Zero-cross
-            Tu = 0.1*2*(float)(ts-last_zero_cross_ts)/1000. + 0.9*Tu;
-            Ku = kp;
-            Serial.print("Tu="); //Tu=0.24	Ku=45.
-            Serial.print(Tu);
-            Serial.print("\tKu=");
-            Serial.println(Ku);
-            last_zero_cross_ts = ts;
-            Ku = 0;
-          }
-          
-          if(abs(v)>1) {
-            saturated = true;
-          } else {
-            if(saturated) error_integral = 0;
-            saturated = false;
-          }
-          
-          if(v > 1) v = 1;
-          if(v < -1) v = -1;
-          
-          distance_avg = 0.8*distance_avg + 0.2*getDistanceCM();
-          ct_vel = -(initialDistance-distance_avg)/5.;
-          
-          if(ct_vel > 0.5) ct_vel = 0.5;
-          if(ct_vel < -0.5) ct_vel = -0.5;
-          
-          if(abs(initialDistance-distance_avg) < 0.5) {
-            break;
-          }
-
-          set_servo1_rot_speed(v+ct_vel);
-          set_servo2_rot_speed(v-ct_vel);
-          delay(10);
-          prev_error = error;
-          prev_ts = ts;
-        }*/
 
         float yawZero = initialHeading;
         float distance_avg = getDistanceCM();
@@ -1336,16 +1258,28 @@ void setup() {
         playNote(RE*2, 100);
         ledColor(0,0,128);
         delay(100);
+
+        //calib.kp = 10;
+        //calib.ki = 0;
+        //calib.kd = 0;
         
-        
-        float yawGoal = initialHeading;
+        float yawGoal = 0;//initialHeading;
         float prev_error = 0;
         float ct_vel = 0;
         boolean saturated = false;
         boolean first_iteration = true;
         float error_integral = 0;
         float error_derivative = 0;
+        float trialStartTS = millis();
+        float angleList[] = {0,M_PI/2,M_PI/4,-M_PI/4,0};
+        int curr = 0;
         while(1) {
+          if(millis()-trialStartTS > 1000) {
+            yawGoal = angleList[curr];
+            curr++;
+            if(curr > 4) break;
+            trialStartTS = millis();
+          }
           readIMU_YawPitchRoll(ypr);
           if(button_is_pressed()) ct_vel = 10.*speed_K;
           ts = millis();
@@ -1368,18 +1302,32 @@ void setup() {
             saturated = false;
           }
           
-          if(v > 1) v = 1;
-          if(v < -1) v = -1;
+          if(v > calib.maxSpeed) v = calib.maxSpeed;
+          if(v < -calib.maxSpeed) v = -calib.maxSpeed;
           
           distance_avg = 0.8*distance_avg + 0.2*getDistanceCM();
-
+          
           set_servo1_rot_speed(v+ct_vel);
           set_servo2_rot_speed(v-ct_vel);
-          delay(10);
+          //delay(10);
+
+          Serial.print("[");
+          Serial.print(millis());
+          Serial.print(",");
+          Serial.print(ypr[0]);
+          Serial.print(",");
+          Serial.print(yawGoal);
+          Serial.print(",");
+          Serial.print(v);
+          Serial.println("],");
+          
           prev_error = error;
           prev_ts = ts;
         }
-        
+
+        set_servo1_rot_speed(0);
+        set_servo2_rot_speed(0);
+        while(1);
         
     //} // End of calibration
     
