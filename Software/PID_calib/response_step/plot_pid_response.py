@@ -41,7 +41,7 @@ ax.plot(time_seconds,pid_response2[:,1]*180./np.pi,'b')
 ax.plot(time_seconds,pid_response1[:,1]*180./np.pi,'g')
 ax.plot(time_seconds,pid_response4[:,1]*180./np.pi,'c',linewidth=2)
 
-ax.legend(["Target yaw","$K_P=10, K_{\{I,D\}}=0$","$K_P=5, K_{\{I,D\}}=0$","$K_P=1, K_{\{I,D\}}=0$","$K_{\{P,I,D\}}=\{4.15,5.85,0.21\}$"])
+ax.legend(["Target yaw","$K_p=10, K_{\{i,d\}}=0$","$K_p=5, K_{\{i,d\}}=0$","$K_p=1, K_{\{i,d\}}=0$","$K_{\{p,i,d\}}=\{4.15,5.85,0.21\}$"])
 
 #ax.plot(pid_response2)
 

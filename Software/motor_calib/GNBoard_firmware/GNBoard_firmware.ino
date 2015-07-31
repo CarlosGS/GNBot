@@ -1130,7 +1130,7 @@ void setup() {
             oscillation_peak_last = oscillation_peak;
             oscillation_peak = 0;
             
-            Tu = 0.4*2*(float)(ts-last_zero_cross_ts)/1000. + 0.6*Tu;
+            Tu = 0.4*2.*(float)(ts-last_zero_cross_ts)/1000. + 0.6*Tu;
             Serial.print("Tu="); //Tu=0.24  Ku=45.
             Serial.print(Tu);
             Serial.print("\tKu=");
@@ -1170,6 +1170,7 @@ void setup() {
         calib.kp = Ku/2.2; // Tyreus-Luyben Tuning http://www.chem.mtu.edu/~tbco/cm416/zn.html
         float Ti = 2.2*Tu;
         float Td = Tu/6.3;
+        
         calib.ki = calib.kp/Ti;
         calib.kd = calib.kp*Td;
 
