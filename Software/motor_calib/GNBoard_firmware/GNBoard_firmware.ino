@@ -1089,6 +1089,7 @@ void setup() {
         float Ku_ok = 0;
         float prev_error = 0;
         float oscillation_peak = 0;
+        float oscillation_peak_first = 0;
         float oscillation_peak_last = 0;
         float trialStartTS = millis();
         while(1) {
@@ -1097,7 +1098,7 @@ void setup() {
             set_servo2_rot_speed(0);
             delay(200);
 
-            if(oscillation_peak_last < 0.01) break;
+            if(oscillation_peak_first == 0 || oscillation_peak_last < 0.01) break;
             
             readIMU_YawPitchRoll(ypr);
             if(nextTurnLeft) yawGoal = ypr[0]-M_PI/4.;
@@ -1110,6 +1111,7 @@ void setup() {
             
             last_zero_cross_ts = millis();
             trialStartTS = millis();
+            oscillation_peak_first = 0;
           }
           
           readIMU_YawPitchRoll(ypr);
@@ -1124,6 +1126,7 @@ void setup() {
           
           float v = Ku*error;
           if(prev_error*error < 0) { // Zero-cross
+            if(oscillation_peak_first == 0) oscillation_peak_first = oscillation_peak;
             oscillation_peak_last = oscillation_peak;
             oscillation_peak = 0;
             
@@ -1263,7 +1266,7 @@ void setup() {
         //calib.ki = 0;
         //calib.kd = 0;
         
-        float yawGoal = 0;//initialHeading;
+        float yawGoal = initialHeading;
         float prev_error = 0;
         float ct_vel = 0;
         boolean saturated = false;
@@ -1271,15 +1274,17 @@ void setup() {
         float error_integral = 0;
         float error_derivative = 0;
         float trialStartTS = millis();
-        float angleList[] = {0,M_PI/2,M_PI/4,-M_PI/4,0};
-        int curr = 0;
+        //float angleList[] = {0,0,M_PI/2,M_PI/4,-M_PI/4,0};
+        //int curr = 0;
         while(1) {
-          if(millis()-trialStartTS > 1000) {
+          /*if(millis()-trialStartTS > 3000) {
             yawGoal = angleList[curr];
             curr++;
             if(curr > 4) break;
             trialStartTS = millis();
-          }
+          }*/
+          //if(millis()-trialStartTS > 20000) break;
+          //if(millis()-trialStartTS > 2000) yawGoal = 10.*(M_PI/180.)*sin(2.*M_PI*(millis()-trialStartTS-2000)/1000.);
           readIMU_YawPitchRoll(ypr);
           if(button_is_pressed()) ct_vel = 10.*speed_K;
           ts = millis();
@@ -1309,17 +1314,17 @@ void setup() {
           
           set_servo1_rot_speed(v+ct_vel);
           set_servo2_rot_speed(v-ct_vel);
-          //delay(10);
+          delay(10);
 
-          Serial.print("[");
+          /*Serial.print("[");
           Serial.print(millis());
           Serial.print(",");
-          Serial.print(ypr[0]);
+          Serial.print(ypr[0],4);
           Serial.print(",");
-          Serial.print(yawGoal);
+          Serial.print(yawGoal,4);
           Serial.print(",");
-          Serial.print(v);
-          Serial.println("],");
+          Serial.print(v,4);
+          Serial.println("],");*/
           
           prev_error = error;
           prev_ts = ts;
