@@ -110,7 +110,7 @@ ax.arrow(9.9, 2, 0.2, 10, head_width=0, head_length=0, fc='k', ec='k')
 ax.text(10.1, 10+5, 'Critically', fontsize=10)
 ax.text(10.15, 10, 'damped', fontsize=10)
 
-ax.set_title('PID auto-tuning process: Empiric discovery of the values $K_u$ and $T_u$', fontsize=18,y=1.01)
+ax.set_title('PID auto-tuning process: Empirical measure of the values $K_u$ and $T_u$', fontsize=18,y=1.01)
 ax.set_xlabel('Time [seconds]', fontsize=16)
 ax.set_ylabel('Yaw error [deg]', fontsize=16)
 ax.set_xlim([0,11])
