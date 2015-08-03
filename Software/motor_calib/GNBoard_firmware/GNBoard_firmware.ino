@@ -477,6 +477,65 @@ void message(char *msg) {
 
 
 
+void pointToAngle(float yawGoal_rad) {
+    float prev_error = 0;
+    boolean saturated = false;
+    boolean first_iteration = true;
+    float error_integral = 0;
+    float error_derivative = 0;
+    unsigned long ts, prev_ts;
+    while(1) {
+      readIMU_YawPitchRoll(ypr);
+      ts = millis();
+      float dt = (float)(ts-prev_ts)/1000.;
+      float yaw = (ypr[0]-yawGoal_rad);
+      while(yaw > M_PI) yaw -= 2.*M_PI;
+      while(yaw <= -M_PI) yaw += 2.*M_PI;
+      float error = -yaw;
+      
+      if(!first_iteration) {
+        if(!saturated) error_integral += prev_error*dt;
+        error_derivative = (error-prev_error)/dt;
+      } else first_iteration = false;
+      float v = calib.kp*error + calib.ki*error_integral + calib.kd*error_derivative;
+      
+      if(abs(v)>1) {
+        saturated = true;
+      } else {
+        if(saturated) error_integral = 0;
+        saturated = false;
+      }
+      
+      if(v > calib.maxSpeed) v = calib.maxSpeed;
+      if(v < -calib.maxSpeed) v = -calib.maxSpeed;
+      
+      set_servo1_rot_speed(v);
+      set_servo2_rot_speed(v);
+
+      if(abs(error)+abs(error_integral)+abs(error_derivative) < 0.1*M_PI/180.) break;
+      
+      delay(10);
+      
+      prev_error = error;
+      prev_ts = ts;
+    }
+
+    set_servo1_rot_speed(0);
+    set_servo2_rot_speed(0);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 void setup() {
     delay(100);
 
@@ -1228,11 +1287,75 @@ void setup() {
     Serial.println(calib.ki);
     Serial.print("calib.kd=\t");
     Serial.println(calib.kd);
-        
+
+    /*while(1) {
+      Serial.println(getDistanceCM());
+      delay(50);
+    }*/
+
+        pointToAngle(initialHeading);
+        ledColor(0,8,0);
+
+        float vel = calib.maxSpeed/2.;// Move forwards
+        set_servo1_rot_speed(vel);
+        set_servo2_rot_speed(-vel);
+
+        while(getDistanceCM() > 10) delay(1);
+        set_servo1_rot_speed(0);
+        set_servo2_rot_speed(0);
+
+        for(int i=1; i<15; i++) {
+            pointToAngle(initialHeading);
+
+            vel = -((float)i)/10.;
+            //vel = -calib.maxSpeed/2.;// Move backwards
+            set_servo1_rot_speed(vel);
+            set_servo2_rot_speed(-vel);
+
+            while(getDistanceCM() < 15) delay(1);
+            ts = millis();
+            prev_ts = ts;
+            while(getDistanceCM() < 20) delay(1);
+            ts = millis();
+            float elapsed = (float)(ts-prev_ts)/1000.;
+            float speed_bw = -5./elapsed;
+            
+            set_servo1_rot_speed(0);
+            set_servo2_rot_speed(0);
+
+
+            pointToAngle(initialHeading);
+            
+            //vel = calib.maxSpeed/2.;// Move forwards
+            vel *= -1;
+            set_servo1_rot_speed(vel);
+            set_servo2_rot_speed(-vel);
+
+            while(getDistanceCM() > 15) delay(1);
+            ts = millis();
+            prev_ts = ts;
+            while(getDistanceCM() > 10) delay(1);
+            ts = millis();
+            elapsed = (float)(ts-prev_ts)/1000.;
+            float speed_fw = 5./elapsed;
+            
+            set_servo1_rot_speed(0);
+            set_servo2_rot_speed(0);
+            Serial.print("[");
+            Serial.print(vel);
+            Serial.print(",");
+            Serial.print(speed_bw);
+            Serial.print(",");
+            Serial.print(speed_fw);
+            Serial.println("],");
+        }
+        while(1);
+
+
+    
         
 
-        float yawZero = initialHeading;
-        float distance_avg = getDistanceCM();
+
         
         /*set_servo1_rot_speed(0);
         set_servo2_rot_speed(0);
@@ -1253,6 +1376,9 @@ void setup() {
         float speed_K = 0.3/(dist1-dist2);
         speed_K *= vel;*/
 
+
+        float yawZero = initialHeading;
+        float distance_avg = getDistanceCM();
 
         float speed_K = 0.1;
         
