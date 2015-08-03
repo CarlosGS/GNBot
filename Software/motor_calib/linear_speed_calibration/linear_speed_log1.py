@@ -1,4 +1,4 @@
-# Measured with larger left wheel
+# Measured with same wheel diameter (robot 2) / surface: lab table
 # fw_w_speed   speed_bw   speed_fw
 linear_speed_log1=[
 [0.10,-1.26,0.87],

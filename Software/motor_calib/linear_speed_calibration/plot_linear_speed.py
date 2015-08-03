@@ -22,8 +22,15 @@ linear_speed_log1 = np.array(linear_speed_log1)
 from linear_speed_log2 import *
 linear_speed_log2 = np.array(linear_speed_log2)
 
+from linear_speed_log3 import *
+linear_speed_log3 = np.array(linear_speed_log3)
 
-linear_speed_log = linear_speed_log2
+from linear_speed_log4 import *
+linear_speed_log4 = np.array(linear_speed_log4)
+
+
+
+linear_speed_log = linear_speed_log4
 
 f, ax = subplots(1,figsize=(10,5))
 ax.plot(linear_speed_log[:,0],linear_speed_log[:,2],'b')

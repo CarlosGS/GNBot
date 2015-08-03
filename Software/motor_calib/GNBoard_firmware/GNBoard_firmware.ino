@@ -68,7 +68,7 @@ struct CalibrationParameters {
     char ok; // Stores CALIB_OK_VAL if the parameters are correct
     MotorParams servo1;
     MotorParams servo2;
-    float maxSpeed;
+    float maxWspeed;
     float speed_k;
     float kp;
     float ki;
@@ -477,7 +477,7 @@ void message(char *msg) {
 
 
 
-void pointToAngle(float yawGoal_rad) {
+int motorPIDcontroller(float yawGoal_rad, boolean term_yawReached, float c_speed_rads, float IRdistGoal_cm, boolean term_IRdistReached, float distanceGoal_rad, boolean term_distanceReached) {
     float prev_error = 0;
     boolean saturated = false;
     boolean first_iteration = true;
@@ -499,32 +499,42 @@ void pointToAngle(float yawGoal_rad) {
       } else first_iteration = false;
       float v = calib.kp*error + calib.ki*error_integral + calib.kd*error_derivative;
       
-      if(abs(v)>1) {
+      if(abs(v)>calib.maxWspeed) {
         saturated = true;
       } else {
         if(saturated) error_integral = 0;
         saturated = false;
       }
       
-      if(v > calib.maxSpeed) v = calib.maxSpeed;
-      if(v < -calib.maxSpeed) v = -calib.maxSpeed;
+      //if(v > calib.maxWspeed) v = calib.maxWspeed;
+      //if(v < -calib.maxWspeed) v = -calib.maxWspeed;
       
-      set_servo1_rot_speed(v);
-      set_servo2_rot_speed(v);
+      set_servo1_rot_speed(v+c_speed_rads);
+      set_servo2_rot_speed(v-c_speed_rads);
 
-      if(abs(error)+abs(error_integral)+abs(error_derivative) < 0.1*M_PI/180.) break;
+      if(term_yawReached && abs(error)+abs(error_integral)+abs(error_derivative) < 0.1*M_PI/180.) return 1;
+      if(term_IRdistReached) {
+          float dist = getDistanceCM();
+          if(c_speed_rads > 0) {
+              if(dist < IRdistGoal_cm) return 2;
+          } else {
+              if(dist > IRdistGoal_cm) return 2;
+          }
+      }
       
-      delay(10);
+      //delay(10);
       
       prev_error = error;
       prev_ts = ts;
     }
+    return 0;
+}
 
+void pointToAngle(float yawGoal_rad) {
+    motorPIDcontroller(yawGoal_rad, true, 0, 0, false, 0, false);
     set_servo1_rot_speed(0);
     set_servo2_rot_speed(0);
 }
-
-
 
 
 
@@ -1124,7 +1134,7 @@ void setup() {
             calib.servo2.cw.zeroSpeed_PWM = round(mapf(0,Servo2_minSpeedB,Servo2_maxSpeedB, Servo2_minPulseB,Servo2_maxPulseB)); // Find crossing point with X axis
         }
 
-        calib.maxSpeed = min(min(abs(calib.servo1.cw.maxSpeed),abs(calib.servo1.ccw.maxSpeed)),min(abs(calib.servo2.cw.maxSpeed),abs(calib.servo2.ccw.maxSpeed)));
+        calib.maxWspeed = min(min(abs(calib.servo1.cw.maxSpeed),abs(calib.servo1.ccw.maxSpeed)),min(abs(calib.servo2.cw.maxSpeed),abs(calib.servo2.ccw.maxSpeed)));
 
         
         // Test linear motion
@@ -1143,7 +1153,7 @@ void setup() {
         boolean nextTurnLeft = true;
         unsigned long last_zero_cross_ts = millis();
         float Tu = 0; // Store the limit response for PID auto-tuning
-        float Ku = calib.maxSpeed/(M_PI/180.);// Calculated so full speed is applied at 1deg error
+        float Ku = calib.maxWspeed/(M_PI/180.);// Calculated so full speed is applied at 1deg error
         float Tu_ok = 0;
         float Ku_ok = 0;
         float prev_error = 0;
@@ -1199,8 +1209,8 @@ void setup() {
             
             last_zero_cross_ts = ts;
           }
-          if(v > calib.maxSpeed) v = calib.maxSpeed;
-          if(v < -calib.maxSpeed) v = -calib.maxSpeed;
+          if(v > calib.maxWspeed) v = calib.maxWspeed;
+          if(v < -calib.maxWspeed) v = -calib.maxWspeed;
           set_servo1_rot_speed(v);
           set_servo2_rot_speed(v);
           //delay(10);
@@ -1234,8 +1244,37 @@ void setup() {
         calib.kd = calib.kp*Td;
 
         playNote(RE*2, 100);
-        ledColor(0,16,0);
+        ledColor(0,0,16);
 
+
+
+        // Calibrate linear velocity constant
+        pointToAngle(initialHeading);
+
+        float vel = calib.maxWspeed/2;
+        // Move backwards
+        motorPIDcontroller(initialHeading, false, -vel, 25, true, 0, false);
+        
+        set_servo1_rot_speed(0);
+        set_servo2_rot_speed(0);
+        
+
+        // Move forwards
+        motorPIDcontroller(initialHeading, false, vel, 20, true, 0, false);
+        prev_ts = millis();
+        motorPIDcontroller(initialHeading, false, vel, 10, true, 0, false);
+        ts = millis();
+        float elapsed = (float)(ts-prev_ts)/1000.;
+        float speed_fw = 10./elapsed;
+
+        calib.speed_k = vel/speed_fw;
+
+        set_servo1_rot_speed(0);
+        set_servo2_rot_speed(0);
+
+        
+        playNote(RE*3, 100);
+        ledColor(0,16,0);
 
         // Store calibration parameters into non-volatile memory
         calib.ok = CALIB_OK_VAL;
@@ -1277,8 +1316,8 @@ void setup() {
     Serial.println(calib.servo2.ccw.zeroSpeed_PWM);
 
     Serial.println();
-    Serial.print("calib.maxSpeed=\t");
-    Serial.println(calib.maxSpeed);
+    Serial.print("calib.maxWspeed=\t");
+    Serial.println(calib.maxWspeed);
 
     Serial.println();
     Serial.print("calib.kp=\t");
@@ -1288,56 +1327,46 @@ void setup() {
     Serial.print("calib.kd=\t");
     Serial.println(calib.kd);
 
-    /*while(1) {
-      Serial.println(getDistanceCM());
-      delay(50);
-    }*/
+    Serial.println();
+    Serial.print("calib.speed_k=\t");
+    Serial.println(calib.speed_k);
 
-        pointToAngle(initialHeading);
-        ledColor(0,8,0);
+    while(!button_is_pressed());
 
-        float vel = calib.maxSpeed/2.;// Move forwards
-        set_servo1_rot_speed(vel);
-        set_servo2_rot_speed(-vel);
+    readIMU_YawPitchRoll(ypr);
+    initialHeading = ypr[0];
 
-        while(getDistanceCM() > 10) delay(1);
+    motorPIDcontroller(initialHeading, false, 5.*calib.speed_k, 0, false, 0, false);
+    while(1);
+
+        // Friction evaluation (measure differences in FW/BW linear velocity)
+        /*pointToAngle(initialHeading);
+        
+        motorPIDcontroller(initialHeading, false, calib.maxWspeed/2., 10, true, 0, false);
         set_servo1_rot_speed(0);
         set_servo2_rot_speed(0);
 
-        for(int i=1; i<15; i++) {
-            pointToAngle(initialHeading);
-
-            vel = -((float)i)/10.;
-            //vel = -calib.maxSpeed/2.;// Move backwards
-            set_servo1_rot_speed(vel);
-            set_servo2_rot_speed(-vel);
-
-            while(getDistanceCM() < 15) delay(1);
-            ts = millis();
-            prev_ts = ts;
-            while(getDistanceCM() < 20) delay(1);
+        for(int i=1; i<30; i++) {
+            float vel = -((float)i)/20.;// Move backwards
+            motorPIDcontroller(initialHeading, false, vel, 15, true, 0, false);
+            prev_ts = millis();
+            motorPIDcontroller(initialHeading, false, vel, 25, true, 0, false);
             ts = millis();
             float elapsed = (float)(ts-prev_ts)/1000.;
-            float speed_bw = -5./elapsed;
+            float speed_bw = -10./elapsed;
             
             set_servo1_rot_speed(0);
             set_servo2_rot_speed(0);
 
 
-            pointToAngle(initialHeading);
-            
-            //vel = calib.maxSpeed/2.;// Move forwards
-            vel *= -1;
-            set_servo1_rot_speed(vel);
-            set_servo2_rot_speed(-vel);
 
-            while(getDistanceCM() > 15) delay(1);
-            ts = millis();
-            prev_ts = ts;
-            while(getDistanceCM() > 10) delay(1);
+            vel *= -1;// Move forwards
+            motorPIDcontroller(initialHeading, false, vel, 20, true, 0, false);
+            prev_ts = millis();
+            motorPIDcontroller(initialHeading, false, vel, 10, true, 0, false);
             ts = millis();
             elapsed = (float)(ts-prev_ts)/1000.;
-            float speed_fw = 5./elapsed;
+            float speed_fw = 10./elapsed;
             
             set_servo1_rot_speed(0);
             set_servo2_rot_speed(0);
@@ -1348,40 +1377,17 @@ void setup() {
             Serial.print(",");
             Serial.print(speed_fw);
             Serial.println("],");
-        }
-        while(1);
-
-
-    
-        
+        }*/
 
 
         
-        /*set_servo1_rot_speed(0);
-        set_servo2_rot_speed(0);
-        
-        playNote(RE*2, 100);
-        ledColor(0,0,128);
-        delay(100);
-        
-        float vel = -1;// Move backwards
-        set_servo1_rot_speed(vel);
-        set_servo2_rot_speed(-vel);
-        
-        delay(300);
-        float dist1 = getDistanceCM();
-        delay(300);
-        float dist2 = getDistanceCM();
-        
-        float speed_K = 0.3/(dist1-dist2);
-        speed_K *= vel;*/
 
 
         float yawZero = initialHeading;
         float distance_avg = getDistanceCM();
 
-        float speed_K = 0.1;
         
+        float speed_K = 0.1;
         
         set_servo1_rot_speed(0);
         set_servo2_rot_speed(0);
@@ -1427,15 +1433,15 @@ void setup() {
           } else first_iteration = false;
           float v = calib.kp*error + calib.ki*error_integral + calib.kd*error_derivative;
           
-          if(abs(v)>1) {
+          if(abs(v)>calib.maxWspeed) {
             saturated = true;
           } else {
             if(saturated) error_integral = 0;
             saturated = false;
           }
           
-          if(v > calib.maxSpeed) v = calib.maxSpeed;
-          if(v < -calib.maxSpeed) v = -calib.maxSpeed;
+          if(v > calib.maxWspeed) v = calib.maxWspeed;
+          if(v < -calib.maxWspeed) v = -calib.maxWspeed;
           
           distance_avg = 0.8*distance_avg + 0.2*getDistanceCM();
           
