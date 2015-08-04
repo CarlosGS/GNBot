@@ -51,7 +51,11 @@ data['measurementMax'] = []
 
 for distance in distances:
     print("Place robot at distance = "+str(distance)+"cm, then press enter")
-    raw_input()
+    while True:
+        if raw_input() == "ok":
+            break
+        print("Current data:")
+        print distance, minMeasurement, maxMeasurement
     data['distances'].append(distance)
     data['measurementMin'].append(minMeasurement)
     data['measurementMax'].append(maxMeasurement)
