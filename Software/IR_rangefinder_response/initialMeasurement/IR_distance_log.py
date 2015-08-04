@@ -42,7 +42,8 @@ while len(gnbot_addresses) == 0:
 
 #print("Waiting for packets...")
 
-distances = np.unique(np.logspace(0,2,20).astype(int)) # from 0 to 100
+distances = np.logspace(0,2.3,20).astype(int)
+distances = np.unique(distances)
 
 data = {}
 data['distances'] = []
@@ -50,7 +51,7 @@ data['measurementMin'] = []
 data['measurementMax'] = []
 
 for distance in distances:
-    print("Place robot at distance = "+str(distance)+"cm, then press enter")
+    print("Place robot at distance = "+str(distance)+", then press enter")
     raw_input()
     data['distances'].append(distance)
     data['measurementMin'].append(minMeasurement)
