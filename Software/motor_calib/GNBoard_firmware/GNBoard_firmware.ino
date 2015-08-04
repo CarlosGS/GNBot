@@ -313,11 +313,11 @@ int loggerMode = 0;
 
 
 float analogReadAverage(int pin, int samples) {
-    int result = 0;
+    float result = 0;
     for(int i=0; i<samples; i++) {
         result += analogRead(pin);
     }
-    return ((float)result)/(float)samples;
+    return result/(float)samples;
 }
 
 float getDistanceCM() {
@@ -1252,26 +1252,29 @@ void setup() {
         pointToAngle(initialHeading);
 
         float vel = calib.maxWspeed/2;
-        // Move backwards
-        motorPIDcontroller(initialHeading, false, -vel, 25, true, 0, false);
-        
-        set_servo1_rot_speed(0);
-        set_servo2_rot_speed(0);
-        
-
-        // Move forwards
-        motorPIDcontroller(initialHeading, false, vel, 20, true, 0, false);
-        prev_ts = millis();
-        motorPIDcontroller(initialHeading, false, vel, 10, true, 0, false);
-        ts = millis();
-        float elapsed = (float)(ts-prev_ts)/1000.;
-        float speed_fw = 10./elapsed;
-
-        calib.speed_k = vel/speed_fw;
-
-        set_servo1_rot_speed(0);
-        set_servo2_rot_speed(0);
-
+        calib.speed_k = 0;
+        for(int i=0; i<4; i++) {
+            // Move backwards
+            motorPIDcontroller(initialHeading, false, -vel, 30, true, 0, false);
+            
+            set_servo1_rot_speed(0);
+            set_servo2_rot_speed(0);
+            
+    
+            // Move forwards
+            motorPIDcontroller(initialHeading, false, vel, 25, true, 0, false);
+            prev_ts = millis();
+            motorPIDcontroller(initialHeading, false, vel, 10, true, 0, false);
+            ts = millis();
+            float elapsed = (float)(ts-prev_ts)/1000.;
+            float speed_fw = 15./elapsed;
+    
+            calib.speed_k += vel/speed_fw;
+    
+            set_servo1_rot_speed(0);
+            set_servo2_rot_speed(0);
+        }
+        calib.speed_k /= 4.;
         
         playNote(RE*3, 100);
         ledColor(0,16,0);
@@ -1282,7 +1285,7 @@ void setup() {
 
         ledColor(0,128,0);
         delay(1000);
-    }
+    }// End of calibration
 
 
     Serial.println("Calibration parameters:");
@@ -1331,13 +1334,13 @@ void setup() {
     Serial.print("calib.speed_k=\t");
     Serial.println(calib.speed_k);
 
-    while(!button_is_pressed());
+    /*while(!button_is_pressed());
 
     readIMU_YawPitchRoll(ypr);
     initialHeading = ypr[0];
 
     motorPIDcontroller(initialHeading, false, 5.*calib.speed_k, 0, false, 0, false);
-    while(1);
+    while(1);*/
 
         // Friction evaluation (measure differences in FW/BW linear velocity)
         /*pointToAngle(initialHeading);
@@ -1378,96 +1381,6 @@ void setup() {
             Serial.print(speed_fw);
             Serial.println("],");
         }*/
-
-
-        
-
-
-        float yawZero = initialHeading;
-        float distance_avg = getDistanceCM();
-
-        
-        float speed_K = 0.1;
-        
-        set_servo1_rot_speed(0);
-        set_servo2_rot_speed(0);
-        playNote(RE*2, 100);
-        ledColor(0,0,128);
-        delay(100);
-
-        //calib.kp = 10;
-        //calib.ki = 0;
-        //calib.kd = 0;
-        
-        float yawGoal = initialHeading;
-        float prev_error = 0;
-        float ct_vel = 0;
-        boolean saturated = false;
-        boolean first_iteration = true;
-        float error_integral = 0;
-        float error_derivative = 0;
-        float trialStartTS = millis();
-        //float angleList[] = {0,0,M_PI/2,M_PI/4,-M_PI/4,0};
-        //int curr = 0;
-        while(1) {
-          /*if(millis()-trialStartTS > 3000) {
-            yawGoal = angleList[curr];
-            curr++;
-            if(curr > 4) break;
-            trialStartTS = millis();
-          }*/
-          //if(millis()-trialStartTS > 20000) break;
-          //if(millis()-trialStartTS > 2000) yawGoal = 10.*(M_PI/180.)*sin(2.*M_PI*(millis()-trialStartTS-2000)/1000.);
-          readIMU_YawPitchRoll(ypr);
-          if(button_is_pressed()) ct_vel = 10.*speed_K;
-          ts = millis();
-          float dt = (float)(ts-prev_ts)/1000.;
-          float yaw = (ypr[0]-yawGoal);
-          while(yaw > M_PI) yaw -= 2.*M_PI;
-          while(yaw <= -M_PI) yaw += 2.*M_PI;
-          float error = -yaw;
-          
-          if(!first_iteration) {
-            if(!saturated) error_integral += prev_error*dt;
-            error_derivative = (error-prev_error)/dt;
-          } else first_iteration = false;
-          float v = calib.kp*error + calib.ki*error_integral + calib.kd*error_derivative;
-          
-          if(abs(v)>calib.maxWspeed) {
-            saturated = true;
-          } else {
-            if(saturated) error_integral = 0;
-            saturated = false;
-          }
-          
-          if(v > calib.maxWspeed) v = calib.maxWspeed;
-          if(v < -calib.maxWspeed) v = -calib.maxWspeed;
-          
-          distance_avg = 0.8*distance_avg + 0.2*getDistanceCM();
-          
-          set_servo1_rot_speed(v+ct_vel);
-          set_servo2_rot_speed(v-ct_vel);
-          delay(10);
-
-          /*Serial.print("[");
-          Serial.print(millis());
-          Serial.print(",");
-          Serial.print(ypr[0],4);
-          Serial.print(",");
-          Serial.print(yawGoal,4);
-          Serial.print(",");
-          Serial.print(v,4);
-          Serial.println("],");*/
-          
-          prev_error = error;
-          prev_ts = ts;
-        }
-
-        set_servo1_rot_speed(0);
-        set_servo2_rot_speed(0);
-        while(1);
-        
-    //} // End of calibration
     
 }
 
