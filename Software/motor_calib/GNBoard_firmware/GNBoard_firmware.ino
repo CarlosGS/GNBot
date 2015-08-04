@@ -477,18 +477,21 @@ void message(char *msg) {
 
 
 
-int motorPIDcontroller(float yawGoal_rad, boolean term_yawReached, float c_speed_rads, float IRdistGoal_cm, boolean term_IRdistReached, float distanceGoal_rad, boolean term_distanceReached) {
+int motorPIDcontroller(float yawGoal_rad, boolean term_yawReached, float c_speed_rads, float IRdistGoal_cm, boolean term_IRdistReached, float yawEnd_rad, float distanceGoal_rad, boolean term_distanceReached) {
     float prev_error = 0;
     boolean saturated = false;
     boolean first_iteration = true;
     float error_integral = 0;
     float error_derivative = 0;
     unsigned long ts, prev_ts;
+    float distance_integral = 0;
     while(1) {
       readIMU_YawPitchRoll(ypr);
       ts = millis();
       float dt = (float)(ts-prev_ts)/1000.;
-      float yaw = (ypr[0]-yawGoal_rad);
+      float targetYaw = yawGoal_rad;
+      if(term_distanceReached) targetYaw = mapf(distance_integral,0,distanceGoal_rad,yawGoal_rad,yawEnd_rad);
+      float yaw = (ypr[0]-targetYaw);
       while(yaw > M_PI) yaw -= 2.*M_PI;
       while(yaw <= -M_PI) yaw += 2.*M_PI;
       float error = -yaw;
@@ -496,6 +499,7 @@ int motorPIDcontroller(float yawGoal_rad, boolean term_yawReached, float c_speed
       if(!first_iteration) {
         if(!saturated) error_integral += prev_error*dt;
         error_derivative = (error-prev_error)/dt;
+        distance_integral += c_speed_rads*dt;
       } else first_iteration = false;
       float v = calib.kp*error + calib.ki*error_integral + calib.kd*error_derivative;
       
@@ -512,7 +516,7 @@ int motorPIDcontroller(float yawGoal_rad, boolean term_yawReached, float c_speed
       set_servo1_rot_speed(v+c_speed_rads);
       set_servo2_rot_speed(v-c_speed_rads);
 
-      if(term_yawReached && abs(error)+abs(error_integral)+abs(error_derivative) < 0.1*M_PI/180.) return 1;
+      if(term_yawReached && abs(error)+abs(error_integral)+abs(error_derivative) < 0.5*M_PI/180.) return 1;
       if(term_IRdistReached) {
           float dist = getDistanceCM();
           if(c_speed_rads > 0) {
@@ -521,6 +525,7 @@ int motorPIDcontroller(float yawGoal_rad, boolean term_yawReached, float c_speed
               if(dist > IRdistGoal_cm) return 2;
           }
       }
+      if(term_distanceReached && distance_integral > distanceGoal_rad) return 3;
       
       //delay(10);
       
@@ -531,16 +536,53 @@ int motorPIDcontroller(float yawGoal_rad, boolean term_yawReached, float c_speed
 }
 
 void pointToAngle(float yawGoal_rad) {
-    motorPIDcontroller(yawGoal_rad, true, 0, 0, false, 0, false);
+    motorPIDcontroller(yawGoal_rad, true, 0, 0, false, 0, 0, false);
     set_servo1_rot_speed(0);
     set_servo2_rot_speed(0);
 }
 
 
 
+void performSquare(float len_cm, float vel_cms) {
+    readIMU_YawPitchRoll(ypr);
+    float yaw = ypr[0];
+    float len = len_cm*calib.speed_k;
+    float vel = vel_cms*calib.speed_k;
+    motorPIDcontroller(yaw, false, vel, 0, false, yaw, len, true);
+    set_servo1_rot_speed(0);
+    set_servo2_rot_speed(0);
+    
+    yaw += 90.*M_PI/180.;
+    pointToAngle(yaw);
+    motorPIDcontroller(yaw, false, vel, 0, false, yaw, len, true);
+    set_servo1_rot_speed(0);
+    set_servo2_rot_speed(0);
+    
+    yaw += 90.*M_PI/180.;
+    pointToAngle(yaw);
+    motorPIDcontroller(yaw, false, vel, 0, false, yaw, len, true);
+    set_servo1_rot_speed(0);
+    set_servo2_rot_speed(0);
+    
+    yaw += 90.*M_PI/180.;
+    pointToAngle(yaw);
+    motorPIDcontroller(yaw, false, vel, 0, false, yaw, len, true);
+    set_servo1_rot_speed(0);
+    set_servo2_rot_speed(0);
+    
+    yaw += 90.*M_PI/180.;
+    pointToAngle(yaw);
+}
 
 
-
+void performArc(float len_cm, float vel_cms, float angle_deg) {
+    readIMU_YawPitchRoll(ypr);
+    float yaw = ypr[0];
+    float len = len_cm*calib.speed_k;
+    float vel = vel_cms*calib.speed_k;
+    float angle = angle_deg*M_PI/180.;
+    motorPIDcontroller(yaw, false, vel, 0, false, yaw+angle, len, true);
+}
 
 
 
@@ -1160,14 +1202,14 @@ void setup() {
         float oscillation_peak = 0;
         float oscillation_peak_last = 0;
         float trialStartTS = millis();
-        boolean did_oscillate = false;
+        int oscillation_count = 0;
         while(1) {
           if(millis()-trialStartTS > 2000) {
             set_servo1_rot_speed(0);
             set_servo2_rot_speed(0);
             delay(200);
 
-            if(oscillation_peak_last < 0.01 || did_oscillate == false) break;
+            if(oscillation_peak_last < 0.5*M_PI/180. || oscillation_count < 2) break;
             
             readIMU_YawPitchRoll(ypr);
             if(nextTurnLeft) yawGoal = ypr[0]-M_PI/4.;
@@ -1180,7 +1222,8 @@ void setup() {
             
             last_zero_cross_ts = millis();
             trialStartTS = millis();
-            did_oscillate = false;
+            oscillation_count = 0;
+            oscillation_peak_last = 0;
           }
           
           readIMU_YawPitchRoll(ypr);
@@ -1195,7 +1238,7 @@ void setup() {
           
           float v = Ku*error;
           if(prev_error*error < 0) { // Zero-cross
-            did_oscillate = true;
+            oscillation_count++;
             oscillation_peak_last = oscillation_peak;
             oscillation_peak = 0;
             
@@ -1251,23 +1294,25 @@ void setup() {
         // Calibrate linear velocity constant
         pointToAngle(initialHeading);
 
-        float vel = calib.maxWspeed/2;
+        float vel = calib.maxWspeed/2.;
         float speed_k = 0;
         for(int i=0; i<4; i++) {
             // Move backwards
-            motorPIDcontroller(initialHeading, false, -vel, 30, true, 0, false);
+            motorPIDcontroller(initialHeading, false, -calib.maxWspeed, 30, true, 0, 0, false);
             
             set_servo1_rot_speed(0);
             set_servo2_rot_speed(0);
             
     
             // Move forwards
-            motorPIDcontroller(initialHeading, false, vel, 25, true, 0, false);
+            motorPIDcontroller(initialHeading, false, vel, 25, true, 0, 0, false);
+            float dist1 = getDistanceCM();
             prev_ts = millis();
-            motorPIDcontroller(initialHeading, false, vel, 10, true, 0, false);
+            motorPIDcontroller(initialHeading, false, vel, 10, true, 0, 0, false);
+            float dist2 = getDistanceCM();
             ts = millis();
             float elapsed = (float)(ts-prev_ts)/1000.;
-            float speed_fw = 15./elapsed;
+            float speed_fw = (dist1-dist2)/elapsed;
     
             speed_k += vel/speed_fw;
     
@@ -1336,10 +1381,33 @@ void setup() {
 
     while(!button_is_pressed());
 
+    delay(500);
+    // Perform circles at distinct speeds
+    /*for(int i=1; i<=5; i++) {
+      float vel = i*2; // cm/s
+      float r = 15; // cm
+      performArc(2.*M_PI*r, vel, 360.);
+    }*/
+    // Perform circles with distinct diameters
+    for(int i=1; i<=5; i++) {
+      float vel = 5; // cm/s
+      float r = (float)(6-i)*2.*2.5; // cm
+      performArc(2.*M_PI*r, vel, 360.);
+    }
+    set_servo1_rot_speed(0);
+    set_servo2_rot_speed(0);
+    while(1);
+
     readIMU_YawPitchRoll(ypr);
     initialHeading = ypr[0];
 
-    motorPIDcontroller(initialHeading, false, 5.*calib.speed_k, 0, false, 0, false);
+    //motorPIDcontroller(initialHeading, false, 5.*calib.speed_k, 0, false, 0, 0, false);
+    /*float r = 30;
+    motorPIDcontroller(initialHeading, false, 3.*calib.speed_k, 0, false, initialHeading+90.*M_PI/180., 0.25*2.*M_PI*r*calib.speed_k, true);
+    motorPIDcontroller(initialHeading+90.*M_PI/180., false, 3.*calib.speed_k, 0, false, initialHeading+180.*M_PI/180., 0.25*2.*M_PI*r*calib.speed_k, true);
+    motorPIDcontroller(initialHeading+180.*M_PI/180., false, 3.*calib.speed_k, 0, false, initialHeading+270.*M_PI/180., 0.25*2.*M_PI*r*calib.speed_k, true);
+    motorPIDcontroller(initialHeading+270.*M_PI/180., false, 3.*calib.speed_k, 0, false, initialHeading, 0.25*2.*M_PI*r*calib.speed_k, true);
+    */
     while(1);
 
         // Friction evaluation (measure differences in FW/BW linear velocity)
