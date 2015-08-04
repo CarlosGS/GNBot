@@ -17,25 +17,56 @@ rc('font',**{'family':'serif','serif':['Computer Modern']})
 
 f, ax = subplots(1)
 
-data = loadFromFile("","distanceLog.p")
+data_files = ['distanceLog.p','distanceLog_robot1.p', 'distanceLog_robot2.p', 'distanceLog_robot4.p']
 
-print(data)
+for filename in data_files:
+    data = loadFromFile("",filename)
+    print(data)
+
+    distances = np.array(data['distances'])
+    measurementMin = np.array(data['measurementMin'])
+    measurementMax = np.array(data['measurementMax'])
+
+    measurementMin = mapVals(measurementMin,0.,1023.,0.,5.)
+    measurementMax = mapVals(measurementMax,0.,1023.,0.,5.)
+    measurementAvg = (measurementMin+measurementMax)/2
+
+    #ax.plot(distances,measurementMax)
+    ax.plot(distances,measurementAvg)
+    #ax.plot(distances,measurementMin)
 
 
 
-distances = np.array(data['distances'])
-measurementMin = np.array(data['measurementMin'])
-measurementMax = np.array(data['measurementMax'])
+x1 = 8.
+y1 = 2.763
 
+x2 = 29.
+y2 = 0.917
 
-#measurementMin = mapVals(measurementMin,0.,1023.,0.,5.)
-#measurementMax = mapVals(measurementMax,0.,1023.,0.,5.)
-measurementAvg = (measurementMin+measurementMax)/2
+K = x1*(y1-y2) / (1.-x1/x2)
+C = y2-K/x2
+fit = K*(1./distances)+C
+print("Voltage fitting:")
+print("K="+str(K))
+print("C="+str(C))
 
-ax.plot(distances,measurementMax)
-ax.plot(distances,measurementAvg)
-ax.plot(distances,measurementMin)
+print("ADC fitting:")
+K = mapVals(K,0.,5.,0.,1023.)
+C = mapVals(C,0.,5.,0.,1023.)
+print("K="+str(K))
+print("C="+str(C))
 
+ax.plot(distances,fit,linewidth=2)
+
+ax.set_ylim([0,3.5])
+ax.set_xlim([0,100])
+
+ax.legend(['Original','Robot 1', 'Robot 2', 'Robot 4','Fit'])
+
+savefig("IR_sensor_response_curve.pdf")
+
+show()
+exit()
 
 # Fitting to exponential curve
 

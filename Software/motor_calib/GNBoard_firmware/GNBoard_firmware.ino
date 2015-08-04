@@ -322,8 +322,8 @@ float analogReadAverage(int pin, int samples) {
 
 float getDistanceCM() {
     float measurement = analogReadAverage(IR4_PIN,4);
-    float ir_K = 4244.64;
-    float ir_C = 37.28;
+    float ir_K = 4172.59;
+    float ir_C = 43.74;
     if(measurement <= ir_C) return 150;
     float res = ir_K/(measurement-ir_C);
     if(res < 0 || res > 150) res = 150;
@@ -1334,13 +1334,13 @@ void setup() {
     Serial.print("calib.speed_k=\t");
     Serial.println(calib.speed_k);
 
-    /*while(!button_is_pressed());
+    while(!button_is_pressed());
 
     readIMU_YawPitchRoll(ypr);
     initialHeading = ypr[0];
 
     motorPIDcontroller(initialHeading, false, 5.*calib.speed_k, 0, false, 0, false);
-    while(1);*/
+    while(1);
 
         // Friction evaluation (measure differences in FW/BW linear velocity)
         /*pointToAngle(initialHeading);
