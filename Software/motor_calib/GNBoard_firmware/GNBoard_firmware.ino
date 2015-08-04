@@ -1158,16 +1158,16 @@ void setup() {
         float Ku_ok = 0;
         float prev_error = 0;
         float oscillation_peak = 0;
-        float oscillation_peak_first = 0;
         float oscillation_peak_last = 0;
         float trialStartTS = millis();
+        boolean did_oscillate = false;
         while(1) {
           if(millis()-trialStartTS > 2000) {
             set_servo1_rot_speed(0);
             set_servo2_rot_speed(0);
             delay(200);
 
-            if(oscillation_peak_first == 0 || oscillation_peak_last < 0.01) break;
+            if(oscillation_peak_last < 0.01 || did_oscillate == false) break;
             
             readIMU_YawPitchRoll(ypr);
             if(nextTurnLeft) yawGoal = ypr[0]-M_PI/4.;
@@ -1180,7 +1180,7 @@ void setup() {
             
             last_zero_cross_ts = millis();
             trialStartTS = millis();
-            oscillation_peak_first = 0;
+            did_oscillate = false;
           }
           
           readIMU_YawPitchRoll(ypr);
@@ -1195,7 +1195,7 @@ void setup() {
           
           float v = Ku*error;
           if(prev_error*error < 0) { // Zero-cross
-            if(oscillation_peak_first == 0) oscillation_peak_first = oscillation_peak;
+            did_oscillate = true;
             oscillation_peak_last = oscillation_peak;
             oscillation_peak = 0;
             
@@ -1252,7 +1252,7 @@ void setup() {
         pointToAngle(initialHeading);
 
         float vel = calib.maxWspeed/2;
-        calib.speed_k = 0;
+        float speed_k = 0;
         for(int i=0; i<4; i++) {
             // Move backwards
             motorPIDcontroller(initialHeading, false, -vel, 30, true, 0, false);
@@ -1269,12 +1269,12 @@ void setup() {
             float elapsed = (float)(ts-prev_ts)/1000.;
             float speed_fw = 15./elapsed;
     
-            calib.speed_k += vel/speed_fw;
+            speed_k += vel/speed_fw;
     
             set_servo1_rot_speed(0);
             set_servo2_rot_speed(0);
         }
-        calib.speed_k /= 4.;
+        calib.speed_k = speed_k/4.;
         
         playNote(RE*3, 100);
         ledColor(0,16,0);
