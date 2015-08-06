@@ -38,15 +38,15 @@ ax.plot(linear_speed_log[:,0],abs(linear_speed_log[:,1]),'r')
 
 ax.legend(['FW', 'BW'])
 
-ax.set_title('Calibration of the linear velocity', fontsize=18,y=1.01)
+ax.set_title('Calibration of the linear velocity. Asymmetric FW/BW friction can be observed', fontsize=18,y=1.01)
 ax.set_xlabel('Motor input $\omega$ [rad/s]', fontsize=16)
 ax.set_ylabel('Velocity [cm/s]', fontsize=16)
 #ax.set_xlim([0,11])
 #ax.set_ylim([-65,65])
 tight_layout()
 
-#savefig("PID_auto_tuning.pdf")
-#savefig("PID_auto_tuning.png")
+savefig("linear_velocity_calibration.pdf")
+savefig("linear_velocity_calibration.png")
 
 show()
 
