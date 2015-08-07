@@ -525,7 +525,13 @@ int motorPIDcontroller(float yawGoal_rad, boolean term_yawReached, float c_speed
               if(dist > IRdistGoal_cm) return 2;
           }
       }
-      if(term_distanceReached && distance_integral > distanceGoal_rad) return 3;
+      if(term_distanceReached) {
+          if(c_speed_rads > 0) {
+              if(distance_integral > distanceGoal_rad) return 3;
+          } else {
+              if(distance_integral < distanceGoal_rad) return 3;
+          }
+      }
       
       //delay(10);
       
@@ -1389,8 +1395,8 @@ void setup() {
 
     readIMU_YawPitchRoll(ypr);
     float yaw = ypr[0];
-    float len = 100.*calib.speed_k;
-    float vel = 5.*calib.speed_k;
+    float len = -100.*calib.speed_k;
+    float vel = -5.*calib.speed_k;
     
     while(1) {
       pointToAngle(yaw);
