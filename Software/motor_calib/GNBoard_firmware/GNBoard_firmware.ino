@@ -1383,10 +1383,32 @@ void setup() {
     Serial.print("calib.speed_k=\t");
     Serial.println(calib.speed_k);
 
+    // Lines
+    while(!button_is_pressed());
+    delay(3000);
 
+    readIMU_YawPitchRoll(ypr);
+    float yaw = ypr[0];
+    float len = 100.*calib.speed_k;
+    float vel = 5.*calib.speed_k;
+    
+    while(1) {
+      pointToAngle(yaw);
+      motorPIDcontroller(yaw, false, vel, 0, false, yaw, len, true);
+      set_servo1_rot_speed(0);
+      set_servo2_rot_speed(0);
+      delay(500);
+      pointToAngle(yaw+M_PI);
+      motorPIDcontroller(yaw+M_PI, false, vel, 0, false, yaw+M_PI, len, true);
+      set_servo1_rot_speed(0);
+      set_servo2_rot_speed(0);
+      delay(500);
+    }
+    
+    while(1);
 
     // Squares
-    while(!button_is_pressed());
+    /*while(!button_is_pressed());
     delay(3000);
     
     // Perform squares at distinct speeds
@@ -1411,7 +1433,7 @@ void setup() {
       performSquare(l, vel);
     }
     
-    while(1);
+    while(1);*/
 
 
     // Circles
