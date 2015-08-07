@@ -1379,15 +1379,23 @@ void setup() {
     Serial.print("calib.speed_k=\t");
     Serial.println(calib.speed_k);
 
-    while(!button_is_pressed());
 
-    delay(500);
+    while(!button_is_pressed());
+    delay(3000);
+    
     // Perform circles at distinct speeds
-    /*for(int i=1; i<=5; i++) {
+    for(int i=1; i<=5; i++) {
       float vel = i*2; // cm/s
       float r = 15; // cm
       performArc(2.*M_PI*r, vel, 360.);
-    }*/
+    }
+    set_servo1_rot_speed(0);
+    set_servo2_rot_speed(0);
+
+
+    while(!button_is_pressed());
+    delay(3000);
+    
     // Perform circles with distinct diameters
     for(int i=1; i<=5; i++) {
       float vel = 5; // cm/s
@@ -1396,6 +1404,7 @@ void setup() {
     }
     set_servo1_rot_speed(0);
     set_servo2_rot_speed(0);
+    
     while(1);
 
     readIMU_YawPitchRoll(ypr);
