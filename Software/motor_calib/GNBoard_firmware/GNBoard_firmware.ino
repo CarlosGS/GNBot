@@ -7,6 +7,7 @@
 #include <XBee.h> // XBee library (usage based on examples by Andrew Rapp)
 #include <dht11.h>
 #include <EEPROM.h>
+#include <TrueRandom.h>
 
 // create the XBee object
 XBee xbee = XBee();
@@ -333,6 +334,13 @@ float getDistanceCM() {
 float getBatteryVoltage() {
     int val = analogRead(BATTERY_PIN);
     return mapf(val,0,1023, 0,21.1765); // Voltage divider with 22k in series with 6k8
+}
+
+float getGasSensorResistance() {
+    float val = analogRead(NOSE_VOUT_PIN);
+    if(val <= 0) val = 0.1;
+    float vout = mapf(val,0,1023, 0,5);
+    return 10000.*(5.-vout)/vout;
 }
 
 char inBuffer[128] = "";
@@ -1219,7 +1227,7 @@ void setup() {
             set_servo2_rot_speed(0);
             delay(200);
 
-            if(oscillation_peak_last < 0.5*M_PI/180. || oscillation_count < 3) break;
+            if(oscillation_peak_last < 0.5*M_PI/180. || oscillation_count < 5) break;
             
             readIMU_YawPitchRoll(ypr);
             if(nextTurnLeft) yawGoal = ypr[0]-M_PI/4.;
@@ -1390,7 +1398,7 @@ void setup() {
     Serial.println(calib.speed_k);
 
     // Lines
-    while(!button_is_pressed());
+    /*while(!button_is_pressed());
     delay(3000);
 
     readIMU_YawPitchRoll(ypr);
@@ -1409,9 +1417,7 @@ void setup() {
       set_servo1_rot_speed(0);
       set_servo2_rot_speed(0);
       delay(500);
-    }
-    
-    while(1);
+    }*/
 
     // Squares
     /*while(!button_is_pressed());
@@ -1438,7 +1444,6 @@ void setup() {
       float l = 2.*(float)(6-i)*2.*2.5; // cm
       performSquare(l, vel);
     }
-    
     while(1);*/
 
 
@@ -1467,61 +1472,118 @@ void setup() {
     }
     set_servo1_rot_speed(0);
     set_servo2_rot_speed(0);
-    
     while(1);*/
 
-    readIMU_YawPitchRoll(ypr);
-    initialHeading = ypr[0];
 
-    //motorPIDcontroller(initialHeading, false, 5.*calib.speed_k, 0, false, 0, 0, false);
-    /*float r = 30;
-    motorPIDcontroller(initialHeading, false, 3.*calib.speed_k, 0, false, initialHeading+90.*M_PI/180., 0.25*2.*M_PI*r*calib.speed_k, true);
-    motorPIDcontroller(initialHeading+90.*M_PI/180., false, 3.*calib.speed_k, 0, false, initialHeading+180.*M_PI/180., 0.25*2.*M_PI*r*calib.speed_k, true);
-    motorPIDcontroller(initialHeading+180.*M_PI/180., false, 3.*calib.speed_k, 0, false, initialHeading+270.*M_PI/180., 0.25*2.*M_PI*r*calib.speed_k, true);
-    motorPIDcontroller(initialHeading+270.*M_PI/180., false, 3.*calib.speed_k, 0, false, initialHeading, 0.25*2.*M_PI*r*calib.speed_k, true);
-    */
-    while(1);
+    // Friction evaluation (measure differences in FW/BW linear velocity)
+    /*pointToAngle(initialHeading);
+    
+    motorPIDcontroller(initialHeading, false, calib.maxWspeed/2., 10, true, 0, false);
+    set_servo1_rot_speed(0);
+    set_servo2_rot_speed(0);
 
-        // Friction evaluation (measure differences in FW/BW linear velocity)
-        /*pointToAngle(initialHeading);
+    for(int i=1; i<30; i++) {
+        float vel = -((float)i)/20.;// Move backwards
+        motorPIDcontroller(initialHeading, false, vel, 15, true, 0, false);
+        prev_ts = millis();
+        motorPIDcontroller(initialHeading, false, vel, 25, true, 0, false);
+        ts = millis();
+        float elapsed = (float)(ts-prev_ts)/1000.;
+        float speed_bw = -10./elapsed;
         
-        motorPIDcontroller(initialHeading, false, calib.maxWspeed/2., 10, true, 0, false);
         set_servo1_rot_speed(0);
         set_servo2_rot_speed(0);
 
-        for(int i=1; i<30; i++) {
-            float vel = -((float)i)/20.;// Move backwards
-            motorPIDcontroller(initialHeading, false, vel, 15, true, 0, false);
-            prev_ts = millis();
-            motorPIDcontroller(initialHeading, false, vel, 25, true, 0, false);
-            ts = millis();
-            float elapsed = (float)(ts-prev_ts)/1000.;
-            float speed_bw = -10./elapsed;
-            
+
+
+        vel *= -1;// Move forwards
+        motorPIDcontroller(initialHeading, false, vel, 20, true, 0, false);
+        prev_ts = millis();
+        motorPIDcontroller(initialHeading, false, vel, 10, true, 0, false);
+        ts = millis();
+        elapsed = (float)(ts-prev_ts)/1000.;
+        float speed_fw = 10./elapsed;
+        
+        set_servo1_rot_speed(0);
+        set_servo2_rot_speed(0);
+        Serial.print("[");
+        Serial.print(vel);
+        Serial.print(",");
+        Serial.print(speed_bw);
+        Serial.print(",");
+        Serial.print(speed_fw);
+        Serial.println("],");
+    }*/
+
+    ledColor(255,0,0);
+    while(getGasSensorResistance() < 10000) delay(1000);
+    ledColor(0,255,0);
+
+    // Levy search
+    boolean levy = true;
+    while(!button_is_pressed());
+    ledColor(255,0,0);
+    delay(500);
+    if(button_is_pressed()) {
+      ledColor(0,0,255);
+      levy = false;
+    }
+    delay(20000);
+    ledColor(0,0,0);
+
+    float len = 2.5*calib.speed_k;
+    float vel = 6.*calib.speed_k;
+    float sweepAngle = 5.*M_PI/180.;
+    float remainingDistance = 1;
+
+    readIMU_YawPitchRoll(ypr);
+    float yaw = ypr[0];
+
+    float nose = getGasSensorResistance();
+    float dist = getDistanceCM();
+    while(1) {
+        if(nose < 10000) break;
+        while(remainingDistance <= 0 || dist < 20) { // Random rotation
             set_servo1_rot_speed(0);
             set_servo2_rot_speed(0);
-
-
-
-            vel *= -1;// Move forwards
-            motorPIDcontroller(initialHeading, false, vel, 20, true, 0, false);
-            prev_ts = millis();
-            motorPIDcontroller(initialHeading, false, vel, 10, true, 0, false);
-            ts = millis();
-            elapsed = (float)(ts-prev_ts)/1000.;
-            float speed_fw = 10./elapsed;
-            
-            set_servo1_rot_speed(0);
-            set_servo2_rot_speed(0);
-            Serial.print("[");
-            Serial.print(vel);
-            Serial.print(",");
-            Serial.print(speed_bw);
-            Serial.print(",");
-            Serial.print(speed_fw);
-            Serial.println("],");
-        }*/
-    
+            delay(200);
+            float random1 = ((float)TrueRandom.random(20001))/20000.;
+            if (dist < 20) {
+                motorPIDcontroller(yaw, false, -vel/2., 0, false, yaw, -len, true);
+                // Move backwards len
+                // rotate opposite direction 90 deg random
+                yaw += M_PI;
+                yaw += (2.*random1-1.)*90.*M_PI/180.;
+            } else {
+                // 360 deg random
+                yaw += (2.*random1-1.)*180.*M_PI/180.;
+            }
+            while(yaw > M_PI) yaw -= 2*M_PI;
+            while(yaw <= -M_PI) yaw += 2*M_PI;
+            pointToAngle(yaw);
+            dist = getDistanceCM();
+            if(remainingDistance <= 0) {
+                float random2 = ((float)TrueRandom.random(20001))/20000.;
+                remainingDistance = pow(random2, -1./2.)*10;
+                remainingDistance *= calib.speed_k;
+            }
+        }
+        nose = getGasSensorResistance();
+        dist = getDistanceCM();
+        motorPIDcontroller(yaw, false, vel, 0, false, yaw+sweepAngle, len, true);
+        
+        nose = min(getGasSensorResistance(),nose);
+        dist = min(getDistanceCM(),dist);
+        motorPIDcontroller(yaw, false, vel, 0, false, yaw-sweepAngle, len, true);
+        
+        nose = min(getGasSensorResistance(),nose);
+        dist = min(getDistanceCM(),dist);
+        if(levy) remainingDistance -= 2*len;
+    }
+    set_servo1_rot_speed(0);
+    set_servo2_rot_speed(0);
+    ledColor(0,0,255); // Odor source has been localized
+    while(1);
 }
 
 int sampleTime = 3000;
