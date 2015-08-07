@@ -1209,7 +1209,7 @@ void setup() {
             set_servo2_rot_speed(0);
             delay(200);
 
-            if(oscillation_peak_last < 0.5*M_PI/180. || oscillation_count < 2) break;
+            if(oscillation_peak_last < 0.5*M_PI/180. || oscillation_count < 3) break;
             
             readIMU_YawPitchRoll(ypr);
             if(nextTurnLeft) yawGoal = ypr[0]-M_PI/4.;
@@ -1237,8 +1237,8 @@ void setup() {
           oscillation_peak = max(oscillation_peak,abs(error));
           
           float v = Ku*error;
-          if(prev_error*error < 0) { // Zero-cross
-            oscillation_count++;
+          if(prev_error*error < 0) { // Oscillation detection via zero-cross
+            if(oscillation_peak > 1.*M_PI/180.) oscillation_count++;
             oscillation_peak_last = oscillation_peak;
             oscillation_peak = 0;
             
