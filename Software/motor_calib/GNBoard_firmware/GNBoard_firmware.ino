@@ -551,24 +551,28 @@ void performSquare(float len_cm, float vel_cms) {
     motorPIDcontroller(yaw, false, vel, 0, false, yaw, len, true);
     set_servo1_rot_speed(0);
     set_servo2_rot_speed(0);
+    delay(500);
     
     yaw += 90.*M_PI/180.;
     pointToAngle(yaw);
     motorPIDcontroller(yaw, false, vel, 0, false, yaw, len, true);
     set_servo1_rot_speed(0);
     set_servo2_rot_speed(0);
+    delay(500);
     
     yaw += 90.*M_PI/180.;
     pointToAngle(yaw);
     motorPIDcontroller(yaw, false, vel, 0, false, yaw, len, true);
     set_servo1_rot_speed(0);
     set_servo2_rot_speed(0);
+    delay(500);
     
     yaw += 90.*M_PI/180.;
     pointToAngle(yaw);
     motorPIDcontroller(yaw, false, vel, 0, false, yaw, len, true);
     set_servo1_rot_speed(0);
     set_servo2_rot_speed(0);
+    delay(500);
     
     yaw += 90.*M_PI/180.;
     pointToAngle(yaw);
@@ -1380,7 +1384,38 @@ void setup() {
     Serial.println(calib.speed_k);
 
 
+
+    // Squares
     while(!button_is_pressed());
+    delay(3000);
+    
+    // Perform squares at distinct speeds
+    for(int i=1; i<=5; i++) {
+      float vel = i*2; // cm/s
+      float l = 2*15; // cm
+      performSquare(l, vel);
+    }
+
+
+    while(!button_is_pressed());
+    delay(3000);
+
+    readIMU_YawPitchRoll(ypr);
+    initialHeading = ypr[0];
+    pointToAngle(initialHeading+M_PI/4.);
+    
+    // Perform squares with distinct sizes
+    for(int i=1; i<=5; i++) {
+      float vel = 5; // cm/s
+      float l = 2.*(float)(6-i)*2.*2.5; // cm
+      performSquare(l, vel);
+    }
+    
+    while(1);
+
+
+    // Circles
+    /*while(!button_is_pressed());
     delay(3000);
     
     // Perform circles at distinct speeds
@@ -1405,7 +1440,7 @@ void setup() {
     set_servo1_rot_speed(0);
     set_servo2_rot_speed(0);
     
-    while(1);
+    while(1);*/
 
     readIMU_YawPitchRoll(ypr);
     initialHeading = ypr[0];
