@@ -1516,7 +1516,7 @@ void setup() {
     }*/
 
     ledColor(255,0,0);
-    while(getGasSensorResistance() < 10000) delay(1000);
+    while(getGasSensorResistance() < 15000) delay(1000);
     ledColor(0,255,0);
 
     // Levy search
@@ -1542,7 +1542,7 @@ void setup() {
     float nose = getGasSensorResistance();
     float dist = getDistanceCM();
     while(1) {
-        if(nose < 10000) break;
+        if(nose < 15000) break;
         while(remainingDistance <= 0 || dist < 20) { // Random rotation
             set_servo1_rot_speed(0);
             set_servo2_rot_speed(0);
@@ -1580,6 +1580,7 @@ void setup() {
         dist = min(getDistanceCM(),dist);
         if(levy) remainingDistance -= 2*len;
     }
+    motorPIDcontroller(yaw, false, -vel/2., 0, false, yaw, -len, true);
     set_servo1_rot_speed(0);
     set_servo2_rot_speed(0);
     ledColor(0,0,255); // Odor source has been localized
