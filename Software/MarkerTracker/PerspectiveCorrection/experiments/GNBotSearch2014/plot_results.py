@@ -16,7 +16,7 @@ rc('text',usetex=True)
 rc('font',**{'family':'serif','serif':['Computer Modern']})
 
 
-data_file_name = "2014-09-24-172105"
+data_file_name = "2014-09-25-193626"
 data = loadFromFile("",data_file_name+"_posLog_raw.p")
 
 ts = data['videoTimestamp']
