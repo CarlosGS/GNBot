@@ -16,7 +16,7 @@ rc('text',usetex=True)
 rc('font',**{'family':'serif','serif':['Computer Modern']})
 
 
-data_file_name = "2015-08-07-175946"
+data_file_name = "2015-08-07-183501"
 data = loadFromFile("",data_file_name+"_posLog_raw.p")
 
 ts = data['videoTimestamp']
@@ -24,7 +24,7 @@ posX = data['posX']
 posY = data['posY']
 
 figure()
-plot(posX, posY,'.')
+plot(posX, posY,'.b',ms=0.1)
 xlabel('Position in X [cm]', fontsize=16)
 ylabel('Position in Y [cm]', fontsize=16)
 axis('equal')

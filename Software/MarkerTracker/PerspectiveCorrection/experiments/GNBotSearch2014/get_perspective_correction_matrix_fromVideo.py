@@ -6,7 +6,7 @@ import cv2
 import numpy as np
 import time
 
-data_file_name = "2014-09-24-172105"
+data_file_name = "2014-09-25-183439"
 scale_for_selection = 4
 
 if data_file_name == None:
