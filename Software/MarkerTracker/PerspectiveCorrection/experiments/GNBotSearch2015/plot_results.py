@@ -23,12 +23,19 @@ ts = data['videoTimestamp']
 posX = data['posX']
 posY = data['posY']
 
+
+map_points = loadFromFile("",data_file_name+"map_data.p")
+map_points = np.vstack((map_points,map_points[0,:])) # Convert to closed curve
+
 figure()
-plot(posX, posY,'.b',ms=0.1)
+plot(map_points[:,0], map_points[:,1], 'b')
+plot(posX, posY,'.g', ms=0.1)
 xlabel('Position in X [cm]', fontsize=16)
 ylabel('Position in Y [cm]', fontsize=16)
 axis('equal')
-tight_layout()
+xlim([-10,410])
+ylim([-410,10])
+#tight_layout()
 savefig(data_file_name+"position_log.png")
 
 

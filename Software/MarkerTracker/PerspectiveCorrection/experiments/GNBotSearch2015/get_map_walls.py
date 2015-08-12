@@ -6,7 +6,7 @@ import cv2
 import numpy as np
 import time
 
-data_file_name = "2014-09-25-191650"
+data_file_name = "2015-08-07-183501"
 
 capture = cv2.VideoCapture(data_file_name+".webm")
 
