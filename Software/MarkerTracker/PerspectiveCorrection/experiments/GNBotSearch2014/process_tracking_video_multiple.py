@@ -14,7 +14,7 @@ dst_points = [(int(x),int(y)) for (x,y) in data['dst_points']]
 
 
 
-data_file_name = "2014-09-25-183723"
+data_file_name = "2014-09-25-193626"
 
 capture = cv2.VideoCapture(data_file_name+".webm")
 capture.set(cv2.cv.CV_CAP_PROP_FPS,60)
@@ -24,10 +24,10 @@ print("Reading file at FPS: "+str(capture.get(cv2.cv.CV_CAP_PROP_FPS)))
 
 N_MARKERS_TO_TRACK = 4
 
-MARKER_COLOR = [41,79,250]
+MARKER_COLOR = [39,98,242]
 
-MARKER_COLOR_MIN = np.array([MARKER_COLOR[0]-15, MARKER_COLOR[1]-15, MARKER_COLOR[2]/2],np.uint8)
-MARKER_COLOR_MAX = np.array([MARKER_COLOR[0]+15, 200, 255],np.uint8)
+MARKER_COLOR_MIN = np.array([MARKER_COLOR[0]-10, MARKER_COLOR[1]-15, MARKER_COLOR[2]/2],np.uint8)
+MARKER_COLOR_MAX = np.array([MARKER_COLOR[0]+10, 255, 255],np.uint8)
 
 dataLog = {}
 dataLog['videoTimestamp'] = []

@@ -35,7 +35,7 @@ indices = range(len(ts))
 indices.reverse()
 first = True
 for i in indices:
-    if ts[i] < 20: # Skip first 20 seconds
+    if ts[i] < 10: # Skip first 20 seconds
         break
     blobs = [np.array([posX[i,r],posY[i,r]]) for r in xrange(N_markers)]
     for r in xrange(N_markers):
@@ -47,7 +47,7 @@ for i in indices:
             distances = [np.linalg.norm(blobs[ri]-last_pos) for ri in xrange(N_markers)]
             idmin = np.argmin(distances)
             minDist = distances[idmin]
-            if minDist < 10:
+            if minDist < 25:
                 pos = blobs[idmin]
             else:
                 pos = last_pos
