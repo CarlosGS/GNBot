@@ -57,11 +57,13 @@ for i in xrange(len(new_radians_diff)):
 new_radians_diff *= 60.*180./np.pi
 
 
-ax.plot(new_time[1:]/1000.,new_radians_diff)
+ax.plot([0,100],[0,0],'--k',linewidth=0.5)
+
+ax.plot(new_time[1:]/1000.,new_radians_diff,'b',linewidth=2)
 
 
 value = "%.3f" % new_radians_diff[-1]
-ax.annotate(value+" deg/min", xy=(99, new_radians_diff[-1]-5), xytext=(70, -15),arrowprops=dict(arrowstyle="->"))
+ax.annotate(value+" deg/min", xy=(99, new_radians_diff[-1]-5), xytext=(70, -25),arrowprops=dict(arrowstyle="->"), fontsize=16)
 
 ax.set_xlim([0,100])
 
@@ -75,4 +77,4 @@ tight_layout()
 savefig("gyro_drift.pdf")
 savefig("gyro_drift.png")
 
-#show()
+show()
