@@ -44,18 +44,18 @@ ax.plot([40,40],[0,3.5],'k--',linewidth=2)
 
 
 
-ax.arrow(40, 2.2, -22.5, 0, head_width=0.1, head_length=5, fc='k', ec='k')
+ax.arrow(40, 2.3, -5, 0, head_width=0.1, head_length=5, fc='k', ec='k')
 ax.text(40-21, 2-0.2, 'Maximum\nsensitivity', fontsize=16)
 ax.text(40+2.5, 3, '$d=40cm$', fontsize=14)
 
 
-ax.arrow(80, 1.4, -27.5, 0, head_width=0.1, head_length=5, fc='k', ec='k')
+ax.arrow(80, 1.5, -5, 0, head_width=0.1, head_length=5, fc='k', ec='k')
 ax.text(85-31, 1.2, 'Manuf. spec.', fontsize=16)
 ax.text(80+2.5, 3, '$d=80cm$', fontsize=14)
 
 
-ax.arrow(80, 0.8, 50, 0, head_width=0.1, head_length=5, fc='k', ec='k')
-ax.text(85, 0.6, 'Outside manuf. spec.', fontsize=16)
+ax.arrow(80, 0.9, 10, 0, head_width=0.1, head_length=5, fc='k', ec='k')
+ax.text(82, 0.6, 'Outside manuf. spec.', fontsize=16)
 
 
 ax.add_patch(Rectangle((0,0),7,3.5,linewidth=0,facecolor=(1,0,0,0.3)))
