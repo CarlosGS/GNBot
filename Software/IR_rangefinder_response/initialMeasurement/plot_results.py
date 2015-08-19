@@ -32,33 +32,40 @@ measurementMin = mapVals(measurementMin,0.,1023.,0.,5.)
 measurementMax = mapVals(measurementMax,0.,1023.,0.,5.)
 measurementAvg = (measurementMin+measurementMax)/2
 
-ax.plot(distances,measurementMax)
-ax.plot(distances,measurementAvg)
-ax.plot(distances,measurementMin)
+ax.plot(distances,measurementMax,'r')
+ax.plot(distances,measurementAvg,'g')
+ax.plot(distances,measurementMin,'b')
 
 #ax.plot([0,200],[0.7,0.7],'k--')
-ax.plot([80,80],[0,3.5],'k--',linewidth=2)
-ax.plot([40,40],[0,3.5],'k--',linewidth=2)
+ax.plot([10,10],[0,3.5],'k--',linewidth=1.5)
+ax.plot([80,80],[0,3.5],'k--',linewidth=1.5)
+ax.plot([40,40],[0,3.5],'k--',linewidth=1.5)
+
+
+my_red = (1,0,0,0.3)
+
+ax.arrow(10, 2.8, 5, 0, head_width=0.1, head_length=5, fc='k', ec='k')
+ax.arrow(40, 2.8, -5, 0, head_width=0.1, head_length=5, fc='k', ec='k')
+ax.text(40-21, 2.3, 'Maximum\nsensitivity', fontsize=16)
 
 
 
+ax.arrow(80, 2.8, -5, 0, head_width=0.1, head_length=5, fc='k', ec='k')
+ax.text(85-31, 2.5, 'Manuf. spec.', fontsize=16)
 
 
-ax.arrow(40, 2.3, -5, 0, head_width=0.1, head_length=5, fc='k', ec='k')
-ax.text(40-21, 2-0.2, 'Maximum\nsensitivity', fontsize=16)
-ax.text(40+2.5, 3, '$d=40cm$', fontsize=14)
+ax.text(10+2.5, 3.2, '$d=10cm$', fontsize=14)
+ax.text(40+2.5, 3.2, '$d=40cm$', fontsize=14)
+ax.text(80+2.5, 3.2, '$d=80cm$', fontsize=14)
 
 
-ax.arrow(80, 1.5, -5, 0, head_width=0.1, head_length=5, fc='k', ec='k')
-ax.text(85-31, 1.2, 'Manuf. spec.', fontsize=16)
-ax.text(80+2.5, 3, '$d=80cm$', fontsize=14)
-
-
-ax.arrow(80, 0.9, 10, 0, head_width=0.1, head_length=5, fc='k', ec='k')
+ax.arrow(10, 0.9, -2.5, 0, head_width=0.05, head_length=2.5, fc=my_red, ec=my_red)
+ax.arrow(80, 0.9, 10, 0, head_width=0.1, head_length=5, fc=my_red, ec=my_red)
 ax.text(82, 0.6, 'Outside manuf. spec.', fontsize=16)
 
 
-ax.add_patch(Rectangle((0,0),7,3.5,linewidth=0,facecolor=(1,0,0,0.3)))
+ax.add_patch(Rectangle((0,0),10,3.5,linewidth=0,facecolor=my_red))
+#ax.add_patch(Rectangle((80,0),200,3.5,linewidth=0,facecolor=my_red))
 
 # Fitting to exponential curve
 
@@ -118,7 +125,7 @@ ax.set_ylim([0,3.5])
 ax.set_xlim([0,200])
 
 ax.set_ylabel('Sensor output [V]', fontsize=16)
-ax.set_xlabel('Actual distance [cm]', fontsize=16)
+ax.set_xlabel('Actual distance $d$ from sensor to wall [cm]', fontsize=16)
 
 ax.set_title('IR rangefinder response curve (I)', fontsize=18)
 

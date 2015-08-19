@@ -7,6 +7,8 @@ from pylab import *
 
 import numpy as np
 
+from matplotlib import gridspec
+
 
 # https://klassenresearch.orbs.com/Plotting+with+Python
 from matplotlib import rc
@@ -15,10 +17,22 @@ rc('text',usetex=True)
 # Change all fonts to 'Computer Modern'
 rc('font',**{'family':'serif','serif':['Computer Modern']})
 
-f, ax = subplots(1)
+#f, ax = subplots(1,2,figsize=(11,5),width_ratios=[2, 1])
 
-data_files = ['distanceLog.p','distanceLog_robot1.p', 'distanceLog_robot2.p', 'distanceLog_robot4.p']
+f = plt.figure(figsize=(11, 5)) 
 
+
+suptitle('IR rangefinder response curve (II)', fontsize=18)
+
+
+ax = []
+gs = gridspec.GridSpec(1, 2, width_ratios=[2, 1]) 
+ax.append(plt.subplot(gs[0]))
+ax.append(plt.subplot(gs[1]))
+
+data_files = ['distanceLog.p', 'distanceLog_robot1.p', 'distanceLog_robot2.p', 'distanceLog_robot4.p']
+
+sensordata = []
 for filename in data_files:
     data = loadFromFile("",filename)
     print(data)
@@ -32,118 +46,108 @@ for filename in data_files:
     measurementAvg = (measurementMin+measurementMax)/2
 
     #ax.plot(distances,measurementMax)
-    ax.plot(distances,measurementAvg)
+    #ax.plot(distances,measurementAvg,'-o',linewidth=0.5)
+    sensordata.append(measurementAvg)
     #ax.plot(distances,measurementMin)
 
+#ax.plot(distances,measurementAvg[0],'-o',linewidth=0.5)
+ax[0].plot(distances,sensordata[1],'-ob',linewidth=0.5)
+ax[0].plot(distances,sensordata[2],'-og',linewidth=0.5)
+ax[0].plot(distances,sensordata[3],'-or',linewidth=0.5)
 
+x1 = 10.
+y1 = 2.32
 
-x1 = 8.
-y1 = 2.763
+x2 = 40.
+y2 = 0.7
 
-x2 = 29.
-y2 = 0.917
-
-K = x1*(y1-y2) / (1.-x1/x2)
-C = y2-K/x2
-fit = K*(1./distances)+C
+Kv = x1*(y1-y2) / (1.-x1/x2)
+Cv = y2-Kv/x2
+fit = Kv*(1./distances)+Cv
 print("Voltage fitting:")
-print("K="+str(K))
-print("C="+str(C))
+print("Kv="+str(Kv))
+print("Cv="+str(Cv))
+
+
+
 
 print("ADC fitting:")
-K = mapVals(K,0.,5.,0.,1023.)
-C = mapVals(C,0.,5.,0.,1023.)
+K = mapVals(Kv,0.,5.,0.,1023.)
+C = mapVals(Cv,0.,5.,0.,1023.)
 print("K="+str(K))
 print("C="+str(C))
 
-ax.plot(distances,fit,linewidth=2)
 
-ax.set_ylim([0,3.5])
-ax.set_xlim([0,100])
 
-ax.legend(['Original','Robot 1', 'Robot 2', 'Robot 4','Fit'])
+ax[0].set_title('Exponential curve fitting', fontsize=14)
 
-savefig("IR_sensor_response_curve.pdf")
+ax[0].plot(distances,fit,'-c',linewidth=2)
 
-show()
-exit()
-
-# Fitting to exponential curve
-
-#x1 = 9.
-#y1 = float(measurementAvg[6])
-
-x1 = 12.
-y1 = float(measurementAvg[7])
-
-#x2 = 21.
-#y2 = float(measurementAvg[9])
-
-x2 = 37.
-y2 = float(measurementAvg[11])
-
-#x2 = 86.
-#y2 = float(measurementAvg[14])
-
-#x2 = 114.
-#y2 = float(measurementAvg[15])
+ax[0].set_ylabel('Sensor output [V]', fontsize=16)
+ax[0].set_xlabel('Actual distance $d$ from sensor to wall [cm]', fontsize=16)
 
 
 
 
-#D = x1
-#A = y1
-#B = np.e
-#C = 0.1
-
-print x1, y1, x2, y2
-
-K = x1*(y1-y2) / (1.-x1/x2)
-C = y2-K/x2
-fit = K*(1./distances)+C
-print("K="+str(K))
-print("C="+str(C))
-
-#K = 14.6358265503
-#C = -0.173084289376
-
-#a = (np.log(K)-np.log(C+y3))/np.log(x3)
-#K = (x1**a)*(y1-y2) / (1.-(x1**a)/(x2**a))
-#C = y2-K/(x2**a)
-#fit = K*(1./(distances**a))+C
-#print a, K, C
-
-#ax.plot(distances,fit)
-
-
-ax.plot(K/(measurementAvg-C),measurementAvg,"o")
+ax[0].set_ylim([0,3.5])
+ax[0].set_xlim([0,100])
 
 
 
+ax[0].plot([16,50],[Kv*(1./16)+Cv,1.8],'-c',linewidth=0.5)
+ax[0].text(50.5, 1.7, '$V(d)='+str(round(Kv,2))+' \\frac{\\displaystyle 1}{\\displaystyle d}+'+str(round(Cv,2))+'$', fontsize=14)
+
+ax[0].plot([10,10],[0,3.5],'k--',linewidth=1.5)
+ax[0].plot([40,40],[0,3.5],'k--',linewidth=1.5)
 
 
-ax.set_ylim([0,3.5])
-ax.set_xlim([0,200])
+ax[0].arrow(10+2*2.5, 3.1, -2.5, 0, head_width=0.05, head_length=2.5, fc='k', ec='k')
+ax[0].arrow(15, 3.1, 25-2.5, 0, head_width=0.05, head_length=2.5, fc='k', ec='k')
 
-ax.set_ylabel('Sensor output [V]', fontsize=16)
-ax.set_xlabel('Actual distance [cm]', fontsize=16)
-
-ax.set_title('IR range-finder response curve', fontsize=16)
+ax[0].text(15, 2.9, 'Linear fit region', fontsize=12)
 
 
-ax.legend(["max","avg","min","fit"])
+
+ax[0].legend(['Sensor 1 (avgd.)', 'Sensor 2 (avgd.)', 'Sensor 3 (avgd.)','Fitted curve'])
 
 tight_layout()
 
 
 
+ax[1].set_title('Linearity evaluation', fontsize=14)
 
-f, ax = subplots(1)
+ax[1].plot(distances,Kv/(sensordata[1]-Cv),'-ob',linewidth=0.5)
+ax[1].plot(distances,Kv/(sensordata[2]-Cv),'-og',linewidth=0.5)
+ax[1].plot(distances,Kv/(sensordata[3]-Cv),'-or',linewidth=0.5)
+ax[1].plot([0,50],[0,50],"c",linewidth=2)
 
-ax.plot(distances,K/(measurementAvg-C),"r")
-ax.plot(distances,distances,"b")
 
-#savefig("IR_sensor_response_curve.pdf")
-show()
+#ax[1].plot([0,10],[50,10],'k--',linewidth=1.5)
+#ax[1].plot([0,40],[50,40],'k--',linewidth=1.5)
+#ax[1].plot([0,10],[50,10],'k--',linewidth=1.5)
+#ax[1].plot([0,10],[50,10],'k--',linewidth=1.5)
+
+
+ax[1].plot(10,10,'+k',markersize=20,markeredgewidth=1.5)
+ax[1].plot(40,40,'+k',markersize=20,markeredgewidth=1.5)
+
+ax[1].text(5, 35, '$d(V)=\\frac{\\displaystyle '+str(round(Kv,2))+'}{\\displaystyle V-'+str(round(Cv,2))+'}$', fontsize=14)
+
+
+ax[1].set_ylabel('$d$ [cm]', fontsize=16)
+ax[1].set_xlabel('$d$ [cm]', fontsize=16)
+
+#ax[1].legend(['Sensor 1 (avgd.)', 'Sensor 2 (avgd.)', 'Sensor 3 (avgd.)','Fitted curve'])
+
+
+ax[1].set_ylim([0,50])
+ax[1].set_xlim([0,50])
+
+
+tight_layout()
+plt.subplots_adjust(top=0.875)
+
+savefig("IR_sensor_response_curve.pdf")
+savefig("IR_sensor_response_curve.png")
 
 
