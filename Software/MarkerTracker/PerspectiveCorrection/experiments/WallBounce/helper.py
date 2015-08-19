@@ -1,1 +1,1 @@
-/home/carlosgs/GitRepos/GNBot/Software/helper.py
+../../../../helper.py
