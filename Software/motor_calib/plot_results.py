@@ -78,8 +78,8 @@ plt.subplots_adjust(top=0.875)
 plt.subplots_adjust(wspace=0)
 #plt.subplots_adjust(wspace=0.12)
 
-savefig("motors_speed_response_curve.pdf")
-savefig("motors_speed_response_curve.png")
+savefig("velocity_response_curve.pdf")
+savefig("velocity_response_curve.png")
 
 
 
@@ -171,11 +171,11 @@ ax.set_title('Motor input values that correspond to a linear trajectory', fontsi
 
 #ax.annotate('Forwards motion', xy=(1400, 1800), xycoords='data', xytext=(1500, 1600), textcoords='data', arrowprops=dict(facecolor='black', shrink=0.1), horizontalalignment='left', verticalalignment='top')
 ax.arrow(1525, 1575, -150, 150, head_width=2*0.05*100, head_length=2*0.1*100, fc='k', ec='k')
-ax.text(1450, 1680, 'Forwards motion', fontsize=16)
+ax.text(1450, 1680, 'Forward motion', fontsize=16)
 
 
 ax.arrow(1575, 1525, 150, -150, head_width=2*0.05*100, head_length=2*0.1*100, fc='k', ec='k')
-ax.text(1650, 1480, 'Backwards motion', fontsize=16)
+ax.text(1650, 1480, 'Backward motion', fontsize=16)
 
 tight_layout()
 
