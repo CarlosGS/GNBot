@@ -83,7 +83,7 @@ ax[0].set_title('Exponential curve fitting', fontsize=14)
 
 ax[0].plot(distances,fit,'-c',linewidth=2)
 
-ax[0].set_ylabel('Sensor output [V]', fontsize=16)
+ax[0].set_ylabel('Sensor output $v$ [V]', fontsize=16)
 ax[0].set_xlabel('Actual distance $d$ from sensor to wall [cm]', fontsize=16)
 
 
@@ -95,7 +95,7 @@ ax[0].set_xlim([0,100])
 
 
 ax[0].plot([16,50],[Kv*(1./16)+Cv,1.8],'-c',linewidth=0.5)
-ax[0].text(50.5, 1.7, '$V(d)='+str(round(Kv,2))+' \\frac{\\displaystyle 1}{\\displaystyle d}+'+str(round(Cv,2))+'$', fontsize=14)
+ax[0].text(50.5, 1.7, '$v(d)='+str(round(Kv,2))+' \\frac{\\displaystyle 1}{\\displaystyle d}+'+str(round(Cv,2))+'$', fontsize=14)
 
 ax[0].plot([10,10],[0,3.5],'k--',linewidth=1.5)
 ax[0].plot([40,40],[0,3.5],'k--',linewidth=1.5)
@@ -131,11 +131,11 @@ ax[1].plot([0,50],[0,50],"c",linewidth=2)
 ax[1].plot(10,10,'+k',markersize=20,markeredgewidth=1.5)
 ax[1].plot(40,40,'+k',markersize=20,markeredgewidth=1.5)
 
-ax[1].text(5, 35, '$d(V)=\\frac{\\displaystyle '+str(round(Kv,2))+'}{\\displaystyle V-'+str(round(Cv,2))+'}$', fontsize=14)
+ax[1].text(3, 41, '$d_m(v(d))=\\frac{\\displaystyle '+str(round(Kv,2))+'}{\\displaystyle v(d)-'+str(round(Cv,2))+'}$', fontsize=14)
 
 
-ax[1].set_ylabel('$d$ [cm]', fontsize=16)
-ax[1].set_xlabel('$d$ [cm]', fontsize=16)
+ax[1].set_ylabel('Reported distance $d_m$ [cm]', fontsize=16)
+ax[1].set_xlabel('Actual distance $d$ [cm]', fontsize=16)
 
 #ax[1].legend(['Sensor 1 (avgd.)', 'Sensor 2 (avgd.)', 'Sensor 3 (avgd.)','Fitted curve'])
 
