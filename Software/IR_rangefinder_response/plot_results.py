@@ -95,7 +95,7 @@ ax[0].set_xlim([0,100])
 
 
 ax[0].plot([16,50],[Kv*(1./16)+Cv,1.8],'-c',linewidth=0.5)
-ax[0].text(50.5, 1.7, '$v(d)='+str(round(Kv,2))+' \\frac{\\displaystyle 1}{\\displaystyle d}+'+str(round(Cv,2))+'$', fontsize=14)
+ax[0].text(50.5, 1.7, '$v_{fit}(d)='+str(round(Kv,2))+' \\frac{\\displaystyle 1}{\\displaystyle d}+'+str(round(Cv,2))+'$', fontsize=14)
 
 ax[0].plot([10,10],[0,3.5],'k--',linewidth=1.5)
 ax[0].plot([40,40],[0,3.5],'k--',linewidth=1.5)
