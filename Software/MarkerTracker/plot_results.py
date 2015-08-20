@@ -17,8 +17,8 @@ rc('font',**{'family':'serif','serif':['Computer Modern']})
 
 f, ax = subplots(2, figsize=(10,8))
 
-ax[0].plot([0,22],[0,0],'--k')
-ax[1].plot([0,3.5],[0,0],'--k')
+#ax[0].plot([0,22],[0,0],'--k')
+#ax[1].plot([0,3.5],[0,0],'--k')
 
 labels = ["$input = 5 [arb]$","$input = 15 [arb]$","$input = 25 [arb]$"]
 i = 0
@@ -71,6 +71,9 @@ ax[1].set_ylim([-5,8.5])
 ax[1].set_xlim([0,3])
 
 ax[0].legend()
+
+ax[0].grid(True)
+ax[1].grid(True)
 
 
 
