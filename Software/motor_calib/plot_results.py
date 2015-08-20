@@ -35,6 +35,8 @@ ax[0].set_title('$D_L=75mm, D_R=65mm$', fontsize=14)
 ax[0].set_ylim([-2.5,2.5])
 ax[0].set_xlim([1050,1950])
 
+ax[0].grid(True)
+
 tight_layout()
 
 
@@ -54,6 +56,8 @@ ax[1].set_ylim([-2.5,2.5])
 ax[1].set_xlim([1050,1950])
 ax[1].set_yticklabels([])
 
+ax[1].grid(True)
+
 tight_layout()
 
 
@@ -72,6 +76,8 @@ ax[2].set_title('$D_L=65mm, D_R=75mm$', fontsize=14)
 ax[2].set_ylim([-2.5,2.5])
 ax[2].set_xlim([1050,1950])
 ax[2].set_yticklabels([])
+
+ax[2].grid(True)
 
 tight_layout()
 plt.subplots_adjust(top=0.875)
@@ -176,6 +182,8 @@ ax.text(1450, 1680, 'Forward motion', fontsize=16)
 
 ax.arrow(1575, 1525, 150, -150, head_width=2*0.05*100, head_length=2*0.1*100, fc='k', ec='k')
 ax.text(1650, 1480, 'Backward motion', fontsize=16)
+
+ax.grid(True)
 
 tight_layout()
 
