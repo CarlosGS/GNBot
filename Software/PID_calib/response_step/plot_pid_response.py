@@ -38,8 +38,8 @@ time_seconds = (pid_response4[:,0]-8500)/1000.
 ax.plot(time_seconds+0.05,pid_response1[:,2]*180./np.pi,'--k')
 ax.plot(time_seconds,pid_response3[:,1]*180./np.pi,'r')
 ax.plot(time_seconds,pid_response2[:,1]*180./np.pi,'b')
-ax.plot(time_seconds,pid_response1[:,1]*180./np.pi,'g')
-ax.plot(time_seconds,pid_response4[:,1]*180./np.pi,'c',linewidth=2)
+ax.plot(time_seconds,pid_response1[:,1]*180./np.pi,'c')
+ax.plot(time_seconds,pid_response4[:,1]*180./np.pi,'g',linewidth=2)
 
 ax.legend(["Target yaw","$K_p=10, K_{\{i,d\}}=0$","$K_p=5, K_{\{i,d\}}=0$","$K_p=1, K_{\{i,d\}}=0$","$K_{\{p,i,d\}}=\{4.15,5.85,0.21\}$"])
 

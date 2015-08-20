@@ -37,8 +37,8 @@ toffset = 2000
 ax.plot((pid_response4[:,0]-2000)/1000.+0.09,pid_response4[:,2]*180./np.pi,'--k')
 ax.plot((pid_response3[:,0]-2000)/1000.,pid_response3[:,1]*180./np.pi,'r')
 ax.plot((pid_response2[:,0]-2000)/1000.,pid_response2[:,1]*180./np.pi,'b')
-ax.plot((pid_response1[:,0]-2000)/1000.,pid_response1[:,1]*180./np.pi,'g')
-ax.plot((pid_response4[:,0]-2000)/1000.,pid_response4[:,1]*180./np.pi,'c',linewidth=2)
+ax.plot((pid_response1[:,0]-2000)/1000.,pid_response1[:,1]*180./np.pi,'c')
+ax.plot((pid_response4[:,0]-2000)/1000.,pid_response4[:,1]*180./np.pi,'g',linewidth=2)
 
 #f, ax = subplots(1,figsize=(10,5))
 #time_seconds = (pid_response4[:,0]-8500)/1000.
