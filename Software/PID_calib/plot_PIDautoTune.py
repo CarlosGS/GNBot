@@ -77,12 +77,8 @@ for i in xrange(len(Kps)-1):
 #ax.plot(pid_autoTune2[:,0],pid_autoTune2[:,1:])
 
 f, ax = subplots(1,figsize=(10,4.6))
-for Kp in Kps:
-    ax.plot(times[Kp],err[Kp]*180./np.pi)
 
-for Kp in Kps:
-    peaks, = ax.plot(times[Kp],err_peak[Kp]*180./np.pi,color = '0.75',linewidth=2)
-
+ax.plot([0,11],[0,0],':k')
 
 legends = []
 i = 0
@@ -95,8 +91,17 @@ for Kp in Kps:
     legends.append("$K_p="+str(Kp)+"$")
     i += 1
 
-l1 = ax.legend(legends,labelspacing=0.25,fontsize = 'medium',mode='expand', loc='lower center',ncol=5)#loc='lower right')
-l2 = legend([peaks], ['Measured amplitude of the error oscillation'], loc='upper left',labelspacing=0.25,fontsize = 'medium') # this removes l1 from the axes.
+i = 0
+for Kp in Kps:
+    ax.plot(times[Kp],err[Kp]*180./np.pi, label=legends[i])
+    i += 1
+
+for Kp in Kps:
+    peaks, = ax.plot(times[Kp],err_peak[Kp]*180./np.pi,color = '0.75',linewidth=2)
+
+
+l1 = ax.legend(labelspacing=0.25,fontsize = 'medium',mode='expand', loc='upper center',ncol=5)#loc='lower right')
+l2 = legend([peaks], ['Measured amplitude of the error oscillation'], loc='lower right',labelspacing=0.25,fontsize = 'medium') # this removes l1 from the axes.
 gca().add_artist(l1)
 
 ax.arrow(8.15, -7, -0.06, 0, head_width=2, head_length=0.05, fc='k', ec='k')
