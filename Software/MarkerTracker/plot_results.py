@@ -20,6 +20,9 @@ f, ax = subplots(2, figsize=(10,8))
 #ax[0].plot([0,22],[0,0],'--k')
 #ax[1].plot([0,3.5],[0,0],'--k')
 
+
+real_length = 60.
+
 labels = ["$input = 5 [arb]$","$input = 15 [arb]$","$input = 25 [arb]$"]
 i = 0
 for fileName in ["yawLog5","yawLog15","yawLog25"]:
@@ -31,8 +34,8 @@ for fileName in ["yawLog5","yawLog15","yawLog25"]:
     pos[:,0] -= pos[0,0]
     pos[:,1] -= pos[0,1]
     
-    pos[:,0] *= 20.5/1425.
-    pos[:,1] *= 20.5/1425.
+    pos[:,0] *= real_length/1425.
+    pos[:,1] *= real_length/1425.
     
     prevX = 0
     prevY = 0
@@ -56,9 +59,9 @@ for fileName in ["yawLog5","yawLog15","yawLog25"]:
     i += 1
 
 
-ax[0].set_ylim([-2,1])
-#ax[0].axis('equal')
-ax[0].set_xlim([0,22])
+ax[0].set_ylim([-10,10])
+ax[0].axis('equal')
+ax[0].set_xlim([-10,real_length+5])
 ax[0].set_ylabel('Position in Y [cm]', fontsize=16)
 ax[0].set_xlabel('Position in X [cm]', fontsize=16)
 ax[1].set_ylabel('Yaw [deg]', fontsize=16)
@@ -74,6 +77,27 @@ ax[0].legend()
 
 ax[0].grid(True)
 ax[1].grid(True)
+
+
+
+def drawRobot(ax,wheel_type):
+    dimX = 9.
+    dimY = 8.
+    # Chassis
+    ax.add_patch(Rectangle((-dimX/2.,-dimY/2.),dimX,dimY,linewidth=1.5, fc='w', ec='k'))
+    # Wheels
+    Dr = 6.5
+    Dl = 6.5
+    if wheel_type == "larger left":
+        Dl += 1
+    elif wheel_type == "larger right":
+        Dr += 1
+    ax.add_patch(Rectangle((-dimX/2.,dimY/2.),Dr,0.6,linewidth=0, fc='k', ec='k'))
+    ax.add_patch(Rectangle((-dimX/2.,-dimY/2.-0.6),Dl,0.6,linewidth=0, fc='k', ec='k'))
+    
+    ax.arrow(-dimX/3., 0, dimX/2., 0, head_width=dimY/2., head_length=dimX/4.,linewidth=3, fc='g', ec='c')
+
+drawRobot(ax[0], "same")
 
 
 
