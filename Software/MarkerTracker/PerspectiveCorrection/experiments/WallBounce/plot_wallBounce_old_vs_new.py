@@ -117,6 +117,32 @@ plot(pathsB[1][0,0],pathsB[1][0,1], 'g>', markersize=10)
 plot(pathsB[1][-1,0],pathsB[1][-1,1], 'gs', markersize=8)
 
 
+
+
+def drawRobot(ax,wheel_type,yoffset=0):
+    dimX = 9.
+    dimY = 8.
+    # Chassis
+    ax.add_patch(Rectangle((-dimX/2.,-dimY/2.+yoffset),dimX,dimY,linewidth=0.5, fc='w', ec='k'))
+    # Wheels
+    Dr = 6.5
+    Dl = 6.5
+    if wheel_type == "larger left":
+        Dl += 1
+    elif wheel_type == "larger right":
+        Dr += 1
+    ax.add_patch(Rectangle((-dimX/2.,dimY/2.+yoffset),Dr,1,linewidth=0, fc='k', ec='k'))
+    ax.add_patch(Rectangle((-dimX/2.,-dimY/2.-1+yoffset),Dl,1,linewidth=0, fc='k', ec='k'))
+    
+    ax.arrow(-dimX/3., yoffset, dimX/2., 0, head_width=dimY/2., head_length=dimX/4.,linewidth=0.1, fc='g', ec='c')
+
+drawRobot(gca(), "same", yoffset=390)
+
+
+#annotate("Actual size of each robot", xy=(10, 0), xytext=(40, -20),arrowprops=dict(arrowstyle="->"), fontsize=10)
+text(10, 385, 'Actual size of each robot', fontsize=10)
+
+
 xlabel('Position in X [cm]', fontsize=14)
 ylabel('Position in Y [cm]', fontsize=14)
 axis('equal')
@@ -131,38 +157,6 @@ title("``Wall bounce'' search using the original controller (left) and the new s
 tight_layout()
 savefig("wallBounce_oldVSnew.png")
 savefig("wallBounce_oldVSnew.pdf")
-show()
+#show()
 
-
-exit()
-
-
-
-
-f, ax = subplots(1,2, figsize=(14,7))
-
-
-for r in xrange(N_markersA):
-    ax[0].plot(pathsA[r][:,0],pathsA[r][:,1], linewidth=2)
-ax[0].plot(map_pointsA[:,0], map_pointsA[:,1], 'b')
-ax[0].set_xlabel('Position in X [cm]', fontsize=16)
-ax[0].set_ylabel('Position in Y [cm]', fontsize=16)
-ax[0].axis('equal')
-#ax[0].set_xlim([-5,400])
-#ax[0].set_ylim([-5,380])
-
-
-for r in xrange(N_markersB):
-    ax[0].plot(pathsB[r][:,0],pathsB[r][:,1], linewidth=2)
-ax[0].plot(map_pointsB[:,0], map_pointsB[:,1], 'b')
-#ax[1].set_xlabel('Position in X [cm]', fontsize=16)
-#ax[1].set_ylabel('Position in Y [cm]', fontsize=16)
-#ax[1].axis('equal')
-#ax[1].set_xlim([-5,400])
-#ax[1].set_ylim([-5,380])
-
-tight_layout()
-savefig("wallBounce_oldVSnew.png")
-savefig("wallBounce_oldVSnew.pdf")
-show()
 
