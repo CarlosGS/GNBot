@@ -30,7 +30,7 @@ linear_speed_log4 = np.array(linear_speed_log4)
 
 
 
-linear_speed_log = linear_speed_log4
+linear_speed_log = linear_speed_log2
 
 f, ax = subplots(1,figsize=(9,6))
 
@@ -66,5 +66,5 @@ tight_layout()
 savefig("linear_velocity_calibration.pdf")
 savefig("linear_velocity_calibration.png")
 
-#show()
+show()
 
