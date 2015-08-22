@@ -76,10 +76,10 @@ map_pointsB -= offset
 figure(figsize=(12,7))
 
 # Draw paths
-plot(pathsA[0][:,0],pathsA[0][:,1], 'g', linewidth=1.5)
-plot(pathsA[1][:,0],pathsA[1][:,1], 'k', linewidth=1.5)
-plot(pathsA[2][:,0],pathsA[2][:,1], 'r', linewidth=1.5)
-plot(pathsA[3][:,0],pathsA[3][:,1], 'c', linewidth=1.5)
+plot(pathsA[0][:,0],pathsA[0][:,1], 'g', linewidth=1)
+plot(pathsA[1][:,0],pathsA[1][:,1], 'k', linewidth=1)
+plot(pathsA[2][:,0],pathsA[2][:,1], 'r', linewidth=1)
+plot(pathsA[3][:,0],pathsA[3][:,1], 'c', linewidth=1)
 
 # Draw markers
 plot(pathsA[0][0,0],pathsA[0][0,1], 'g>', markersize=10)
@@ -96,12 +96,12 @@ plot(pathsA[3][-1,0],pathsA[3][-1,1], 'cs', markersize=8)
 
 
 # Draw map walls
-plot(map_pointsA[:,0], map_pointsA[:,1], 'b', linewidth=2)
-plot(map_pointsB[:,0], map_pointsB[:,1], 'b', linewidth=2, label="Map walls")
-plot(pathsB[3][:,0],pathsB[3][:,1], 'k', linewidth=1.5, label="Robot 1")
-plot(pathsB[2][:,0],pathsB[2][:,1], 'c', linewidth=1.5, label="Robot 2")
-plot(pathsB[0][:,0],pathsB[0][:,1], 'r', linewidth=1.5, label="Robot 3")
-plot(pathsB[1][:,0],pathsB[1][:,1], 'g', linewidth=1.5, label="Robot 4")
+plot(map_pointsA[:,0], map_pointsA[:,1], 'b', linewidth=1.5)
+plot(map_pointsB[:,0], map_pointsB[:,1], 'b', linewidth=1.5, label="Map walls")
+plot(pathsB[3][:,0],pathsB[3][:,1], 'k', linewidth=1, label="Robot 1")
+plot(pathsB[2][:,0],pathsB[2][:,1], 'c', linewidth=1, label="Robot 2")
+plot(pathsB[0][:,0],pathsB[0][:,1], 'r', linewidth=1, label="Robot 3")
+plot(pathsB[1][:,0],pathsB[1][:,1], 'g', linewidth=1, label="Robot 4")
 
 # Draw markers
 plot(pathsB[3][0,0],pathsB[3][0,1], 'k>', markersize=10)
