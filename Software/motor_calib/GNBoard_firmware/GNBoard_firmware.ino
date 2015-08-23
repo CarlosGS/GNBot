@@ -323,8 +323,8 @@ float analogReadAverage(int pin, int samples) {
 
 float getDistanceCM() {
     float measurement = analogReadAverage(IR4_PIN,4);
-    float ir_K = 4172.59;
-    float ir_C = 43.74;
+    float ir_K = 4419.36;
+    float ir_C = 32.736;
     if(measurement <= ir_C) return 150;
     float res = ir_K/(measurement-ir_C);
     if(res < 0 || res > 150) res = 150;
@@ -508,21 +508,14 @@ int motorPIDcontroller(float yawGoal_rad, boolean term_yawReached, float c_speed
         if(!saturated) error_integral += prev_error*dt;
         error_derivative = (error-prev_error)/dt;
         distance_integral += c_speed_rads*dt;
+        if(term_distanceReached) {
+            if(c_speed_rads > 0) {
+                if(distance_integral > distanceGoal_rad-c_speed_rads*dt) return 3;
+            } else {
+                if(distance_integral < distanceGoal_rad+c_speed_rads*dt) return 3;
+            }
+        }
       } else first_iteration = false;
-      float v = calib.kp*error + calib.ki*error_integral + calib.kd*error_derivative;
-      
-      if(abs(v)>calib.maxWspeed) {
-        saturated = true;
-      } else {
-        if(saturated) error_integral = 0;
-        saturated = false;
-      }
-      
-      //if(v > calib.maxWspeed) v = calib.maxWspeed;
-      //if(v < -calib.maxWspeed) v = -calib.maxWspeed;
-      
-      set_servo1_rot_speed(v+c_speed_rads);
-      set_servo2_rot_speed(v-c_speed_rads);
 
       if(term_yawReached && abs(error)+abs(error_integral)+abs(error_derivative) < 0.5*M_PI/180.) return 1;
       if(term_IRdistReached) {
@@ -533,15 +526,23 @@ int motorPIDcontroller(float yawGoal_rad, boolean term_yawReached, float c_speed
               if(dist > IRdistGoal_cm) return 2;
           }
       }
-      if(term_distanceReached) {
-          if(c_speed_rads > 0) {
-              if(distance_integral > distanceGoal_rad) return 3;
-          } else {
-              if(distance_integral < distanceGoal_rad) return 3;
-          }
+      
+      float v = calib.kp*error + calib.ki*error_integral + calib.kd*error_derivative;
+      
+      if(abs(v)>calib.maxWspeed) {
+        saturated = true;
+      } else {
+        if(saturated) error_integral = 0;
+        saturated = false;
       }
       
-      //delay(10);
+      if(v > calib.maxWspeed) v = calib.maxWspeed;
+      if(v < -calib.maxWspeed) v = -calib.maxWspeed;
+      
+      set_servo1_rot_speed(v+c_speed_rads);
+      set_servo2_rot_speed(v-c_speed_rads);
+      
+      delay(10); // Necessary for accurate distance integration
       
       prev_error = error;
       prev_ts = ts;
@@ -1312,18 +1313,20 @@ void setup() {
         // Calibrate linear velocity constant
         pointToAngle(initialHeading);
 
-        float vel = calib.maxWspeed/2.;
+        float vel = calib.maxWspeed/3.;
         float speed_k = 0;
         for(int i=0; i<4; i++) {
             // Move backwards
-            motorPIDcontroller(initialHeading, false, -calib.maxWspeed, 30, true, 0, 0, false);
+            ledColor(64,0,0);
+            motorPIDcontroller(initialHeading, false, -calib.maxWspeed, 35, true, 0, 0, false);
             
             set_servo1_rot_speed(0);
             set_servo2_rot_speed(0);
             
     
             // Move forwards
-            motorPIDcontroller(initialHeading, false, vel, 25, true, 0, 0, false);
+            motorPIDcontroller(initialHeading, false, vel, 30, true, 0, 0, false);
+            ledColor(0,128,0);
             float dist1 = getDistanceCM();
             prev_ts = millis();
             motorPIDcontroller(initialHeading, false, vel, 10, true, 0, 0, false);
@@ -1418,6 +1421,32 @@ void setup() {
       set_servo2_rot_speed(0);
       delay(500);
     }*/
+
+
+    while(!button_is_pressed());
+    delay(3000);
+    
+    readIMU_YawPitchRoll(ypr);
+    float yaw = ypr[0];
+    float len = 30.*calib.speed_k;
+    float vel = 2.*calib.speed_k;
+    motorPIDcontroller(yaw, false, vel, 0, false, yaw, len, true);
+    set_servo1_rot_speed(0);
+    set_servo2_rot_speed(0);
+    delay(500);
+    yaw += 90.*M_PI/180.;
+    pointToAngle(yaw);
+
+    while(!button_is_pressed());
+    delay(3000);
+
+    vel = 2; // cm/s
+    float r = 15; // cm
+    performArc(M_PI*r, vel, 180.);
+    set_servo1_rot_speed(0);
+    set_servo2_rot_speed(0);
+
+    while(1);
 
     // Squares
     /*while(!button_is_pressed());
@@ -1515,7 +1544,9 @@ void setup() {
         Serial.println("],");
     }*/
 
-    ledColor(255,0,0);
+
+    // Odor search algorithm
+    /*ledColor(255,0,0);
     while(getGasSensorResistance() < 15000) delay(1000);
     ledColor(0,255,0);
 
@@ -1584,7 +1615,7 @@ void setup() {
     set_servo1_rot_speed(0);
     set_servo2_rot_speed(0);
     ledColor(0,0,255); // Odor source has been localized
-    while(1);
+    while(1);*/
 }
 
 int sampleTime = 3000;
