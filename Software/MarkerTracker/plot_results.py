@@ -21,7 +21,7 @@ f, ax = subplots(2, figsize=(10,8))
 #ax[1].plot([0,3.5],[0,0],'--k')
 
 
-real_length = 60.
+real_length = 20.5*7.9/3.
 
 labels = ["$input = 5 [arb]$","$input = 15 [arb]$","$input = 25 [arb]$"]
 i = 0
