@@ -109,6 +109,48 @@ for i in xrange(N):
 
 
 
+def drawRobotUP(ax,wheel_type,xoffset=0):
+    dimX = 9.
+    dimY = 8.
+    # Chassis
+    ax.add_patch(Rectangle((-dimY/2.+xoffset,-dimX/2.),dimY,dimX,linewidth=0.5, fc='w', ec='k'))
+    # Wheels
+    Dr = 6.5
+    Dl = 6.5
+    if wheel_type == "larger left":
+        Dl += 1
+    elif wheel_type == "larger right":
+        Dr += 1
+    ax.add_patch(Rectangle((-dimY/2.-1+xoffset,-dimX/2.),1,Dr,linewidth=0, fc='k', ec='k'))
+    ax.add_patch(Rectangle((dimY/2.+xoffset,-dimX/2.),1,Dl,linewidth=0, fc='k', ec='k'))
+    
+    ax.arrow(xoffset, -dimX/3., 0, dimX/2., head_width=dimY/2., head_length=dimX/4.,linewidth=1, fc='g', ec='c')
+    ax.arrow(xoffset-10, 5, 0, 10, head_width=dimY/4., head_length=dimX/2.,fc='k', ec='k')
+
+def drawRobotDOWN(ax,wheel_type,xoffset=0):
+    dimX = 9.
+    dimY = 8.
+    # Chassis
+    ax.add_patch(Rectangle((-dimY/2.+xoffset,-dimX/2.),dimY,dimX,linewidth=0.5, fc='w', ec='k'))
+    # Wheels
+    Dr = 6.5
+    Dl = 6.5
+    if wheel_type == "larger left":
+        Dl += 1
+    elif wheel_type == "larger right":
+        Dr += 1
+    ax.add_patch(Rectangle((-dimY/2.-1+xoffset,dimX/2.),1,-Dr,linewidth=0, fc='k', ec='k'))
+    ax.add_patch(Rectangle((dimY/2.+xoffset,dimX/2.),1,-Dl,linewidth=0, fc='k', ec='k'))
+    
+    ax.arrow(xoffset, dimX/3., 0, -dimX/2., head_width=dimY/2., head_length=dimX/4.,linewidth=1, fc='g', ec='c')
+    ax.arrow(xoffset-10, 5, 0, 10, head_width=dimY/4., head_length=dimX/2.,fc='k', ec='k')
+
+drawRobotUP(gca(), "same", xoffset=-sep)
+drawRobotDOWN(gca(), "same", xoffset=sep)
+
+
+
+
 legend(loc="upper center", ncol=2)
 
 ylim([-10,120])
