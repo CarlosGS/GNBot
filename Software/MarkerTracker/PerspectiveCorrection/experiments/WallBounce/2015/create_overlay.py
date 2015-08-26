@@ -43,16 +43,18 @@ print inv_perspective_correction_matrix
 for r in xrange(N_markers):
     for i in xrange(N_points):
         src = np.array([[paths[r][i,:]]],np.float32)
+        src[0][0][1] *= -1
+        src /= cm_per_pixel
         dst = cv2.perspectiveTransform(src,inv_perspective_correction_matrix)
         while len(dst.shape) > 1:
             dst = dst[0]
         paths[r][i,:] = dst
 
 
-img = cv.imread("Screenshot from 2015-08-07-183814.webm.png")
+img = cv2.imread("Screenshot from 2015-08-07-183814.webm.png")
 
 #colors = [(255,0,0), (0,255,0), (0,0,255), (255,255,255),(0,0,0)]
-colors = [(255,0,0), (0,255,0), (0,0,255), (255,255,255),(0,0,0)]
+colors = [(0,0,255), (0,255,0), (255,255,0), (0,0,0)]
 
 def tuple_lerp(start,end,l):
     start = np.array(start)
@@ -61,18 +63,20 @@ def tuple_lerp(start,end,l):
     return tuple(res)
 
 
-for r in xrange(N_markers):
-    curr = paths[r][0,:]
-    prev = (int(curr[0]),int(curr[1]))
-    for i in xrange(N_points):
-        progress = float(i)/float(N_points)
-        curr = paths[r][i,:]
-        new = (int(curr[0]),int(curr[1]))
-        #cv2.line(img, prev, new, tuple_lerp((128,128,128),colors[r],progress))
-        col = (colors[r][0],colors[r][1],colors[r][2],int(progress*255))
-        cv2.line(img, prev, new, col)
-        prev = new
-
+first = True
+for i in xrange(N_points):
+    if not first:
+        for r in xrange(N_markers):
+            progress = min(5*float(i)/float(N_points),1)
+            prev = paths[r][i-1,:]
+            prev = (int(prev[0]),int(prev[1]))
+            new = paths[r][i,:]
+            new = (int(new[0]),int(new[1]))
+            cv2.line(img, prev, new, tuple_lerp((128,128,128),colors[r],progress), thickness=2, lineType=cv2.cv.CV_AA)
+            #col = (colors[r][0],colors[r][1],colors[r][2],10)
+            #cv2.line(img, prev, new, col, thickness=2, lineType=cv2.cv.CV_AA)
+    else:
+        first = False
 
 
 cv2.imwrite("overlay.png",img)
