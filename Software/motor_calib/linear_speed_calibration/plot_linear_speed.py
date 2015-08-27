@@ -66,5 +66,5 @@ tight_layout()
 savefig("linear_velocity_calibration.pdf")
 savefig("linear_velocity_calibration.png")
 
-show()
+#show()
 
