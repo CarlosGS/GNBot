@@ -34,10 +34,10 @@
      fit-margin-right="0"
      fit-margin-bottom="0"
      inkscape:zoom="1.7940592"
-     inkscape:cx="230.00906"
-     inkscape:cy="76.36078"
-     inkscape:window-x="141"
-     inkscape:window-y="174"
+     inkscape:cx="243.77814"
+     inkscape:cy="40.528528"
+     inkscape:window-x="388"
+     inkscape:window-y="181"
      inkscape:window-maximized="0"
      inkscape:current-layer="svg2" />
   <defs
@@ -749,5 +749,51 @@
            id="flowSpan44608-3"
            style="font-size:13.47500038px">ω</flowSpan><flowSpan
            id="flowSpan44604-7"
-           style="font-size:8.75px;baseline-shift:sub" /></flowPara></flowRoot>  </g>
+           style="font-size:8.75px;baseline-shift:sub" /></flowPara></flowRoot>    <flowRoot
+       transform="translate(650.11,957.33594)"
+       id="flowRoot44480-7-6"
+       xml:space="preserve"
+       style="font-size:13.47702026px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"><flowRegion
+         id="flowRegion44482-6-5"><rect
+           width="307.21411"
+           height="42.518181"
+           x="-0.88815206"
+           y="-6.0621982"
+           id="rect44484-1-8" /></flowRegion><flowPara
+         id="flowPara44486-0-4"
+         style="font-size:12.5px"><flowSpan
+           id="flowSpan44608-3-2"
+           style="font-size:13.47500038px">ω<flowSpan
+   style="font-size:65.00091553%;baseline-shift:sub"
+   id="flowSpan3142">R</flowSpan>=ω</flowSpan></flowPara></flowRoot>    <flowRoot
+       style="font-size:13.47702026px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       xml:space="preserve"
+       id="flowRoot3131"
+       transform="translate(282.78655,975.17259)"><flowRegion
+         id="flowRegion3133"><rect
+           id="rect3135"
+           y="-6.0621982"
+           x="-0.88815206"
+           height="42.518181"
+           width="307.21411" /></flowRegion><flowPara
+         style="font-size:12.5px"
+         id="flowPara3137"><flowSpan
+           style="font-size:13.47500038px"
+           id="flowSpan3139">V<flowSpan
+   id="flowSpan3141"
+   style="font-size:65.00091553%;baseline-shift:sub">L</flowSpan>=0</flowSpan></flowPara></flowRoot>    <flowRoot
+       transform="translate(361.93667,975.17259)"
+       id="flowRoot3143"
+       xml:space="preserve"
+       style="font-size:13.47702026px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"><flowRegion
+         id="flowRegion3145"><rect
+           width="307.21411"
+           height="42.518181"
+           x="-0.88815206"
+           y="-6.0621982"
+           id="rect3147" /></flowRegion><flowPara
+         style="font-size:13.47500038px"
+         id="flowPara3155">V<flowSpan
+   style="font-size:65.00091553%;baseline-shift:sub"
+   id="flowSpan3159">R</flowSpan>=C</flowPara></flowRoot>  </g>
 </svg>
