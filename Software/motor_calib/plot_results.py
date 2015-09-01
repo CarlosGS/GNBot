@@ -29,7 +29,7 @@ R_pulse_ms = data['avgRmotorInput']
 ax[0].plot(L_pulse_ms,L_speed_rads,'-r')
 ax[0].plot(R_pulse_ms,R_speed_rads,'-b')
 ax[0].set_xlabel('Motor input pulse width [ms]', fontsize=14)
-ax[0].set_ylabel('Robot clockwise rotational speed $\omega_R$ [rad/s]', fontsize=14)
+ax[0].set_ylabel('Robot clockwise rotational speed $\omega$ [rad/s]', fontsize=14)
 #ax[0].legend(['L','R'])
 ax[0].set_title('$D_L=75mm, D_R=65mm$', fontsize=14)
 ax[0].set_ylim([-2.5,2.5])
