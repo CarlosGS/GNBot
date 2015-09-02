@@ -18,6 +18,8 @@ rc('font',**{'family':'serif','serif':['Computer Modern']})
 f, ax = subplots(1,3,figsize=(10,5))
 
 
+my_red = (1,0,0,0.2)
+
 suptitle('Velocity response curves for distinct wheel diameters', fontsize=18)
 
 data = loadFromFile("","motorCalibLog_biggerLwheel.p")
@@ -34,6 +36,9 @@ ax[0].set_ylabel('Robot clockwise rotational speed $\omega$ [rad/s]', fontsize=1
 ax[0].set_title('$D_L=75mm, D_R=65mm$', fontsize=14)
 ax[0].set_ylim([-2.5,2.5])
 ax[0].set_xlim([1050,1950])
+
+ax[0].add_patch(Rectangle((1050,1.5),900,1,linewidth=0,facecolor=my_red))
+ax[0].add_patch(Rectangle((1050,-2.5),900,1,linewidth=0,facecolor=my_red))
 
 ax[0].grid(True)
 
@@ -56,6 +61,11 @@ ax[1].set_ylim([-2.5,2.5])
 ax[1].set_xlim([1050,1950])
 ax[1].set_yticklabels([])
 
+ax[1].add_patch(Rectangle((1050,1.5),900,1,linewidth=0,facecolor=my_red))
+ax[1].add_patch(Rectangle((1050,-2.5),900,1,linewidth=0,facecolor=my_red))
+
+ax[1].text(1410,0.8,"Linear\nregion", fontsize=12)
+
 ax[1].grid(True)
 
 tight_layout()
@@ -76,6 +86,9 @@ ax[2].set_title('$D_L=65mm, D_R=75mm$', fontsize=14)
 ax[2].set_ylim([-2.5,2.5])
 ax[2].set_xlim([1050,1950])
 ax[2].set_yticklabels([])
+
+ax[2].add_patch(Rectangle((1050,1.5),900,1,linewidth=0,facecolor=my_red))
+ax[2].add_patch(Rectangle((1050,-2.5),900,1,linewidth=0,facecolor=my_red))
 
 ax[2].grid(True)
 
