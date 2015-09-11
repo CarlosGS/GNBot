@@ -1400,6 +1400,101 @@ void setup() {
     Serial.print("calib.speed_k=\t");
     Serial.println(calib.speed_k);
 
+
+    int option = 0;
+    unsigned long start_time = millis();
+    while(1) {
+        if((millis()-start_time) > 1000) {
+            start_time = millis();
+            option++;
+            if(option > 4) option = 0;
+        }
+        switch(option) {
+            case 1:
+                ledColor(128,0,0);
+                break;
+            case 2:
+                ledColor(0,128,0);
+                break;
+            case 3:
+                ledColor(0,0,128);
+                break;
+            case 4:
+                ledColor(0,64,64);
+                break;
+            default:
+                ledColor(128,128,128);
+        }
+        if(button_is_pressed()) break;
+        delay(10);
+    }
+
+    switch(option) {
+        case 1:
+            ledColor(128/4,0,0);
+            break;
+        case 2:
+            ledColor(0,128/4,0);
+            break;
+        case 3:
+            ledColor(0,0,128/4);
+            break;
+        case 4:
+            ledColor(0,128/8,128/8);
+            break;
+        default:
+            ledColor(128/4,128/4,128/4);
+    }
+
+    delay(500);
+    while(!button_is_pressed());
+
+    readIMU_YawPitchRoll(ypr);
+    float yaw = ypr[0];
+    
+    switch(option) {
+        case 1: // squares
+            while(1) {
+                float l = 20; // cm
+                float vel = 5; // cm/s
+                performSquare(2*l, vel);
+                pointToAngle(yaw);
+                performSquare(-l, -vel);
+                pointToAngle(yaw);
+                
+                performSquare(2*l, 2*vel);
+                pointToAngle(yaw);
+                performSquare(-l, -2*vel);
+                pointToAngle(yaw);
+            }
+            break;
+        case 2: // circles
+            while(1) {
+                float r = 10; // cm
+                float vel = 5; // cm/s
+                performArc(2*2.*M_PI*r, vel, 360.);
+                pointToAngle(yaw);
+                performArc(-2.*M_PI*r, -vel, 360.);
+                pointToAngle(yaw);
+                
+                performArc(2*2.*M_PI*r, 2*vel, 360.);
+                pointToAngle(yaw);
+                performArc(-2.*M_PI*r, -2*vel, 360.);
+                pointToAngle(yaw);
+            }
+            break;
+        case 3: // PID simple test
+            motorPIDcontroller(yaw, false, 0, 0, false, 0, 0, false);
+            break;
+        case 4: // wall bounce
+            break;
+        default: // mapping
+            break;
+    }
+
+
+
+
     // Lines
     /*while(!button_is_pressed());
     delay(3000);
@@ -1423,7 +1518,9 @@ void setup() {
     }*/
 
 
-    while(!button_is_pressed());
+
+    // Misc calibration
+    /*while(!button_is_pressed());
     delay(3000);
     
     readIMU_YawPitchRoll(ypr);
@@ -1446,7 +1543,9 @@ void setup() {
     set_servo1_rot_speed(0);
     set_servo2_rot_speed(0);
 
-    while(1);
+    while(1);*/
+
+
 
     // Squares
     /*while(!button_is_pressed());
@@ -1544,7 +1643,7 @@ void setup() {
         Serial.println("],");
     }*/
 
-
+    if(option == 4) {
     // Odor search algorithm
     /*ledColor(255,0,0);
     while(getGasSensorResistance() < 15000) delay(1000);
@@ -1560,20 +1659,20 @@ void setup() {
       levy = false;
     }
     delay(20000);
-    ledColor(0,0,0);
+    ledColor(0,0,0);*/
 
     float len = 2.5*calib.speed_k;
     float vel = 6.*calib.speed_k;
-    float sweepAngle = 5.*M_PI/180.;
+    //float sweepAngle = 5.*M_PI/180.;
     float remainingDistance = 1;
 
     readIMU_YawPitchRoll(ypr);
     float yaw = ypr[0];
 
-    float nose = getGasSensorResistance();
+    //float nose = getGasSensorResistance();
     float dist = getDistanceCM();
     while(1) {
-        if(nose < 15000) break;
+        //if(nose < 15000) break;
         while(remainingDistance <= 0 || dist < 20) { // Random rotation
             set_servo1_rot_speed(0);
             set_servo2_rot_speed(0);
@@ -1599,23 +1698,133 @@ void setup() {
                 remainingDistance *= calib.speed_k;
             }
         }
-        nose = getGasSensorResistance();
+        //nose = getGasSensorResistance();
         dist = getDistanceCM();
-        motorPIDcontroller(yaw, false, vel, 0, false, yaw+sweepAngle, len, true);
+        motorPIDcontroller(yaw, false, vel, 0, false, yaw, len, true);
         
-        nose = min(getGasSensorResistance(),nose);
-        dist = min(getDistanceCM(),dist);
-        motorPIDcontroller(yaw, false, vel, 0, false, yaw-sweepAngle, len, true);
+        //nose = min(getGasSensorResistance(),nose);
+        //dist = min(getDistanceCM(),dist);
+        //motorPIDcontroller(yaw, false, vel, 0, false, yaw-sweepAngle, len, true);
         
-        nose = min(getGasSensorResistance(),nose);
-        dist = min(getDistanceCM(),dist);
-        if(levy) remainingDistance -= 2*len;
+        //nose = min(getGasSensorResistance(),nose);
+        //dist = min(getDistanceCM(),dist);
+        //if(levy) remainingDistance -= 2*len;
     }
-    motorPIDcontroller(yaw, false, -vel/2., 0, false, yaw, -len, true);
+    /*motorPIDcontroller(yaw, false, -vel/2., 0, false, yaw, -len, true);
     set_servo1_rot_speed(0);
     set_servo2_rot_speed(0);
     ledColor(0,0,255); // Odor source has been localized
     while(1);*/
+    }
+
+    readIMU_YawPitchRoll(ypr);
+    float zeroYaw = ypr[0];
+    yaw = zeroYaw;
+
+    float target_angle = 0;
+    float len_cm = 0;
+    bool modified = false;
+    iniTime = millis();
+    int rotation = 0;
+    while(1) {
+        xbee.readPacket();
+        if (xbee.getResponse().isAvailable()) {
+          if (xbee.getResponse().getApiId() == ZB_RX_RESPONSE) {
+            xbee.getResponse().getZBRxResponse(rx);
+            int datalen = rx.getDataLength();
+    
+            if(datalen > 1) {
+              char command = rx.getData(0);
+              if(command == 0) { // PUT command
+                int N_values = (datalen-1)/3;
+                for(int i=0; i<N_values; i++) {
+                  int istart = i*3+1;
+                  char valType = rx.getData(istart);
+                  int value = (short)(rx.getData(istart+1)<<8|rx.getData(istart+2));
+                  switch ( valType ) {
+                  case 31: // targetAngle
+                    target_angle = value;
+                    target_angle = target_angle*M_PI/180.;
+                    modified = true;
+                    break;
+                  case 32: // targetDistance
+                    len_cm = value;
+                    modified = true;
+                    break;
+                  default:
+                    break;
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        if(modified) {
+            modified = false;
+            // Motion
+            yaw += target_angle;
+            pointToAngle(yaw);
+            delay(100);
+            float len = len_cm*calib.speed_k;
+            float vel = 5*calib.speed_k;
+            motorPIDcontroller(yaw, false, vel, 0, false, yaw, len, true);
+            set_servo1_rot_speed(0);
+            set_servo2_rot_speed(0);
+            delay(500);
+            
+            // Scan
+            float w = 0.3; // rad/s
+            if(rotation % 2) w *= -1;
+            set_servo1_rot_speed(w/2.);
+            set_servo2_rot_speed(w/2.);
+            iniTime = millis();
+            while((millis()-iniTime) < 1000.*2.*M_PI/abs(w)) {
+            //for(int i=0; i<20; i++) {
+                //pointToAngle(yaw+((float)i)*2.*M_PI/20.);
+                readIMU_YawPitchRoll(ypr);
+                unsigned int IRdistCM_tushort = round(mapf(getDistanceCM(),0,150,0,65535));
+                float yaw_sent = ypr[0]-zeroYaw;
+                while(yaw_sent > M_PI) yaw_sent -= 2*M_PI;
+                while(yaw_sent <= -M_PI) yaw_sent += 2*M_PI;
+                imu_yaw_tushort = round(mapf(yaw_sent,-M_PI,M_PI,0,65535));
+                char data[256] = "";
+                int pos = 0;
+                
+                data[pos] = 0; // PUT command
+                pos += 1;
+                
+                data[pos] = 24; // Type: IMUyaw
+                data[pos+1] = imu_yaw_tushort >> 8;
+                data[pos+2] = imu_yaw_tushort & 0x00ff;
+                pos += 3;
+                
+                data[pos] = 30; // Type: IRdistanceCM
+                data[pos+1] = IRdistCM_tushort >> 8;
+                data[pos+2] = IRdistCM_tushort & 0x00ff;
+                pos += 3;
+                
+                sendXbee(data, pos+1);
+                delay(200);
+            }
+            pointToAngle(yaw);
+            rotation++;
+        }
+
+        if((millis()-iniTime) > 1000) {
+          char data[256] = "";
+          int pos = 0;
+          data[pos] = 0; // PUT command
+          pos += 1;
+          sendXbee(data, pos+1);
+          iniTime = millis();
+        }
+        if(button_is_pressed()) {
+            readIMU_YawPitchRoll(ypr);
+            zeroYaw = ypr[0];
+            yaw = zeroYaw;
+        }
+    }
 }
 
 int sampleTime = 3000;

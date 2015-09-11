@@ -41,7 +41,10 @@ class GNBot(object):
 					26	: "IMUroll",# to be read
 					27	: "avgSpeed",# to be read
 					28	: "avgLmotorInput",# to be read
-					29	: "avgRmotorInput"# to be read
+					29	: "avgRmotorInput",# to be read
+					30	: "IRdistanceCM",# to be read
+					31	: "targetAngle",
+					32	: "targetDistance"
 					}
 	
 	valueTypesLookup = {}
