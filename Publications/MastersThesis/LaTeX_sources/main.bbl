@@ -1,0 +1,119 @@
+\begin{thebibliography}{10}
+
+\bibitem{GarciaSauraLM14}
+Carlos Garc{\'\i}a-Saura, Francisco de~Borja~Rodr{\'\i}guez, and Pablo Varona.
+\newblock Design principles for cooperative robots with uncertainty-aware and
+  resource-wise adaptive behavior.
+\newblock In Armin Duff, NathanF. Lepora, Anna Mura, TonyJ. Prescott, and
+  PaulF.M.J. Verschure, editors, {\em Biomimetic and Biohybrid Systems}, volume
+  8608 of {\em Lecture Notes in Computer Science}, pages 108--117. Springer
+  International Publishing, 2014.
+
+\bibitem{GarciaSaura14}
+Carlos Garc{\'\i}a-Saura.
+\newblock Cooperative strategies for the detection and localization of odorants
+  with robots and artificial noses.
+\newblock Technical report, 2014.
+
+\bibitem{Barczyk10}
+M.~Barczyk, M.~Jost, D.R. Kastelan, A.F. Lynch, and K.D. Listmann.
+\newblock An experimental validation of magnetometer integration into a
+  gps-aided helicopter uav navigation system.
+\newblock In {\em American Control Conference (ACC), 2010}, pages 4439--4444,
+  June 2010.
+
+\bibitem{PeiChunLin06}
+Pei-Chun Lin, H.~Komsuoglu, and D.E. Koditschek.
+\newblock Sensor data fusion for body state estimation in a hexapod robot with
+  dynamical gaits.
+\newblock {\em Robotics, IEEE Transactions on}, 22(5):932--943, Oct 2006.
+
+\bibitem{SeungbeomWoo11}
+Seungbeom Woo, Jaeyong Kim, Jungmin Kim, and Sungshin Kim.
+\newblock Calibration of accelerometer using fuzzy inference system.
+\newblock In {\em Control, Automation and Systems (ICCAS), 2011 11th
+  International Conference on}, pages 1448--1450, Oct 2011.
+
+\bibitem{Stilwell01}
+D.J. Stilwell, C.E. Wick, and B.E. Bishop.
+\newblock Small inertial sensors for a miniature autonomous underwater vehicle.
+\newblock In {\em Control Applications, 2001. (CCA '01). Proceedings of the
+  2001 IEEE International Conference on}, pages 841--846, 2001.
+
+\bibitem{Kinsey02}
+J.C. Kinsey and L.L. Whitcomb.
+\newblock Towards in-situ calibration of gyro and doppler navigation sensors
+  for precision underwater vehicle navigation.
+\newblock In {\em Robotics and Automation, 2002. Proceedings. ICRA '02. IEEE
+  International Conference on}, volume~4, pages 4016--4023 vol.4, 2002.
+
+\bibitem{Panish11}
+R.~Panish and M.~Taylor.
+\newblock Achieving high navigation accuracy using inertial navigation systems
+  in autonomous underwater vehicles.
+\newblock In {\em OCEANS, 2011 IEEE - Spain}, pages 1--7, June 2011.
+
+\bibitem{HyoungKiLee12}
+Hyoung-Ki Lee, Kiwan Choi, Jiyoung Park, and Hyun Myung.
+\newblock Self-calibration of gyro using monocular slam for an indoor mobile
+  robot.
+\newblock {\em International Journal of Control, Automation and Systems},
+  10(3):558--566, 2012.
+
+\bibitem{Ovren13}
+H.~Ovren, P.~Forssen, and D.~Tornqvist.
+\newblock Why would i want a gyroscope on my rgb-d sensor?
+\newblock In {\em Robot Vision (WORV), 2013 IEEE Workshop on}, pages 68--75,
+  Jan 2013.
+
+\bibitem{HakyoungChung01}
+Hakyoung Chung, L.~Ojeda, and J.~Borenstein.
+\newblock Sensor fusion for mobile robot dead-reckoning with a
+  precision-calibrated fiber optic gyroscope.
+\newblock In {\em Robotics and Automation, 2001. Proceedings 2001 ICRA. IEEE
+  International Conference on}, volume~4, pages 3588--3593 vol.4, 2001.
+
+\bibitem{panich11}
+Surachai Panich and Nitin Afzulpurkar.
+\newblock Mobile robot integrated with gyroscope by using ikf.
+\newblock {\em International Journal of Advanced Robotic Systems}, 8(2):122,
+  2011.
+
+\bibitem{Borenstein98}
+J.~Borenstein.
+\newblock Experimental evaluation of a fiber optics gyroscope for improving
+  dead-reckoning accuracy in mobile robots.
+\newblock In {\em Robotics and Automation, 1998. Proceedings. 1998 IEEE
+  International Conference on}, volume~4, pages 3456--3461 vol.4, May 1998.
+
+\bibitem{ziegler1942optimum}
+John~G Ziegler and Nathaniel~B Nichols.
+\newblock Optimum settings for automatic controllers.
+\newblock {\em trans. ASME}, 64(11), 1942.
+
+\bibitem{luyben1997essentials}
+Michael~L Luyben and William~L Luyben.
+\newblock {\em Essentials of process control}.
+\newblock McGraw-Hill College, 1997.
+
+\bibitem{martinelli07}
+Agostino Martinelli, Nicola Tomatis, and Roland Siegwart.
+\newblock Simultaneous localization and odometry self calibration for mobile
+  robot.
+\newblock {\em Autonomous Robots}, 22(1):75--85, 2007.
+
+\bibitem{DeCecco02}
+M.~De~Cecco.
+\newblock Self-calibration of agv inertial-odometric navigation using
+  absolute-reference measurements.
+\newblock In {\em Instrumentation and Measurement Technology Conference, 2002.
+  IMTC/2002. Proceedings of the 19th IEEE}, volume~2, pages 1513--1518 vol.2,
+  2002.
+
+\bibitem{roy99}
+Nicholas Roy and Sebastian Thrun.
+\newblock Online self-calibration for mobile robots.
+\newblock In {\em Robotics and Automation, 1999. Proceedings. 1999 IEEE
+  International Conference on}, volume~3, pages 2292--2297. IEEE, 1999.
+
+\end{thebibliography}
