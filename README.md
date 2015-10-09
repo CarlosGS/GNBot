@@ -4,6 +4,8 @@ GNBot: robotic platform for cooperative search strategies
 Low-cost 3D-printable robot design for testing cooperative search algorithms.  
 
 
+**Check [the GNBot wiki page](https://github.com/carlosgs/GNBot/wiki) for more information**  
+
 ![ScreenShot](Publications/Media/GNBot_1.0_swarm.jpg)  
 
 
