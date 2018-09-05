@@ -31,7 +31,7 @@ License: **Attribution - Share Alike - Creative Commons (<http://creativecommons
 
 Author:  
 --
-**Carlosgs (<http://carlosgs.es>)**  
+**@CarlosGS** <https://github.com/CarlosGS>
 
 Disclaimer  
 --
